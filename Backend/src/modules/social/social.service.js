@@ -1,10 +1,11 @@
 const { query } = require('../../shared/db');
-const { NotFoundError, ConflictError } = require('../../shared/errors');
-const { buildCursorPage, parsePaginationParams } = require('../../shared/pagination');
-const { emitToUser } = require('../../shared/socket');
+const { NotFoundError, ConflictError, BadRequestError } = require('../../shared/errors');
 
 async function follow(playerId, { target_type, target_id }) {
-  const table = target_type === 'org' ? 'org' : 'team';
+  let table = 'org';
+  if (target_type === 'team') table = 'team';
+  if (target_type === 'organizer') table = 'tournament_organizer';
+
   const targetRes = await query(`SELECT id FROM "${table}" WHERE id = $1`, [target_id]);
   if (targetRes.rowCount === 0) throw new NotFoundError(target_type);
 
@@ -30,54 +31,240 @@ async function unfollow(playerId, { target_type, target_id }) {
   return { message: 'Unfollowed successfully' };
 }
 
-async function getFeed(playerId, queryParams) {
-  const { limit, cursor } = parsePaginationParams(queryParams);
-  const cursorClause = cursor ? `AND p.id > '${cursor}'` : '';
-  const sql = `
-    SELECT p.id, p.author_type, p.author_id, p.content, p.created_at,
-           CASE WHEN p.author_type = 'org' THEN o.name WHEN p.author_type = 'team' THEN t.name END AS author_name
-    FROM post p
-    LEFT JOIN org o ON p.author_type = 'org' AND o.id = p.author_id
-    LEFT JOIN team t ON p.author_type = 'team' AND t.id = p.author_id
-    WHERE (
-      (p.author_type = 'org' AND p.author_id IN (SELECT target_id FROM follow WHERE player_id = $1 AND target_type = 'org'))
-      OR
-      (p.author_type = 'team' AND p.author_id IN (SELECT target_id FROM follow WHERE player_id = $1 AND target_type = 'team'))
-    )
-    ${cursorClause}
-    ORDER BY p.created_at DESC
-    LIMIT $2
-  `;
-  const result = await query(sql, [playerId, limit + 1]);
-  return buildCursorPage(result.rows, limit);
-}
+async function createPost(user, { content, category = 'General', game = 'valorant' }) {
+  if (!content || !content.trim()) throw new BadRequestError('Content cannot be empty');
 
-async function createPost(authorType, authorId, content) {
+  const authorType = user.role || 'player';
+  const authorId = user.id;
+
   const result = await query(
-    `INSERT INTO post (author_type, author_id, content)
-     VALUES ($1, $2, $3) RETURNING id, author_type, author_id, content, created_at`,
-    [authorType, authorId, content],
+    `INSERT INTO post (author_type, author_id, content, category, game)
+     VALUES ($1, $2, $3, $4, $5)
+     RETURNING id, author_type, author_id, content, category, game, likes_count, created_at`,
+    [authorType, authorId, content.trim(), category, game.toLowerCase()],
   );
   const post = result.rows[0];
 
-  // Notify followers
-  const followers = await query(
-    'SELECT player_id FROM follow WHERE target_type = $1 AND target_id = $2',
-    [authorType, authorId],
-  );
-  for (const row of followers.rows) {
-    emitToUser(row.player_id, 'new_post', post);
+  // Resolve author metadata
+  if (authorType === 'player') {
+    const p = await query('SELECT username, game_ign, avatar_url, tagline FROM player WHERE id = $1', [authorId]);
+    if (p.rowCount > 0) {
+      post.author_name = p.rows[0].username;
+      post.author_ign = p.rows[0].game_ign;
+      post.author_tagline = p.rows[0].tagline;
+      post.avatar_url = p.rows[0].avatar_url;
+    }
+  } else if (authorType === 'org') {
+    const o = await query('SELECT name, verified FROM org WHERE id = $1', [authorId]);
+    if (o.rowCount > 0) {
+      post.author_name = o.rows[0].name;
+      post.author_verified = o.rows[0].verified;
+    }
+  } else if (authorType === 'organizer') {
+    const orgn = await query('SELECT name, verified FROM tournament_organizer WHERE id = $1', [authorId]);
+    if (orgn.rowCount > 0) {
+      post.author_name = orgn.rows[0].name;
+      post.author_verified = orgn.rows[0].verified;
+    }
   }
+
+  post.comments = [];
+  post.liked = false;
   return post;
 }
 
-async function getPost(id) {
+async function getFeed(userId = null) {
+  // Production LinkedIn-style feed query returning all public posts,
+  // enhanced with likes, comments, and author profiles
+  const sql = `
+    SELECT p.id, p.author_type, p.author_id, p.content, p.category, p.game, p.created_at,
+           CASE 
+             WHEN p.author_type = 'player' THEN pl.username 
+             WHEN p.author_type = 'org' THEN o.name 
+             WHEN p.author_type = 'organizer' THEN orgn.name
+             WHEN p.author_type = 'team' THEN t.name 
+             ELSE 'Gamer' 
+           END AS author_name,
+           pl.game_ign AS author_ign,
+           pl.tagline AS author_tagline,
+           pl.avatar_url AS author_avatar,
+           CASE 
+             WHEN p.author_type = 'org' THEN o.verified
+             WHEN p.author_type = 'organizer' THEN orgn.verified
+             ELSE false
+           END AS author_verified,
+           COUNT(DISTINCT plk.id)::int AS likes_count,
+           COUNT(DISTINCT pc.id)::int AS comments_count,
+           EXISTS(SELECT 1 FROM post_like WHERE post_id = p.id AND user_id = $1) AS liked
+    FROM post p
+    LEFT JOIN player pl ON p.author_type = 'player' AND pl.id = p.author_id
+    LEFT JOIN org o ON p.author_type = 'org' AND o.id = p.author_id
+    LEFT JOIN tournament_organizer orgn ON p.author_type = 'organizer' AND orgn.id = p.author_id
+    LEFT JOIN team t ON p.author_type = 'team' AND t.id = p.author_id
+    LEFT JOIN post_like plk ON plk.post_id = p.id
+    LEFT JOIN post_comment pc ON pc.post_id = p.id
+    GROUP BY p.id, pl.username, pl.game_ign, pl.tagline, pl.avatar_url, o.name, o.verified, orgn.name, orgn.verified, t.name
+    ORDER BY p.created_at DESC
+    LIMIT 60
+  `;
+
+  const result = await query(sql, [userId || '00000000-0000-0000-0000-000000000000']);
+  
+  // Attach recent comments for each post
+  for (const post of result.rows) {
+    const commentsRes = await query(
+      'SELECT id, author_name, content, created_at FROM post_comment WHERE post_id = $1 ORDER BY created_at ASC LIMIT 5',
+      [post.id],
+    );
+    post.comments = commentsRes.rows;
+  }
+
+  return result.rows;
+}
+
+async function getPost(id, userId = null) {
   const result = await query(
-    'SELECT id, author_type, author_id, content, created_at FROM post WHERE id = $1',
-    [id],
+    `SELECT p.*,
+            CASE 
+              WHEN p.author_type = 'player' THEN pl.username 
+              WHEN p.author_type = 'org' THEN o.name 
+              WHEN p.author_type = 'organizer' THEN orgn.name
+              WHEN p.author_type = 'team' THEN t.name 
+              ELSE 'Gamer' 
+            END AS author_name,
+            pl.avatar_url, pl.tagline,
+            COUNT(DISTINCT plk.id)::int AS likes_count,
+            EXISTS(SELECT 1 FROM post_like WHERE post_id = p.id AND user_id = $2) AS liked
+     FROM post p
+     LEFT JOIN player pl ON p.author_type = 'player' AND pl.id = p.author_id
+     LEFT JOIN org o ON p.author_type = 'org' AND o.id = p.author_id
+     LEFT JOIN tournament_organizer orgn ON p.author_type = 'organizer' AND orgn.id = p.author_id
+     LEFT JOIN team t ON p.author_type = 'team' AND t.id = p.author_id
+     LEFT JOIN post_like plk ON plk.post_id = p.id
+     WHERE p.id = $1
+     GROUP BY p.id, pl.username, pl.avatar_url, pl.tagline, o.name, orgn.name, t.name`,
+    [id, userId || '00000000-0000-0000-0000-000000000000'],
   );
   if (result.rowCount === 0) throw new NotFoundError('Post');
+  const post = result.rows[0];
+
+  const commentsRes = await query(
+    'SELECT id, author_name, content, created_at FROM post_comment WHERE post_id = $1 ORDER BY created_at ASC',
+    [id],
+  );
+  post.comments = commentsRes.rows;
+  return post;
+}
+
+async function toggleLike(postId, userId) {
+  const existing = await query('SELECT id FROM post_like WHERE post_id = $1 AND user_id = $2', [postId, userId]);
+  if (existing.rowCount > 0) {
+    await query('DELETE FROM post_like WHERE post_id = $1 AND user_id = $2', [postId, userId]);
+    await query('UPDATE post SET likes_count = GREATEST(0, likes_count - 1) WHERE id = $1', [postId]);
+    return { liked: false };
+  } else {
+    await query('INSERT INTO post_like (post_id, user_id) VALUES ($1, $2)', [postId, userId]);
+    await query('UPDATE post SET likes_count = likes_count + 1 WHERE id = $1', [postId]);
+    return { liked: true };
+  }
+}
+
+async function addComment(postId, user, content) {
+  if (!content || !content.trim()) throw new BadRequestError('Comment cannot be empty');
+
+  let authorName = 'Gamer';
+  if (user.role === 'player') {
+    const p = await query('SELECT username FROM player WHERE id = $1', [user.id]);
+    if (p.rowCount > 0) authorName = p.rows[0].username;
+  } else if (user.role === 'org') {
+    const o = await query('SELECT name FROM org WHERE id = $1', [user.id]);
+    if (o.rowCount > 0) authorName = o.rows[0].name;
+  } else if (user.role === 'organizer') {
+    const orgn = await query('SELECT name FROM tournament_organizer WHERE id = $1', [user.id]);
+    if (orgn.rowCount > 0) authorName = orgn.rows[0].name;
+  }
+
+  const result = await query(
+    `INSERT INTO post_comment (post_id, author_id, author_name, content)
+     VALUES ($1, $2, $3, $4)
+     RETURNING id, post_id, author_id, author_name, content, created_at`,
+    [postId, user.id, authorName, content.trim()],
+  );
   return result.rows[0];
 }
 
-module.exports = { follow, unfollow, getFeed, createPost, getPost };
+// Connections (LinkedIn-style)
+async function connectPlayers(requesterId, receiverId) {
+  if (requesterId === receiverId) throw new BadRequestError('Cannot connect with yourself');
+  const rec = await query('SELECT id FROM player WHERE id = $1', [receiverId]);
+  if (rec.rowCount === 0) throw new NotFoundError('Target player');
+
+  const existing = await query(
+    'SELECT * FROM player_connection WHERE (requester_id = $1 AND receiver_id = $2) OR (requester_id = $2 AND receiver_id = $1)',
+    [requesterId, receiverId],
+  );
+  if (existing.rowCount > 0) {
+    return existing.rows[0];
+  }
+
+  const res = await query(
+    `INSERT INTO player_connection (requester_id, receiver_id, status)
+     VALUES ($1, $2, 'connected')
+     RETURNING *`,
+    [requesterId, receiverId],
+  );
+  return res.rows[0];
+}
+
+async function getConnections(playerId) {
+  const sql = `
+    SELECT pc.id AS connection_id, pc.created_at AS connected_at,
+           p.id, p.username, p.game_ign, p.primary_game, p.tagline, p.avatar_url, p.lft_status
+    FROM player_connection pc
+    JOIN player p ON (p.id = CASE WHEN pc.requester_id = $1 THEN pc.receiver_id ELSE pc.requester_id END)
+    WHERE pc.requester_id = $1 OR pc.receiver_id = $1
+    ORDER BY pc.created_at DESC
+  `;
+  const res = await query(sql, [playerId]);
+  return res.rows;
+}
+
+async function getRecommendedPlayers(currentUserId = null) {
+  const params = [];
+  let filterClause = '';
+  if (currentUserId) {
+    params.push(currentUserId);
+    filterClause = `
+      WHERE p.id != $1
+        AND p.id NOT IN (
+          SELECT CASE WHEN requester_id = $1 THEN receiver_id ELSE requester_id END
+          FROM player_connection
+          WHERE requester_id = $1 OR receiver_id = $1
+        )
+    `;
+  }
+  const sql = `
+    SELECT p.id, p.username, p.game_ign, p.primary_game, p.tagline, p.avatar_url, p.lft_status,
+           t.name AS team_name
+    FROM player p
+    LEFT JOIN team t ON t.id = p.team_id
+    ${filterClause}
+    ORDER BY p.created_at DESC
+    LIMIT 10
+  `;
+  const res = await query(sql, params);
+  return res.rows;
+}
+
+module.exports = {
+  follow,
+  unfollow,
+  createPost,
+  getFeed,
+  getPost,
+  toggleLike,
+  addComment,
+  connectPlayers,
+  getConnections,
+  getRecommendedPlayers,
+};

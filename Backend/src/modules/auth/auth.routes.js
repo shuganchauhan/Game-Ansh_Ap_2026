@@ -1,7 +1,13 @@
 const { Router } = require('express');
-const { signup, login } = require('./auth.controller');
+const { signup, simpleSignup, login } = require('./auth.controller');
 const { validate } = require('../../shared/validation');
-const { loginSchema, playerSignupSchema, orgSignupSchema, organizerSignupSchema } = require('./auth.schema');
+const {
+  simpleSignupSchema,
+  loginSchema,
+  playerSignupSchema,
+  orgSignupSchema,
+  organizerSignupSchema,
+} = require('./auth.schema');
 
 const router = Router();
 
@@ -10,10 +16,17 @@ function pickSignupSchema(req, res, next) {
   if (type === 'player') return validate(playerSignupSchema)(req, res, next);
   if (type === 'org') return validate(orgSignupSchema)(req, res, next);
   if (type === 'organizer') return validate(organizerSignupSchema)(req, res, next);
-  next(); // unknown type handled by controller
+  next();
 }
 
+// Simple frictionless signup (Just Email & Password)
+router.post('/signup', validate(simpleSignupSchema), simpleSignup);
+router.post('/register', validate(simpleSignupSchema), simpleSignup);
+
+// Legacy/typed signup
 router.post('/signup/:type', pickSignupSchema, signup);
+
+// Login (email & password auto-detects admin, player, org, organizer)
 router.post('/login', validate(loginSchema), login);
 
 module.exports = router;

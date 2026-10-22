@@ -16,14 +16,19 @@ const socialRoutes = require('./modules/social/social.routes');
 const messagingRoutes = require('./modules/messaging/messaging.routes');
 const tournamentsRoutes = require('./modules/tournaments/tournaments.routes');
 const adminRoutes = require('./modules/admin/admin.routes');
+const uploadsRoutes = require('./modules/uploads/uploads.routes');
+const path = require('path');
 
 const app = express();
 
-app.use(helmet());
+app.use(helmet({ crossOriginResourcePolicy: false }));
 app.use(cors());
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
-app.use(express.json({ limit: '1mb' }));
+app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
+
+// Serve uploaded static assets
+app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
 
 app.get('/health', (_req, res) => res.json({ status: 'ok', timestamp: new Date().toISOString() }));
 
@@ -33,10 +38,12 @@ app.use('/orgs', orgsRoutes);
 app.use('/teams', teamsRoutes);
 app.use('/', recruitmentRoutes);       // /teams/:id/postings, /postings/:id/apply, /applications/:id
 app.use('/discovery', discoveryRoutes);
+app.use('/social', socialRoutes);
 app.use('/', socialRoutes);             // /follow, /feed, /posts
 app.use('/messages', messagingRoutes);
 app.use('/tournaments', tournamentsRoutes);
 app.use('/admin', adminRoutes);
+app.use('/uploads', uploadsRoutes);
 
 app.use((_req, res) => res.status(404).json({ status: 'error', message: 'Route not found' }));
 app.use(globalErrorHandler);

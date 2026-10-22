@@ -1,0 +1,19 @@
+{
+  "name": "gamers-g-platform",
+  "version": "1.0.0",
+  "description": "Gamers'G — High Performance Esports Competitive Platform",
+  "private": true,
+  "scripts": {
+    "dev:backend": "npm --prefix Backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "start:backend": "npm --prefix Backend start",
+    "build:frontend": "npm --prefix frontend run build",
+    "verify": "node scripts/verify-full-stack.js",
+    "seed": "npm --prefix Backend run seed",
+    "migrate": "npm --prefix Backend run migrate",
+    "setup:db": "npm --prefix Backend run setup-db"
+  },
+  "keywords": ["esports", "gamers-g", "competitive-gaming", "react", "node", "postgresql"],
+  "author": "Gamers'G Team",
+  "license": "UNLICENSED"
+}

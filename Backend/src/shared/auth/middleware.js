@@ -16,10 +16,11 @@ function authenticate(req, _res, next) {
 }
 
 function authorize(...roles) {
+  const allowed = roles.flat();
   return (req, _res, next) => {
     if (!req.user) return next(new UnauthorizedError());
-    if (!roles.includes(req.user.role)) {
-      return next(new ForbiddenError(`Access restricted to: ${roles.join(', ')}`));
+    if (!allowed.includes(req.user.role)) {
+      return next(new ForbiddenError(`Access restricted to: ${allowed.join(', ')}`));
     }
     next();
   };

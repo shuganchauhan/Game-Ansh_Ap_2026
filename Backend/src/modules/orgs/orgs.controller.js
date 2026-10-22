@@ -16,5 +16,13 @@ async function getOrgPlayers(req, res, next) {
   try { res.json({ status: 'success', data: await orgsService.getOrgPlayers(req.params.id) }); }
   catch (err) { next(err); }
 }
+async function submitVerification(req, res, next) {
+  try { res.status(201).json({ status: 'success', data: await orgsService.submitVerification(req.user.id, req.user.role, req.user.email, req.body) }); }
+  catch (err) { next(err); }
+}
+async function getVerificationStatus(req, res, next) {
+  try { res.json({ status: 'success', data: await orgsService.getVerificationStatus(req.user.id, req.user.role, req.user.email) }); }
+  catch (err) { next(err); }
+}
 
-module.exports = { getOrg, updateOrg, getOrgTeams, getOrgPlayers };
+module.exports = { getOrg, updateOrg, getOrgTeams, getOrgPlayers, submitVerification, getVerificationStatus };

@@ -1,24 +1,64 @@
 const teamsService = require('./teams.service');
 
 async function createTeam(req, res, next) {
-  try { res.status(201).json({ status: 'success', data: await teamsService.createTeam(req.user.id, req.body) }); }
-  catch (err) { next(err); }
-}
-async function getTeam(req, res, next) {
-  try { res.json({ status: 'success', data: await teamsService.getTeam(req.params.id) }); }
-  catch (err) { next(err); }
-}
-async function updateTeam(req, res, next) {
-  try { res.json({ status: 'success', data: await teamsService.updateTeam(req.params.id, req.user.id, req.body) }); }
-  catch (err) { next(err); }
-}
-async function addPlayer(req, res, next) {
-  try { res.json({ status: 'success', data: await teamsService.addPlayerToTeam(req.params.id, req.body.player_id, req.user.id) }); }
-  catch (err) { next(err); }
-}
-async function removePlayer(req, res, next) {
-  try { res.json({ status: 'success', data: await teamsService.removePlayerFromTeam(req.params.id, req.params.playerId, req.user.id) }); }
-  catch (err) { next(err); }
+  try {
+    const data = await teamsService.createTeam(req.user, req.body);
+    res.status(201).json({ status: 'success', data });
+  } catch (err) {
+    next(err);
+  }
 }
 
-module.exports = { createTeam, getTeam, updateTeam, addPlayer, removePlayer };
+async function getTeam(req, res, next) {
+  try {
+    const data = await teamsService.getTeam(req.params.id);
+    res.json({ status: 'success', data });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function listTeams(req, res, next) {
+  try {
+    const data = await teamsService.listTeams(req.query);
+    res.json({ status: 'success', data });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function updateTeam(req, res, next) {
+  try {
+    const data = await teamsService.updateTeam(req.params.id, req.user, req.body);
+    res.json({ status: 'success', data });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function addMember(req, res, next) {
+  try {
+    const data = await teamsService.addMember(req.params.id, req.user, req.body);
+    res.json({ status: 'success', data });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function removeMember(req, res, next) {
+  try {
+    const data = await teamsService.removeMember(req.params.id, req.params.memberId, req.user);
+    res.json({ status: 'success', data });
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = {
+  createTeam,
+  getTeam,
+  listTeams,
+  updateTeam,
+  addMember,
+  removeMember,
+};
