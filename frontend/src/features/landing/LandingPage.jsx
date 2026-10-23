@@ -6,7 +6,8 @@ import {
   Gamepad2, Shield, Trophy, Radio, ChevronRight, ShieldCheck, Zap,
   Swords, Users, Star, MessageSquare, TrendingUp, Play, ArrowRight,
   Cpu, Target, Globe2, CheckCircle2, ChevronDown, ChevronUp, Lock,
-  Award, Sparkles, Flame, Eye, Calendar, Clock, Crosshair, HelpCircle
+  Award, Sparkles, Flame, Eye, Calendar, Clock, Crosshair, HelpCircle,
+  User
 } from 'lucide-react';
 
 /* ── Live Match Ticker Data ── */
