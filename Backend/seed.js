@@ -22,13 +22,19 @@ async function seed() {
   await pool.query('UPDATE player SET team_id = NULL');
   await pool.query('DELETE FROM team');
 
-  // 1. Admin Account
-  console.log('[Seed] Inserting Admin user...');
+  // 1. Admin Accounts
+  console.log('[Seed] Inserting Admin users...');
   const adminRes = await pool.query(
     `INSERT INTO "admin" (email, password_hash)
      VALUES ('admin@gamersg.com', $1)
      ON CONFLICT (email) DO UPDATE SET password_hash = EXCLUDED.password_hash
      RETURNING id, email`,
+    [hash],
+  );
+  await pool.query(
+    `INSERT INTO "admin" (email, password_hash)
+     VALUES ('admin@admin.com', $1)
+     ON CONFLICT (email) DO UPDATE SET password_hash = EXCLUDED.password_hash`,
     [hash],
   );
   const adminId = adminRes.rows[0].id;

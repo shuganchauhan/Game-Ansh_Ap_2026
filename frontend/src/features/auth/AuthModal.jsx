@@ -4,7 +4,7 @@ import { useAuth } from '../../stores/authContext';
 import { useGameStore } from '../../stores/gameStore';
 
 const QUICK_ACCOUNTS = [
-  { role: 'admin', label: 'Admin', email: 'admin@gamersg.com', pass: 'Password123!', color: 'text-red-400 border-red-500/30 bg-red-500/10' },
+  { role: 'admin', label: 'Admin', email: 'admin@gamersg.com', pass: 'Admin@123', color: 'text-red-400 border-red-500/30 bg-red-500/10' },
   { role: 'player', label: 'Pro Player', email: 'vortex@gamersg.com', pass: 'Password123!', color: 'text-primary border-primary/30 bg-primary/10' },
   { role: 'org', label: 'Esports Org', email: 'management@s8ul.gg', pass: 'Password123!', color: 'text-secondary border-secondary/30 bg-secondary/10' },
   { role: 'organizer', label: 'Organizer', email: 'admin@skyesports.in', pass: 'Password123!', color: 'text-amber-400 border-amber-500/30 bg-amber-500/10' },
