@@ -74,7 +74,6 @@ export default function AuthModal({
       if (mode === 'login') {
         resultUser = await login(cleanEmail, password);
       } else {
-        // Standard clean registration
         resultUser = await signup(cleanEmail, password);
       }
 
@@ -104,27 +103,27 @@ export default function AuthModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="w-full max-w-md rounded-3xl bg-[#14141a]/95 border border-white/10 p-6 sm:p-8 space-y-6 shadow-2xl relative text-white">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 dark:bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
+      <div className="w-full max-w-md rounded-3xl bg-surface-container-lowest dark:bg-[#14141a] border border-card-border p-6 sm:p-8 space-y-6 shadow-2xl relative text-on-surface">
         {/* Close Button */}
         <button
           onClick={onClose}
           aria-label="Close modal"
-          className="absolute top-5 right-5 p-2 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white transition-colors"
+          className="absolute top-5 right-5 p-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors border border-card-border"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Brand Header */}
         <div className="text-center space-y-2 pt-1">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-cyan-400 flex items-center justify-center mx-auto shadow-lg shadow-indigo-500/20">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center mx-auto shadow-lg shadow-primary/20">
             <span className="font-display font-extrabold text-2xl text-black">G</span>
           </div>
           <div>
-            <h2 className="font-display font-bold text-2xl text-white tracking-tight">
+            <h2 className="font-display font-bold text-2xl text-on-surface tracking-tight">
               {mode === 'login' ? 'Welcome Back' : 'Create Your Account'}
             </h2>
-            <p className="font-body text-xs text-zinc-400 mt-1 max-w-xs mx-auto">
+            <p className="font-body text-xs text-on-surface-variant mt-1 max-w-xs mx-auto">
               {mode === 'login'
                 ? 'Sign in to access your competitive dashboard, scrims, and match rooms.'
                 : 'Join Gamers\'G to compete in tournaments, form rosters, and build your gaming profile.'}
@@ -133,7 +132,7 @@ export default function AuthModal({
         </div>
 
         {/* Tab Switcher */}
-        <div className="grid grid-cols-2 p-1 rounded-2xl bg-white/5 border border-white/10 text-center">
+        <div className="grid grid-cols-2 p-1 rounded-2xl bg-surface-container border border-card-border text-center">
           <button
             type="button"
             onClick={() => {
@@ -143,8 +142,8 @@ export default function AuthModal({
             }}
             className={`py-2.5 rounded-xl font-display text-xs font-bold uppercase tracking-wider transition-all ${
               mode === 'login'
-                ? 'bg-gradient-to-r from-indigo-500 to-cyan-400 text-black shadow-md'
-                : 'text-zinc-400 hover:text-white'
+                ? 'bg-primary text-black dark:text-black font-extrabold shadow-md'
+                : 'text-on-surface-variant hover:text-on-surface'
             }`}
           >
             Sign In
@@ -158,8 +157,8 @@ export default function AuthModal({
             }}
             className={`py-2.5 rounded-xl font-display text-xs font-bold uppercase tracking-wider transition-all ${
               mode === 'signup'
-                ? 'bg-gradient-to-r from-indigo-500 to-cyan-400 text-black shadow-md'
-                : 'text-zinc-400 hover:text-white'
+                ? 'bg-primary text-black dark:text-black font-extrabold shadow-md'
+                : 'text-on-surface-variant hover:text-on-surface'
             }`}
           >
             Sign Up
@@ -168,14 +167,14 @@ export default function AuthModal({
 
         {/* Feedback Alerts */}
         {error && (
-          <div className="flex items-start gap-2.5 p-3.5 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-300 text-xs font-body animate-in fade-in">
+          <div className="flex items-start gap-2.5 p-3.5 rounded-2xl bg-error/15 border border-error/30 text-error text-xs font-body animate-in fade-in">
             <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
             <span className="leading-relaxed">{error}</span>
           </div>
         )}
 
         {forgotSent && (
-          <div className="flex items-start gap-2.5 p-3.5 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-body animate-in fade-in">
+          <div className="flex items-start gap-2.5 p-3.5 rounded-2xl bg-secondary/15 border border-secondary/30 text-secondary text-xs font-body animate-in fade-in">
             <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" />
             <span className="leading-relaxed">
               If an account matches <strong>{email}</strong>, a password reset link has been dispatched to your inbox.
@@ -188,8 +187,8 @@ export default function AuthModal({
           {/* Sign Up: Gamer Tag Field */}
           {mode === 'signup' && (
             <div>
-              <label className="block font-mono text-[11px] uppercase tracking-wider text-zinc-300 mb-1.5 flex items-center gap-1.5">
-                <User className="w-3.5 h-3.5 text-cyan-400" />
+              <label className="block font-mono text-[11px] uppercase tracking-wider text-on-surface-variant mb-1.5 flex items-center gap-1.5 font-bold">
+                <User className="w-3.5 h-3.5 text-secondary" />
                 Gamer Tag / Display Name
               </label>
               <input
@@ -197,15 +196,15 @@ export default function AuthModal({
                 placeholder="e.g. Vortex_99"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-zinc-500 text-sm focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 font-body transition-all"
+                className="w-full px-4 py-3 rounded-xl bg-surface-container-low dark:bg-white/5 border border-card-border text-on-surface placeholder:text-on-surface-variant/50 text-sm focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary font-body transition-all"
               />
             </div>
           )}
 
           {/* Email Address */}
           <div>
-            <label className="block font-mono text-[11px] uppercase tracking-wider text-zinc-300 mb-1.5 flex items-center gap-1.5">
-              <Mail className="w-3.5 h-3.5 text-indigo-400" />
+            <label className="block font-mono text-[11px] uppercase tracking-wider text-on-surface-variant mb-1.5 flex items-center gap-1.5 font-bold">
+              <Mail className="w-3.5 h-3.5 text-primary" />
               Email Address
             </label>
             <input
@@ -215,22 +214,22 @@ export default function AuthModal({
               placeholder="you@domain.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-zinc-500 text-sm focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 font-body transition-all"
+              className="w-full px-4 py-3 rounded-xl bg-surface-container-low dark:bg-white/5 border border-card-border text-on-surface placeholder:text-on-surface-variant/50 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary font-body transition-all"
             />
           </div>
 
           {/* Password */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="font-mono text-[11px] uppercase tracking-wider text-zinc-300 flex items-center gap-1.5">
-                <Lock className="w-3.5 h-3.5 text-cyan-400" />
+              <label className="font-mono text-[11px] uppercase tracking-wider text-on-surface-variant flex items-center gap-1.5 font-bold">
+                <Lock className="w-3.5 h-3.5 text-secondary" />
                 Password
               </label>
               {mode === 'login' && (
                 <button
                   type="button"
                   onClick={handleForgotPassword}
-                  className="font-mono text-[11px] text-zinc-400 hover:text-cyan-300 transition-colors"
+                  className="font-mono text-[11px] text-on-surface-variant hover:text-secondary transition-colors"
                 >
                   Forgot password?
                 </button>
@@ -243,12 +242,12 @@ export default function AuthModal({
                 placeholder="••••••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-4 pr-11 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-zinc-500 text-sm focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 font-body transition-all"
+                className="w-full pl-4 pr-11 py-3 rounded-xl bg-surface-container-low dark:bg-white/5 border border-card-border text-on-surface placeholder:text-on-surface-variant/50 text-sm focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary font-body transition-all"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white transition-colors"
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface transition-colors"
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -259,8 +258,8 @@ export default function AuthModal({
           {/* Sign Up: Confirm Password */}
           {mode === 'signup' && (
             <div>
-              <label className="block font-mono text-[11px] uppercase tracking-wider text-zinc-300 mb-1.5 flex items-center gap-1.5">
-                <Lock className="w-3.5 h-3.5 text-indigo-400" />
+              <label className="block font-mono text-[11px] uppercase tracking-wider text-on-surface-variant mb-1.5 flex items-center gap-1.5 font-bold">
+                <Lock className="w-3.5 h-3.5 text-primary" />
                 Confirm Password
               </label>
               <input
@@ -269,7 +268,7 @@ export default function AuthModal({
                 placeholder="••••••••••••"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-zinc-500 text-sm focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 font-body transition-all"
+                className="w-full px-4 py-3 rounded-xl bg-surface-container-low dark:bg-white/5 border border-card-border text-on-surface placeholder:text-on-surface-variant/50 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary font-body transition-all"
               />
             </div>
           )}
@@ -282,9 +281,9 @@ export default function AuthModal({
                 id="rememberMe"
                 checked={rememberMe}
                 onChange={(e) => setRememberMe(e.target.checked)}
-                className="w-4 h-4 rounded border-white/20 bg-white/5 text-indigo-500 focus:ring-0 focus:ring-offset-0 cursor-pointer"
+                className="w-4 h-4 rounded border-card-border bg-surface-container text-primary focus:ring-0 focus:ring-offset-0 cursor-pointer"
               />
-              <label htmlFor="rememberMe" className="text-xs text-zinc-400 cursor-pointer select-none">
+              <label htmlFor="rememberMe" className="text-xs text-on-surface-variant cursor-pointer select-none">
                 Remember this session on this device
               </label>
             </div>
@@ -295,10 +294,10 @@ export default function AuthModal({
                 id="terms"
                 checked={agreedTerms}
                 onChange={(e) => setAgreedTerms(e.target.checked)}
-                className="w-4 h-4 mt-0.5 rounded border-white/20 bg-white/5 text-indigo-500 focus:ring-0 focus:ring-offset-0 cursor-pointer"
+                className="w-4 h-4 mt-0.5 rounded border-card-border bg-surface-container text-primary focus:ring-0 focus:ring-offset-0 cursor-pointer"
               />
-              <label htmlFor="terms" className="text-xs text-zinc-400 cursor-pointer select-none leading-relaxed">
-                I agree to the <span className="text-white hover:underline">Terms of Service</span> and acknowledge the <span className="text-white hover:underline">Fair Play Code</span>.
+              <label htmlFor="terms" className="text-xs text-on-surface-variant cursor-pointer select-none leading-relaxed">
+                I agree to the <span className="text-on-surface font-semibold hover:underline">Terms of Service</span> and acknowledge the <span className="text-on-surface font-semibold hover:underline">Fair Play Code</span>.
               </label>
             </div>
           )}
@@ -307,7 +306,7 @@ export default function AuthModal({
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-indigo-500 via-indigo-600 to-cyan-400 hover:opacity-95 text-black font-display font-bold text-xs uppercase tracking-wider shadow-lg shadow-indigo-500/25 active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+            className="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-primary to-secondary hover:opacity-95 text-black font-display font-bold text-xs uppercase tracking-wider shadow-lg shadow-primary/25 active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
           >
             {loading ? (
               <span className="inline-flex items-center gap-2">
@@ -324,8 +323,8 @@ export default function AuthModal({
         </form>
 
         {/* Footer switch prompt */}
-        <div className="text-center pt-2 border-t border-white/10">
-          <p className="text-xs text-zinc-400">
+        <div className="text-center pt-2 border-t border-card-border">
+          <p className="text-xs text-on-surface-variant">
             {mode === 'login' ? (
               <>
                 Don't have an account yet?{' '}
@@ -335,7 +334,7 @@ export default function AuthModal({
                     setMode('signup');
                     setError(null);
                   }}
-                  className="font-bold text-cyan-400 hover:text-cyan-300 transition-colors ml-1"
+                  className="font-bold text-secondary hover:underline transition-colors ml-1"
                 >
                   Create one now
                 </button>
@@ -349,15 +348,15 @@ export default function AuthModal({
                     setMode('login');
                     setError(null);
                   }}
-                  className="font-bold text-indigo-400 hover:text-indigo-300 transition-colors ml-1"
+                  className="font-bold text-primary hover:underline transition-colors ml-1"
                 >
                   Sign in here
                 </button>
               </>
             )}
           </p>
-          <div className="flex items-center justify-center gap-1.5 text-[10px] font-mono text-zinc-500 mt-3 uppercase tracking-wider">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+          <div className="flex items-center justify-center gap-1.5 text-[10px] font-mono text-on-surface-variant/70 mt-3 uppercase tracking-wider">
+            <ShieldCheck className="w-3.5 h-3.5 text-secondary" />
             <span>256-Bit SSL · Anti-Cheat Fair Play Protocol</span>
           </div>
         </div>

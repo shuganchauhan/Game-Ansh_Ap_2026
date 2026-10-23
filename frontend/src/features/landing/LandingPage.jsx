@@ -29,8 +29,8 @@ const PLATFORM_PILLARS = [
     description:
       'Compete in scheduled practice lobbies with automated slot management. Room ID and confidential password dispatched directly to verified team captains 10 minutes before drop.',
     icon: Flame,
-    color: 'from-amber-500/20 to-orange-500/20 text-amber-400 border-amber-500/30',
-    iconColor: 'text-amber-400',
+    color: 'from-amber-500/20 to-orange-500/20 text-amber-500 dark:text-amber-400 border-amber-500/30',
+    iconColor: 'text-amber-500 dark:text-amber-400',
     badge: 'Instant Room Credentials',
     features: [
       'Automated slot reservation for registered rosters',
@@ -48,8 +48,8 @@ const PLATFORM_PILLARS = [
     description:
       'Participate in high-stakes official championships and community cups. Single elimination, double elimination, Swiss, and Battle Royale points tables with automated bracket generation.',
     icon: Trophy,
-    color: 'from-indigo-500/20 to-purple-500/20 text-indigo-400 border-indigo-500/30',
-    iconColor: 'text-indigo-400',
+    color: 'from-primary/20 to-secondary/20 text-primary border-primary/30',
+    iconColor: 'text-primary',
     badge: 'Escrow Protected',
     features: [
       'Multi-format brackets (Single/Double Elim, Swiss, BR Matrix)',
@@ -67,8 +67,8 @@ const PLATFORM_PILLARS = [
     description:
       'Build your esports franchise or grassroots squad in seconds. Create team tags, assign captain privileges, invite players, lock lineups for match day, and track collective win rates.',
     icon: Users,
-    color: 'from-cyan-500/20 to-blue-500/20 text-cyan-400 border-cyan-500/30',
-    iconColor: 'text-cyan-400',
+    color: 'from-secondary/20 to-primary/20 text-secondary border-secondary/30',
+    iconColor: 'text-secondary',
     badge: 'Lineup Lock Protocol',
     features: [
       'One-click squad creation with custom tags and logos',
@@ -86,8 +86,8 @@ const PLATFORM_PILLARS = [
     description:
       'Direct pipeline to certified Esports Organizations like S8UL, GodLike, and Global Esports. Filter free agents by rank, K/D, and play hours, or submit video tryout dossiers to open recruitment calls.',
     icon: Target,
-    color: 'from-emerald-500/20 to-teal-500/20 text-emerald-400 border-emerald-500/30',
-    iconColor: 'text-emerald-400',
+    color: 'from-emerald-500/20 to-teal-500/20 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
+    iconColor: 'text-emerald-600 dark:text-emerald-400',
     badge: 'Pro Contract Pipeline',
     features: [
       'Direct application to verified Esports Organizations',
@@ -105,8 +105,8 @@ const PLATFORM_PILLARS = [
     description:
       'Your digital esports identity. Sync your Riot Games, Steam, and BGMI IDs. Showcase your verified in-game statistics, tournament trophies, past teams, and anti-cheat verification status.',
     icon: ShieldCheck,
-    color: 'from-fuchsia-500/20 to-pink-500/20 text-fuchsia-400 border-fuchsia-500/30',
-    iconColor: 'text-fuchsia-400',
+    color: 'from-fuchsia-500/20 to-pink-500/20 text-fuchsia-600 dark:text-fuchsia-400 border-fuchsia-500/30',
+    iconColor: 'text-fuchsia-600 dark:text-fuchsia-400',
     badge: 'Anti-Cheat Verified',
     features: [
       'Multi-game UID sync (Steam, Riot ID, BGMI UID, Free Fire)',
@@ -124,8 +124,8 @@ const PLATFORM_PILLARS = [
     description:
       'Comprehensive toolkit for community hosts and tournament organizers. Launch custom tournaments, provision private scrim rooms, manage bracket seedings, and stream live brackets to fans.',
     icon: Swords,
-    color: 'from-rose-500/20 to-red-500/20 text-rose-400 border-rose-500/30',
-    iconColor: 'text-rose-400',
+    color: 'from-rose-500/20 to-red-500/20 text-rose-600 dark:text-rose-400 border-rose-500/30',
+    iconColor: 'text-rose-600 dark:text-rose-400',
     badge: 'Host Control Suite',
     features: [
       'Automated bracket builder and seeding wizard',
@@ -154,7 +154,7 @@ const SAMPLE_TOURNAMENTS = [
     format: 'Battle Royale · 24 Squads',
     prize: '$12,000 / ₹10,00,000',
     status: 'REGISTRATION CLOSING',
-    statusColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+    statusColor: 'bg-amber-500/15 text-amber-600 dark:text-amber-300 border-amber-500/30',
     teams: '21 / 24 Registered',
     entry: 'Free / ELO Verified',
     startsIn: 'Tomorrow, 6:00 PM IST',
@@ -166,7 +166,7 @@ const SAMPLE_TOURNAMENTS = [
     format: '5v5 Double Elimination',
     prize: '$8,500 / ₹7,00,000',
     status: 'LIVE BRACKET',
-    statusColor: 'bg-red-500/20 text-red-400 border-red-500/30',
+    statusColor: 'bg-red-500/15 text-red-600 dark:text-red-400 border-red-500/30',
     teams: '32 / 32 Teams (Quarterfinals)',
     entry: 'Ascendant+ Required',
     startsIn: 'In Progress (Round of 8)',
@@ -178,7 +178,7 @@ const SAMPLE_TOURNAMENTS = [
     format: 'Clash Squad & BR Matrix',
     prize: '$5,000 / ₹4,00,000',
     status: 'CHECK-IN OPEN',
-    statusColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+    statusColor: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 border-emerald-500/30',
     teams: '44 / 48 Squads',
     entry: 'Free Entry',
     startsIn: 'Starts in 3h 45m',
@@ -282,42 +282,42 @@ const SUPPORTED_GAMES = [
     category: 'Battle Royale',
     modes: 'Squads (Erangel, Miramar, Sanhok)',
     players: '4,800+ Active Players',
-    badgeColor: 'border-amber-500/40 text-amber-400 bg-amber-500/10',
+    badgeColor: 'border-amber-500/40 text-amber-600 dark:text-amber-400 bg-amber-500/10',
   },
   {
     name: 'VALORANT',
     category: 'Tactical FPS',
     modes: '5v5 Spike Defuse · Tournament Vetoes',
     players: '3,900+ Active Players',
-    badgeColor: 'border-red-500/40 text-red-400 bg-red-500/10',
+    badgeColor: 'border-red-500/40 text-red-600 dark:text-red-400 bg-red-500/10',
   },
   {
     name: 'Free Fire MAX',
     category: 'Battle Royale',
     modes: 'Clash Squad 4v4 & 12-Team BR',
     players: '2,600+ Active Players',
-    badgeColor: 'border-orange-500/40 text-orange-400 bg-orange-500/10',
+    badgeColor: 'border-orange-500/40 text-orange-600 dark:text-orange-400 bg-orange-500/10',
   },
   {
     name: 'Counter-Strike 2',
     category: 'Competitive FPS',
     modes: '5v5 MR12 Competitive Standard',
     players: '1,500+ Active Players',
-    badgeColor: 'border-cyan-500/40 text-cyan-400 bg-cyan-500/10',
+    badgeColor: 'border-cyan-500/40 text-secondary bg-secondary/10',
   },
   {
     name: 'Call of Duty: Mobile',
     category: 'Multiplayer & BR',
     modes: 'Hardpoint, Search & Destroy, BR',
     players: '950+ Active Players',
-    badgeColor: 'border-indigo-500/40 text-indigo-400 bg-indigo-500/10',
+    badgeColor: 'border-indigo-500/40 text-primary bg-primary/10',
   },
   {
     name: 'Clash Royale',
     category: 'Strategy & Mobile Arena',
     modes: '1v1 Duel & King of the Hill',
     players: '650+ Active Players',
-    badgeColor: 'border-emerald-500/40 text-emerald-400 bg-emerald-500/10',
+    badgeColor: 'border-emerald-500/40 text-emerald-600 dark:text-emerald-400 bg-emerald-500/10',
   },
 ];
 
@@ -421,42 +421,42 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
   }, []);
 
   return (
-    <div className="w-full bg-[#0d0e12] text-zinc-100 overflow-x-hidden selection:bg-indigo-500/30 selection:text-white">
+    <div className="w-full bg-surface text-on-surface transition-colors duration-200 overflow-x-hidden selection:bg-primary/30">
       {/* ══════════════════════════════════════════════════════════
-          1. HERO SECTION — Spacious, Confident & Professional
+          1. HERO SECTION — Spacious, Confident & Dual-Themed
       ══════════════════════════════════════════════════════════ */}
       <section className="relative min-h-[92vh] flex flex-col items-center justify-center pt-24 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
         {/* Three.js Canvas Backdrop */}
-        <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none opacity-45" />
+        <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none opacity-40 dark:opacity-45" />
 
         {/* Ambient Glows */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] rounded-full bg-gradient-to-b from-indigo-600/15 via-cyan-500/10 to-transparent blur-[140px] pointer-events-none" />
-        <div className="absolute bottom-10 left-10 w-96 h-96 rounded-full bg-indigo-500/5 blur-[120px] pointer-events-none" />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] rounded-full bg-gradient-to-b from-primary/10 via-secondary/10 to-transparent blur-[140px] pointer-events-none" />
+        <div className="absolute bottom-10 left-10 w-96 h-96 rounded-full bg-primary/5 blur-[120px] pointer-events-none" />
 
         {/* Hero Body */}
         <div className="relative z-10 max-w-5xl mx-auto text-center space-y-8">
           {/* Status Chip */}
-          <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-md shadow-lg">
+          <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-surface-container/80 dark:bg-white/5 border border-card-border backdrop-blur-md shadow-sm">
             <span className="relative flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-400" />
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75" />
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-secondary" />
             </span>
-            <span className="font-mono text-xs uppercase tracking-widest text-cyan-300 font-bold">
+            <span className="font-mono text-xs uppercase tracking-widest text-secondary font-bold">
               2026 Competitive Season Active
             </span>
-            <span className="text-zinc-600">·</span>
-            <span className="font-mono text-xs text-zinc-400">Next-Gen Esports Protocol</span>
+            <span className="text-on-surface-variant/40">·</span>
+            <span className="font-mono text-xs text-on-surface-variant font-medium">Next-Gen Esports Protocol</span>
           </div>
 
           {/* Majestic Headline */}
           <div className="space-y-4">
-            <h1 className="font-display font-extrabold text-4xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight leading-[1.08] uppercase">
+            <h1 className="font-display font-extrabold text-4xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight leading-[1.08] uppercase text-on-surface">
               The Premier Arena for{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-cyan-300 to-indigo-300">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-primary">
                 Competitive Esports
               </span>
             </h1>
-            <p className="font-body text-base sm:text-lg md:text-xl text-zinc-400 max-w-3xl mx-auto leading-relaxed">
+            <p className="font-body text-base sm:text-lg md:text-xl text-on-surface-variant max-w-3xl mx-auto leading-relaxed">
               Book daily automated scrim lobbies, compete in verified prize-pool tournaments,
               manage your competitive roster, and connect directly with Tier-1 esports organizations.
             </p>
@@ -466,7 +466,7 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
             <button
               onClick={() => onOpenAuthWithRole?.('player', 'signup')}
-              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-indigo-500 via-indigo-600 to-cyan-400 text-black font-display font-bold text-sm uppercase tracking-wider shadow-lg shadow-indigo-500/25 hover:opacity-95 active:scale-95 transition-all flex items-center justify-center gap-2.5 group"
+              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-primary to-secondary text-black font-display font-bold text-sm uppercase tracking-wider shadow-lg shadow-primary/25 hover:opacity-95 active:scale-95 transition-all flex items-center justify-center gap-2.5 group"
             >
               <Gamepad2 className="w-5 h-5 text-black" />
               <span>Create Free Account</span>
@@ -475,32 +475,32 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
 
             <button
               onClick={() => onSelectTab?.('tournaments')}
-              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-display font-bold text-sm uppercase tracking-wider backdrop-blur-md active:scale-95 transition-all flex items-center justify-center gap-2.5"
+              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-surface-container hover:bg-surface-container-high border border-card-border text-on-surface font-display font-bold text-sm uppercase tracking-wider backdrop-blur-md active:scale-95 transition-all flex items-center justify-center gap-2.5"
             >
-              <Trophy className="w-5 h-5 text-indigo-400" />
+              <Trophy className="w-5 h-5 text-primary" />
               <span>Explore Tournaments & Scrims</span>
             </button>
           </div>
 
           {/* Trust Guarantees */}
-          <div className="flex flex-wrap items-center justify-center gap-6 text-xs font-mono text-zinc-400 pt-4">
+          <div className="flex flex-wrap items-center justify-center gap-6 text-xs font-mono text-on-surface-variant pt-4">
             <div className="flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-cyan-400" />
+              <ShieldCheck className="w-4 h-4 text-secondary" />
               <span>Verified Organizations</span>
             </div>
-            <span className="text-zinc-700 hidden sm:inline">·</span>
+            <span className="text-card-border hidden sm:inline">·</span>
             <div className="flex items-center gap-2">
-              <Zap className="w-4 h-4 text-indigo-400" />
+              <Zap className="w-4 h-4 text-primary" />
               <span>Sub-150ms Match Events</span>
             </div>
-            <span className="text-zinc-700 hidden sm:inline">·</span>
+            <span className="text-card-border hidden sm:inline">·</span>
             <div className="flex items-center gap-2">
-              <Lock className="w-4 h-4 text-emerald-400" />
+              <Lock className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
               <span>Escrow Protected Prizes</span>
             </div>
-            <span className="text-zinc-700 hidden sm:inline">·</span>
+            <span className="text-card-border hidden sm:inline">·</span>
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-amber-400" />
+              <CheckCircle2 className="w-4 h-4 text-amber-500 dark:text-amber-400" />
               <span>Anti-Cheat Fair Play</span>
             </div>
           </div>
@@ -510,11 +510,11 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
       {/* ══════════════════════════════════════════════════════════
           2. LIVE MATCH TICKER STRIP
       ══════════════════════════════════════════════════════════ */}
-      <div className="border-y border-white/10 py-3.5 bg-black/40 backdrop-blur-md overflow-hidden relative z-20">
+      <div className="border-y border-card-border py-3.5 bg-surface-container-lowest/80 backdrop-blur-md overflow-hidden relative z-20">
         <div className="max-w-7xl mx-auto px-4 flex items-center gap-4">
-          <div className="shrink-0 flex items-center gap-2 pr-4 border-r border-white/10">
-            <span className="inline-block w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-            <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-red-400">
+          <div className="shrink-0 flex items-center gap-2 pr-4 border-r border-card-border">
+            <span className="inline-block w-2 h-2 rounded-full bg-error animate-pulse" />
+            <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-error">
               Match Circuit
             </span>
           </div>
@@ -525,21 +525,21 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
                 <span
                   className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase ${
                     item.label === 'LIVE'
-                      ? 'bg-red-500/20 text-red-400 border border-red-500/30'
+                      ? 'bg-error/15 text-error border border-error/30'
                       : item.label === 'FINAL'
-                      ? 'bg-zinc-800 text-zinc-300'
-                      : 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30'
+                      ? 'bg-surface-container-high text-on-surface-variant'
+                      : 'bg-secondary/15 text-secondary border border-secondary/30'
                   }`}
                 >
                   {item.label}
                 </span>
-                <span className="font-display text-xs font-semibold text-white">{item.team1}</span>
-                <span className="font-mono text-xs font-bold text-cyan-400">{item.score}</span>
-                <span className="font-display text-xs font-semibold text-white">{item.team2}</span>
-                <span className="font-mono text-[10px] text-zinc-400 bg-white/5 px-2 py-0.5 rounded">
+                <span className="font-display text-xs font-semibold text-on-surface">{item.team1}</span>
+                <span className="font-mono text-xs font-bold text-secondary">{item.score}</span>
+                <span className="font-display text-xs font-semibold text-on-surface">{item.team2}</span>
+                <span className="font-mono text-[10px] text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">
                   {item.game}
                 </span>
-                <span className="text-zinc-700 pl-4">/</span>
+                <span className="text-card-border pl-4">/</span>
               </div>
             ))}
           </div>
@@ -549,41 +549,41 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
       {/* ══════════════════════════════════════════════════════════
           3. REAL-TIME STATS COUNTER BAR
       ══════════════════════════════════════════════════════════ */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 border-b border-white/5 bg-[#101117]" ref={stepsRef}>
+      <section className="py-16 px-4 sm:px-6 lg:px-8 border-b border-card-border bg-surface-container-low" ref={stepsRef}>
         <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
           <div className="text-center space-y-1">
-            <div className="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mx-auto text-indigo-400 mb-2">
+            <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto text-primary mb-2">
               <Gamepad2 className="w-5 h-5" />
             </div>
-            <div ref={stat1} className="font-display font-extrabold text-3xl sm:text-4xl text-white">0</div>
-            <div className="font-mono text-xs uppercase tracking-wider text-zinc-400">Verified Athletes</div>
+            <div ref={stat1} className="font-display font-extrabold text-3xl sm:text-4xl text-on-surface">0</div>
+            <div className="font-mono text-xs uppercase tracking-wider text-on-surface-variant">Verified Athletes</div>
           </div>
 
           <div className="text-center space-y-1">
-            <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mx-auto text-cyan-400 mb-2">
+            <div className="w-10 h-10 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center mx-auto text-secondary mb-2">
               <Users className="w-5 h-5" />
             </div>
-            <div ref={stat2} className="font-display font-extrabold text-3xl sm:text-4xl text-cyan-400">0</div>
-            <div className="font-mono text-xs uppercase tracking-wider text-zinc-400">Active Team Rosters</div>
+            <div ref={stat2} className="font-display font-extrabold text-3xl sm:text-4xl text-secondary">0</div>
+            <div className="font-mono text-xs uppercase tracking-wider text-on-surface-variant">Active Team Rosters</div>
           </div>
 
           <div className="text-center space-y-1">
-            <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mx-auto text-amber-400 mb-2">
+            <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mx-auto text-amber-500 dark:text-amber-400 mb-2">
               <Flame className="w-5 h-5" />
             </div>
-            <div ref={stat3} className="font-display font-extrabold text-3xl sm:text-4xl text-amber-400">0</div>
-            <div className="font-mono text-xs uppercase tracking-wider text-zinc-400">Daily Scrim Lobbies</div>
+            <div ref={stat3} className="font-display font-extrabold text-3xl sm:text-4xl text-amber-500 dark:text-amber-400">0</div>
+            <div className="font-mono text-xs uppercase tracking-wider text-on-surface-variant">Daily Scrim Lobbies</div>
           </div>
 
           <div className="text-center space-y-1">
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto text-emerald-400 mb-2">
+            <div className="w-10 h-10 rounded-xl bg-tertiary/10 border border-tertiary/20 flex items-center justify-center mx-auto text-tertiary mb-2">
               <Trophy className="w-5 h-5" />
             </div>
-            <div className="flex items-center justify-center font-display font-extrabold text-3xl sm:text-4xl text-emerald-400">
+            <div className="flex items-center justify-center font-display font-extrabold text-3xl sm:text-4xl text-tertiary">
               <span>$</span>
               <span ref={stat4}>0</span>
             </div>
-            <div className="font-mono text-xs uppercase tracking-wider text-zinc-400">Prizes Distributed</div>
+            <div className="font-mono text-xs uppercase tracking-wider text-on-surface-variant">Prizes Distributed</div>
           </div>
         </div>
       </section>
@@ -594,13 +594,13 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
       <section ref={featureRef} className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-16">
         {/* Section Heading */}
         <div className="text-center space-y-3 max-w-3xl mx-auto">
-          <span className="font-mono text-xs uppercase tracking-widest text-indigo-400 font-bold">
+          <span className="font-mono text-xs uppercase tracking-widest text-primary font-bold">
             Complete Ecosystem Architecture
           </span>
-          <h2 className="font-display font-extrabold text-3xl sm:text-5xl text-white tracking-tight">
+          <h2 className="font-display font-extrabold text-3xl sm:text-5xl text-on-surface tracking-tight">
             Engineered For The Full Lifecycle of Esports
           </h2>
-          <p className="font-body text-sm sm:text-base text-zinc-400 leading-relaxed">
+          <p className="font-body text-sm sm:text-base text-on-surface-variant leading-relaxed">
             Gamers'G provides end-to-end tooling for grassroots players, competitive clans,
             elite tournament organizers, and multi-game esports organizations.
           </p>
@@ -614,39 +614,39 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
               <div
                 key={pillar.id}
                 data-reveal
-                className="rounded-3xl bg-[#14151c] border border-white/10 p-6 sm:p-8 flex flex-col justify-between hover:border-white/20 transition-all duration-300 hover:shadow-2xl hover:shadow-indigo-500/10 group"
+                className="rounded-3xl bg-surface-container-low border border-card-border p-6 sm:p-8 flex flex-col justify-between hover:border-secondary/50 hover:shadow-xl transition-all duration-300 group"
               >
                 <div className="space-y-5">
                   {/* Top Row: Icon & Tag */}
                   <div className="flex items-center justify-between">
-                    <div className={`w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center ${pillar.iconColor} group-hover:scale-110 transition-transform`}>
+                    <div className={`w-12 h-12 rounded-2xl bg-surface-container border border-card-border flex items-center justify-center ${pillar.iconColor} group-hover:scale-110 transition-transform`}>
                       <Icon className="w-6 h-6" />
                     </div>
-                    <span className="font-mono text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-white/5 text-zinc-300 border border-white/10">
+                    <span className="font-mono text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant border border-card-border">
                       {pillar.badge}
                     </span>
                   </div>
 
                   {/* Title & Tagline */}
                   <div>
-                    <span className="font-mono text-[10px] uppercase tracking-widest text-zinc-400 font-bold">
+                    <span className="font-mono text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">
                       {pillar.tagline}
                     </span>
-                    <h3 className="font-display font-bold text-xl text-white mt-1 group-hover:text-cyan-300 transition-colors">
+                    <h3 className="font-display font-bold text-xl text-on-surface mt-1 group-hover:text-secondary transition-colors">
                       {pillar.title}
                     </h3>
                   </div>
 
                   {/* Description */}
-                  <p className="font-body text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                  <p className="font-body text-xs sm:text-sm text-on-surface-variant leading-relaxed">
                     {pillar.description}
                   </p>
 
                   {/* Feature Checklist */}
-                  <div className="space-y-2 pt-2 border-t border-white/5">
+                  <div className="space-y-2 pt-2 border-t border-card-border">
                     {pillar.features.map((feat, i) => (
-                      <div key={i} className="flex items-start gap-2 text-xs text-zinc-300">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400 shrink-0 mt-0.5" />
+                      <div key={i} className="flex items-start gap-2 text-xs text-on-surface">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-secondary shrink-0 mt-0.5" />
                         <span>{feat}</span>
                       </div>
                     ))}
@@ -654,12 +654,12 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
                 </div>
 
                 {/* Card Bottom: Metric & Action Link */}
-                <div className="pt-6 mt-6 border-t border-white/10 flex items-center justify-between">
+                <div className="pt-6 mt-6 border-t border-card-border flex items-center justify-between">
                   <div>
-                    <span className="font-display font-extrabold text-xl text-white block">
+                    <span className="font-display font-extrabold text-xl text-on-surface block">
                       {pillar.metric}
                     </span>
-                    <span className="font-mono text-[10px] text-zinc-400 uppercase tracking-wider">
+                    <span className="font-mono text-[10px] text-on-surface-variant uppercase tracking-wider">
                       {pillar.metricLabel}
                     </span>
                   </div>
@@ -674,7 +674,7 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
                         onSelectTab?.('discovery');
                       }
                     }}
-                    className="font-display text-xs font-bold text-cyan-400 hover:text-cyan-300 flex items-center gap-1 group-hover:translate-x-1 transition-all"
+                    className="font-display text-xs font-bold text-secondary hover:underline flex items-center gap-1 group-hover:translate-x-1 transition-all"
                   >
                     <span>Explore</span>
                     <ArrowRight className="w-3.5 h-3.5" />
@@ -689,24 +689,24 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
       {/* ══════════════════════════════════════════════════════════
           5. INTERACTIVE LIVE ARENA PREVIEW (TABBED EXPLORER)
       ══════════════════════════════════════════════════════════ */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-[#111218] border-y border-white/10">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-surface-container-lowest/80 border-y border-card-border">
         <div className="max-w-6xl mx-auto space-y-12">
           {/* Section Heading */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div className="space-y-2">
-              <span className="font-mono text-xs uppercase tracking-widest text-cyan-400 font-bold">
+              <span className="font-mono text-xs uppercase tracking-widest text-secondary font-bold">
                 Live Platform Feed
               </span>
-              <h2 className="font-display font-extrabold text-3xl sm:text-4xl text-white">
+              <h2 className="font-display font-extrabold text-3xl sm:text-4xl text-on-surface">
                 Inside the Active Arena
               </h2>
-              <p className="font-body text-xs sm:text-sm text-zinc-400 max-w-xl">
+              <p className="font-body text-xs sm:text-sm text-on-surface-variant max-w-xl">
                 Browse verified competitions, daily scrim slot availability, elite team rosters, and active esports organizations.
               </p>
             </div>
 
             {/* Tab Buttons */}
-            <div className="flex flex-wrap items-center gap-1.5 p-1 rounded-2xl bg-white/5 border border-white/10">
+            <div className="flex flex-wrap items-center gap-1.5 p-1 rounded-2xl bg-surface-container border border-card-border">
               {SHOWCASE_TABS.map((tab) => {
                 const Icon = tab.icon;
                 const active = activeShowcaseTab === tab.id;
@@ -716,8 +716,8 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
                     onClick={() => setActiveShowcaseTab(tab.id)}
                     className={`flex items-center gap-2 px-3.5 py-2 rounded-xl font-display text-xs font-semibold transition-all ${
                       active
-                        ? 'bg-gradient-to-r from-indigo-500 to-cyan-400 text-black font-bold shadow-md'
-                        : 'text-zinc-400 hover:text-white hover:bg-white/5'
+                        ? 'bg-gradient-to-r from-primary to-secondary text-black font-bold shadow-md'
+                        : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high'
                     }`}
                   >
                     <Icon className="w-3.5 h-3.5" />
@@ -736,11 +736,11 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
                 {SAMPLE_TOURNAMENTS.map((t) => (
                   <div
                     key={t.id}
-                    className="rounded-3xl bg-[#161720] border border-white/10 p-6 flex flex-col justify-between space-y-5 hover:border-cyan-400/40 transition-all group"
+                    className="rounded-3xl bg-surface-container-low border border-card-border p-6 flex flex-col justify-between space-y-5 hover:border-secondary/40 transition-all group"
                   >
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className="font-mono text-[10px] font-bold px-2.5 py-1 rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                        <span className="font-mono text-[10px] font-bold px-2.5 py-1 rounded-lg bg-primary/10 text-primary border border-primary/20">
                           {t.game}
                         </span>
                         <span className={`font-mono text-[10px] font-bold px-2 py-0.5 rounded border ${t.statusColor}`}>
@@ -748,36 +748,36 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
                         </span>
                       </div>
 
-                      <h4 className="font-display font-bold text-lg text-white group-hover:text-cyan-300 transition-colors">
+                      <h4 className="font-display font-bold text-lg text-on-surface group-hover:text-secondary transition-colors">
                         {t.title}
                       </h4>
 
-                      <div className="text-xs text-zinc-400 space-y-1.5 font-mono">
+                      <div className="text-xs text-on-surface-variant space-y-1.5 font-mono">
                         <div className="flex items-center justify-between">
                           <span>Format:</span>
-                          <span className="text-zinc-200">{t.format}</span>
+                          <span className="text-on-surface font-semibold">{t.format}</span>
                         </div>
                         <div className="flex items-center justify-between">
                           <span>Prize Pool:</span>
-                          <span className="text-emerald-400 font-bold">{t.prize}</span>
+                          <span className="text-emerald-600 dark:text-emerald-400 font-bold">{t.prize}</span>
                         </div>
                         <div className="flex items-center justify-between">
                           <span>Registered:</span>
-                          <span className="text-zinc-200">{t.teams}</span>
+                          <span className="text-on-surface">{t.teams}</span>
                         </div>
                         <div className="flex items-center justify-between">
                           <span>Schedule:</span>
-                          <span className="text-amber-300">{t.startsIn}</span>
+                          <span className="text-amber-600 dark:text-amber-300 font-medium">{t.startsIn}</span>
                         </div>
                       </div>
                     </div>
 
                     <button
                       onClick={() => onSelectTab?.('tournaments')}
-                      className="w-full py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-display font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5"
+                      className="w-full py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high border border-card-border text-on-surface font-display font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5"
                     >
                       <span>View Tournament Details</span>
-                      <ChevronRight className="w-4 h-4 text-cyan-400" />
+                      <ChevronRight className="w-4 h-4 text-secondary" />
                     </button>
                   </div>
                 ))}
@@ -790,43 +790,43 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
                 {SAMPLE_SCRIMS.map((s) => (
                   <div
                     key={s.id}
-                    className="rounded-3xl bg-[#161720] border border-white/10 p-6 flex flex-col justify-between space-y-5 hover:border-amber-400/40 transition-all group"
+                    className="rounded-3xl bg-surface-container-low border border-card-border p-6 flex flex-col justify-between space-y-5 hover:border-amber-400/40 transition-all group"
                   >
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className="font-mono text-[10px] font-bold px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                        <span className="font-mono text-[10px] font-bold px-2.5 py-1 rounded-lg bg-amber-500/15 text-amber-600 dark:text-amber-300 border border-amber-500/30">
                           {s.game}
                         </span>
-                        <span className="font-mono text-[10px] text-zinc-400 bg-white/5 px-2 py-0.5 rounded">
+                        <span className="font-mono text-[10px] text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">
                           {s.time}
                         </span>
                       </div>
 
-                      <h4 className="font-display font-bold text-lg text-white group-hover:text-amber-300 transition-colors">
+                      <h4 className="font-display font-bold text-lg text-on-surface group-hover:text-amber-500 dark:group-hover:text-amber-300 transition-colors">
                         {s.title}
                       </h4>
 
-                      <div className="text-xs text-zinc-400 space-y-1.5 font-mono">
+                      <div className="text-xs text-on-surface-variant space-y-1.5 font-mono">
                         <div className="flex items-center justify-between">
                           <span>Map / Ruleset:</span>
-                          <span className="text-zinc-200">{s.map}</span>
+                          <span className="text-on-surface font-semibold">{s.map}</span>
                         </div>
                         <div className="flex items-center justify-between">
                           <span>Requirement:</span>
-                          <span className="text-zinc-200">{s.tier}</span>
+                          <span className="text-on-surface">{s.tier}</span>
                         </div>
                         <div className="flex items-center justify-between">
                           <span>Lobby Capacity:</span>
-                          <span className="text-cyan-400 font-bold">{s.slots}</span>
+                          <span className="text-secondary font-bold">{s.slots}</span>
                         </div>
                       </div>
                     </div>
 
                     <button
                       onClick={() => onSelectTab?.('tournaments')}
-                      className="w-full py-2.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 font-display font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5"
+                      className="w-full py-2.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-600 dark:text-amber-300 font-display font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5"
                     >
-                      <Flame className="w-3.5 h-3.5 text-amber-400" />
+                      <Flame className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
                       <span>Reserve Team Slot</span>
                     </button>
                   </div>
@@ -840,47 +840,47 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
                 {SAMPLE_TEAMS.map((tm, idx) => (
                   <div
                     key={idx}
-                    className="rounded-3xl bg-[#161720] border border-white/10 p-6 flex flex-col justify-between space-y-5 hover:border-cyan-400/40 transition-all group"
+                    className="rounded-3xl bg-surface-container-low border border-card-border p-6 flex flex-col justify-between space-y-5 hover:border-secondary/40 transition-all group"
                   >
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className="font-mono text-[10px] font-bold px-2 py-1 rounded bg-white/5 text-zinc-300">
+                        <span className="font-mono text-[10px] font-bold px-2 py-1 rounded bg-surface-container text-on-surface-variant border border-card-border">
                           TAG: [{tm.tag}]
                         </span>
-                        <span className="font-mono text-[10px] font-bold text-cyan-400">
+                        <span className="font-mono text-[10px] font-bold text-secondary">
                           {tm.game}
                         </span>
                       </div>
 
                       <div>
-                        <h4 className="font-display font-bold text-xl text-white group-hover:text-cyan-300 transition-colors">
+                        <h4 className="font-display font-bold text-xl text-on-surface group-hover:text-secondary transition-colors">
                           {tm.name}
                         </h4>
-                        <span className="font-mono text-xs text-zinc-400">{tm.tier}</span>
+                        <span className="font-mono text-xs text-on-surface-variant">{tm.tier}</span>
                       </div>
 
-                      <div className="text-xs text-zinc-400 space-y-1.5 font-mono pt-2 border-t border-white/5">
+                      <div className="text-xs text-on-surface-variant space-y-1.5 font-mono pt-2 border-t border-card-border">
                         <div className="flex items-center justify-between">
                           <span>Competitive Win Rate:</span>
-                          <span className="text-emerald-400 font-bold">{tm.winRate}</span>
+                          <span className="text-emerald-600 dark:text-emerald-400 font-bold">{tm.winRate}</span>
                         </div>
                         <div className="flex items-center justify-between">
                           <span>Active Roster Size:</span>
-                          <span className="text-zinc-200">{tm.members} Athletes</span>
+                          <span className="text-on-surface">{tm.members} Athletes</span>
                         </div>
                         <div className="flex items-center justify-between">
                           <span>Recruitment Status:</span>
-                          <span className="text-amber-300">{tm.status}</span>
+                          <span className="text-amber-600 dark:text-amber-300 font-medium">{tm.status}</span>
                         </div>
                       </div>
                     </div>
 
                     <button
                       onClick={() => onSelectTab?.('teams')}
-                      className="w-full py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-display font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5"
+                      className="w-full py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high border border-card-border text-on-surface font-display font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5"
                     >
                       <span>View Team Dossier</span>
-                      <ArrowRight className="w-4 h-4 text-cyan-400" />
+                      <ArrowRight className="w-4 h-4 text-secondary" />
                     </button>
                   </div>
                 ))}
@@ -893,32 +893,32 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
                 {SAMPLE_ORGS.map((org, idx) => (
                   <div
                     key={idx}
-                    className="rounded-3xl bg-[#161720] border border-white/10 p-6 flex flex-col justify-between space-y-5 hover:border-indigo-400/40 transition-all group"
+                    className="rounded-3xl bg-surface-container-low border border-card-border p-6 flex flex-col justify-between space-y-5 hover:border-primary/40 transition-all group"
                   >
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className="font-mono text-[10px] font-bold px-2 py-1 rounded bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">
+                        <span className="font-mono text-[10px] font-bold px-2 py-1 rounded bg-primary/10 text-primary border border-primary/20">
                           {org.tag}
                         </span>
-                        <span className="flex items-center gap-1 font-mono text-[10px] font-bold text-cyan-300">
-                          <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
+                        <span className="flex items-center gap-1 font-mono text-[10px] font-bold text-secondary">
+                          <ShieldCheck className="w-3.5 h-3.5 text-secondary" />
                           {org.badge}
                         </span>
                       </div>
 
                       <div>
-                        <h4 className="font-display font-bold text-xl text-white group-hover:text-indigo-300 transition-colors">
+                        <h4 className="font-display font-bold text-xl text-on-surface group-hover:text-primary transition-colors">
                           {org.name}
                         </h4>
-                        <span className="font-mono text-xs text-zinc-400">{org.hq}</span>
+                        <span className="font-mono text-xs text-on-surface-variant">{org.hq}</span>
                       </div>
 
-                      <div className="text-xs text-zinc-400 space-y-2 pt-2 border-t border-white/5">
+                      <div className="text-xs text-on-surface-variant space-y-2 pt-2 border-t border-card-border">
                         <div>
-                          <span className="block text-[10px] font-mono uppercase text-zinc-500 mb-1">Rosters In:</span>
+                          <span className="block text-[10px] font-mono uppercase text-on-surface-variant/70 mb-1">Rosters In:</span>
                           <div className="flex flex-wrap gap-1">
                             {org.titles.map((t, ti) => (
-                              <span key={ti} className="px-2 py-0.5 rounded bg-white/5 text-[10px] font-mono text-zinc-300">
+                              <span key={ti} className="px-2 py-0.5 rounded bg-surface-container text-[10px] font-mono text-on-surface">
                                 {t}
                               </span>
                             ))}
@@ -926,17 +926,17 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
                         </div>
                         <div className="flex items-center justify-between font-mono pt-1 text-[11px]">
                           <span>Tryout Pipeline:</span>
-                          <span className="text-emerald-400 font-bold">{org.openRoles}</span>
+                          <span className="text-emerald-600 dark:text-emerald-400 font-bold">{org.openRoles}</span>
                         </div>
                       </div>
                     </div>
 
                     <button
                       onClick={() => onSelectTab?.('discovery')}
-                      className="w-full py-2.5 rounded-xl bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 font-display font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5"
+                      className="w-full py-2.5 rounded-xl bg-primary/10 hover:bg-primary/20 border border-primary/30 text-primary font-display font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5"
                     >
                       <span>Submit Player Application</span>
-                      <ArrowRight className="w-4 h-4 text-indigo-400" />
+                      <ArrowRight className="w-4 h-4 text-primary" />
                     </button>
                   </div>
                 ))}
@@ -951,13 +951,13 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
       ══════════════════════════════════════════════════════════ */}
       <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-14">
         <div className="text-center space-y-3 max-w-2xl mx-auto">
-          <span className="font-mono text-xs uppercase tracking-widest text-cyan-400 font-bold">
+          <span className="font-mono text-xs uppercase tracking-widest text-secondary font-bold">
             Supported Arenas
           </span>
-          <h2 className="font-display font-extrabold text-3xl sm:text-5xl text-white tracking-tight">
+          <h2 className="font-display font-extrabold text-3xl sm:text-5xl text-on-surface tracking-tight">
             Battle Across Leading Esports Titles
           </h2>
-          <p className="font-body text-xs sm:text-sm text-zinc-400">
+          <p className="font-body text-xs sm:text-sm text-on-surface-variant">
             Automated custom rooms, bracket formats, and verified stat-tracking calibrated for each competitive title.
           </p>
         </div>
@@ -966,34 +966,34 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
           {SUPPORTED_GAMES.map((game, idx) => (
             <div
               key={idx}
-              className="rounded-3xl bg-[#14151c] border border-white/10 p-6 space-y-4 hover:border-white/20 transition-all group"
+              className="rounded-3xl bg-surface-container-low border border-card-border p-6 space-y-4 hover:border-secondary/40 transition-all group"
             >
               <div className="flex items-center justify-between">
                 <span className={`px-2.5 py-1 rounded-full text-[10px] font-mono font-bold uppercase border ${game.badgeColor}`}>
                   {game.category}
                 </span>
-                <span className="font-mono text-[11px] text-zinc-400">
+                <span className="font-mono text-[11px] text-on-surface-variant">
                   {game.players}
                 </span>
               </div>
 
               <div>
-                <h3 className="font-display font-bold text-xl text-white group-hover:text-cyan-300 transition-colors">
+                <h3 className="font-display font-bold text-xl text-on-surface group-hover:text-secondary transition-colors">
                   {game.name}
                 </h3>
-                <p className="font-mono text-xs text-zinc-400 mt-1">
+                <p className="font-mono text-xs text-on-surface-variant mt-1">
                   {game.modes}
                 </p>
               </div>
 
-              <div className="pt-3 border-t border-white/5 flex items-center justify-between text-xs font-mono">
-                <span className="text-emerald-400 flex items-center gap-1">
+              <div className="pt-3 border-t border-card-border flex items-center justify-between text-xs font-mono">
+                <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-1 font-semibold">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   API Sync Active
                 </span>
                 <button
                   onClick={() => onSelectTab?.('tournaments')}
-                  className="text-zinc-400 hover:text-white flex items-center gap-1 transition-colors"
+                  className="text-on-surface-variant hover:text-on-surface flex items-center gap-1 transition-colors"
                 >
                   <span>Matches</span>
                   <ChevronRight className="w-3.5 h-3.5" />
@@ -1007,16 +1007,16 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
       {/* ══════════════════════════════════════════════════════════
           7. THE 4-STEP ONBOARDING JOURNEY
       ══════════════════════════════════════════════════════════ */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-[#111218] border-y border-white/10">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-surface-container-lowest/80 border-y border-card-border">
         <div className="max-w-6xl mx-auto space-y-14">
           <div className="text-center space-y-3 max-w-2xl mx-auto">
-            <span className="font-mono text-xs uppercase tracking-widest text-indigo-400 font-bold">
+            <span className="font-mono text-xs uppercase tracking-widest text-primary font-bold">
               The Path to Pro
             </span>
-            <h2 className="font-display font-extrabold text-3xl sm:text-5xl text-white tracking-tight">
+            <h2 className="font-display font-extrabold text-3xl sm:text-5xl text-on-surface tracking-tight">
               From Casual Queue to Sponsored Stage
             </h2>
-            <p className="font-body text-xs sm:text-sm text-zinc-400">
+            <p className="font-body text-xs sm:text-sm text-on-surface-variant">
               Four streamlined steps to establish your competitive presence and ascend the rankings.
             </p>
           </div>
@@ -1027,30 +1027,30 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
               return (
                 <div
                   key={idx}
-                  className="rounded-3xl bg-[#161720] border border-white/10 p-6 space-y-4 relative flex flex-col justify-between hover:border-cyan-400/40 transition-all group"
+                  className="rounded-3xl bg-surface-container-low border border-card-border p-6 space-y-4 relative flex flex-col justify-between hover:border-secondary/40 transition-all group"
                 >
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center font-display font-bold">
+                      <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 text-primary flex items-center justify-center font-display font-bold">
                         <Icon className="w-6 h-6" />
                       </div>
-                      <span className="font-mono text-2xl font-extrabold text-zinc-700 group-hover:text-cyan-400/60 transition-colors">
+                      <span className="font-mono text-2xl font-extrabold text-on-surface-variant/40 group-hover:text-secondary transition-colors">
                         {step.step}
                       </span>
                     </div>
 
                     <div>
-                      <h3 className="font-display font-bold text-lg text-white group-hover:text-cyan-300 transition-colors">
+                      <h3 className="font-display font-bold text-lg text-on-surface group-hover:text-secondary transition-colors">
                         {step.title}
                       </h3>
-                      <p className="font-body text-xs text-zinc-400 mt-2 leading-relaxed">
+                      <p className="font-body text-xs text-on-surface-variant mt-2 leading-relaxed">
                         {step.description}
                       </p>
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-white/5">
-                    <span className="font-mono text-[10px] uppercase text-zinc-500 tracking-wider">
+                  <div className="pt-4 border-t border-card-border">
+                    <span className="font-mono text-[10px] uppercase text-on-surface-variant/70 tracking-wider">
                       Step {idx + 1} of 4
                     </span>
                   </div>
@@ -1066,13 +1066,13 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
       ══════════════════════════════════════════════════════════ */}
       <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto space-y-12">
         <div className="text-center space-y-3">
-          <span className="font-mono text-xs uppercase tracking-widest text-cyan-400 font-bold">
+          <span className="font-mono text-xs uppercase tracking-widest text-secondary font-bold">
             Got Questions?
           </span>
-          <h2 className="font-display font-extrabold text-3xl sm:text-5xl text-white tracking-tight">
+          <h2 className="font-display font-extrabold text-3xl sm:text-5xl text-on-surface tracking-tight">
             Frequently Asked Questions
           </h2>
-          <p className="font-body text-xs sm:text-sm text-zinc-400 max-w-xl mx-auto">
+          <p className="font-body text-xs sm:text-sm text-on-surface-variant max-w-xl mx-auto">
             Everything you need to know about scrims, tournaments, prize pools, and organization recruiting.
           </p>
         </div>
@@ -1083,23 +1083,23 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
             return (
               <div
                 key={index}
-                className="rounded-2xl bg-[#14151c] border border-white/10 overflow-hidden transition-all"
+                className="rounded-2xl bg-surface-container-low border border-card-border overflow-hidden transition-all"
               >
                 <button
                   type="button"
                   onClick={() => setOpenFaq(isOpen ? null : index)}
-                  className="w-full p-6 text-left flex items-center justify-between gap-4 hover:bg-white/5 transition-colors"
+                  className="w-full p-6 text-left flex items-center justify-between gap-4 hover:bg-surface-container transition-colors"
                 >
-                  <span className="font-display font-bold text-base sm:text-lg text-white">
+                  <span className="font-display font-bold text-base sm:text-lg text-on-surface">
                     {item.q}
                   </span>
-                  <span className="p-1 rounded-lg bg-white/5 text-zinc-400 shrink-0">
-                    {isOpen ? <ChevronUp className="w-5 h-5 text-cyan-400" /> : <ChevronDown className="w-5 h-5" />}
+                  <span className="p-1 rounded-lg bg-surface-container text-on-surface-variant shrink-0 border border-card-border">
+                    {isOpen ? <ChevronUp className="w-5 h-5 text-secondary" /> : <ChevronDown className="w-5 h-5" />}
                   </span>
                 </button>
 
                 {isOpen && (
-                  <div className="px-6 pb-6 pt-1 text-xs sm:text-sm text-zinc-400 leading-relaxed font-body border-t border-white/5 animate-in fade-in">
+                  <div className="px-6 pb-6 pt-1 text-xs sm:text-sm text-on-surface-variant leading-relaxed font-body border-t border-card-border animate-in fade-in">
                     {item.a}
                   </div>
                 )}
@@ -1112,27 +1112,27 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
       {/* ══════════════════════════════════════════════════════════
           9. FINAL CALL TO ACTION BANNER
       ══════════════════════════════════════════════════════════ */}
-      <section className="relative py-24 px-4 sm:px-6 lg:px-8 overflow-hidden bg-gradient-to-b from-[#111218] to-[#0a0a0e] border-t border-white/10">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] rounded-full bg-indigo-500/10 blur-[130px] pointer-events-none" />
+      <section className="relative py-24 px-4 sm:px-6 lg:px-8 overflow-hidden bg-surface-container-low border-t border-card-border">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] rounded-full bg-primary/10 blur-[130px] pointer-events-none" />
 
         <div className="relative z-10 max-w-4xl mx-auto text-center space-y-6">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 font-mono text-xs uppercase tracking-wider">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary font-mono text-xs uppercase tracking-wider">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Join 14,000+ Esports Athletes Today</span>
           </div>
 
-          <h2 className="font-display font-extrabold text-4xl sm:text-6xl text-white tracking-tight uppercase leading-tight">
+          <h2 className="font-display font-extrabold text-4xl sm:text-6xl text-on-surface tracking-tight uppercase leading-tight">
             Ready to Claim Your Place on the Leaderboard?
           </h2>
 
-          <p className="font-body text-sm sm:text-base text-zinc-400 max-w-xl mx-auto leading-relaxed">
+          <p className="font-body text-sm sm:text-base text-on-surface-variant max-w-xl mx-auto leading-relaxed">
             Register your official gamer tag, assemble your squad, and join scheduled scrims with automated room credentials.
           </p>
 
           <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
               onClick={() => onOpenAuthWithRole?.('player', 'signup')}
-              className="w-full sm:w-auto px-10 py-4 rounded-2xl bg-gradient-to-r from-indigo-500 via-indigo-600 to-cyan-400 text-black font-display font-bold text-sm uppercase tracking-wider shadow-lg shadow-indigo-500/25 hover:opacity-95 active:scale-95 transition-all flex items-center justify-center gap-2 group"
+              className="w-full sm:w-auto px-10 py-4 rounded-2xl bg-gradient-to-r from-primary to-secondary text-black font-display font-bold text-sm uppercase tracking-wider shadow-lg shadow-primary/25 hover:opacity-95 active:scale-95 transition-all flex items-center justify-center gap-2 group"
             >
               <Gamepad2 className="w-5 h-5 text-black" />
               <span>Claim Your Gamer Tag</span>
@@ -1141,7 +1141,7 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
 
             <button
               onClick={() => onSelectTab?.('discovery')}
-              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-display font-bold text-sm uppercase tracking-wider transition-all"
+              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-surface-container hover:bg-surface-container-high border border-card-border text-on-surface font-display font-bold text-sm uppercase tracking-wider transition-all"
             >
               <span>Browse Active Rosters</span>
             </button>
@@ -1152,51 +1152,51 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
       {/* ══════════════════════════════════════════════════════════
           10. PROFESSIONAL PLATFORM FOOTER
       ══════════════════════════════════════════════════════════ */}
-      <footer className="border-t border-white/10 bg-[#0a0a0e] pt-16 pb-12 px-4 sm:px-6 lg:px-8 text-zinc-400 text-xs">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-5 gap-10 pb-12 border-b border-white/10">
+      <footer className="border-t border-card-border bg-surface-container-lowest pt-16 pb-12 px-4 sm:px-6 lg:px-8 text-on-surface-variant text-xs">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-5 gap-10 pb-12 border-b border-card-border">
           {/* Brand Info */}
           <div className="md:col-span-2 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-400 flex items-center justify-center text-black font-display font-extrabold text-xl shadow-md">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-black font-display font-extrabold text-xl shadow-md">
                 G
               </div>
-              <span className="font-display font-bold text-xl text-white tracking-wider">
-                GAMERS<span className="text-cyan-400">'G</span>
+              <span className="font-display font-bold text-xl text-on-surface tracking-wider">
+                GAMERS<span className="text-secondary">'G</span>
               </span>
             </div>
-            <p className="font-body text-xs text-zinc-400 max-w-sm leading-relaxed">
+            <p className="font-body text-xs text-on-surface-variant max-w-sm leading-relaxed">
               The premier competitive esports ecosystem. Bridging the gap between grassroots players,
               elite rosters, certified organizers, and professional esports franchises.
             </p>
-            <div className="flex items-center gap-2 text-emerald-400 font-mono text-[11px]">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-mono text-[11px]">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               <span>All Systems Operational (API v1.0.4)</span>
             </div>
           </div>
 
           {/* Nav Column 1 */}
           <div className="space-y-3">
-            <h4 className="font-mono text-xs uppercase tracking-wider text-white font-bold">
+            <h4 className="font-mono text-xs uppercase tracking-wider text-on-surface font-bold">
               Competition
             </h4>
             <ul className="space-y-2">
               <li>
-                <button onClick={() => onSelectTab?.('tournaments')} className="hover:text-white transition-colors">
+                <button onClick={() => onSelectTab?.('tournaments')} className="hover:text-on-surface transition-colors">
                   Live Tournaments
                 </button>
               </li>
               <li>
-                <button onClick={() => onSelectTab?.('tournaments')} className="hover:text-white transition-colors">
+                <button onClick={() => onSelectTab?.('tournaments')} className="hover:text-on-surface transition-colors">
                   Daily Scrim Lobbies
                 </button>
               </li>
               <li>
-                <button onClick={() => onSelectTab?.('tournaments')} className="hover:text-white transition-colors">
+                <button onClick={() => onSelectTab?.('tournaments')} className="hover:text-on-surface transition-colors">
                   Bracket Progression
                 </button>
               </li>
               <li>
-                <button onClick={() => onSelectTab?.('tournaments')} className="hover:text-white transition-colors">
+                <button onClick={() => onSelectTab?.('tournaments')} className="hover:text-on-surface transition-colors">
                   Prize Escrow Rules
                 </button>
               </li>
@@ -1205,27 +1205,27 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
 
           {/* Nav Column 2 */}
           <div className="space-y-3">
-            <h4 className="font-mono text-xs uppercase tracking-wider text-white font-bold">
+            <h4 className="font-mono text-xs uppercase tracking-wider text-on-surface font-bold">
               Rosters & Orgs
             </h4>
             <ul className="space-y-2">
               <li>
-                <button onClick={() => onSelectTab?.('teams')} className="hover:text-white transition-colors">
+                <button onClick={() => onSelectTab?.('teams')} className="hover:text-on-surface transition-colors">
                   Create a Squad
                 </button>
               </li>
               <li>
-                <button onClick={() => onSelectTab?.('discovery')} className="hover:text-white transition-colors">
+                <button onClick={() => onSelectTab?.('discovery')} className="hover:text-on-surface transition-colors">
                   Talent Radar (Free Agents)
                 </button>
               </li>
               <li>
-                <button onClick={() => onSelectTab?.('discovery')} className="hover:text-white transition-colors">
+                <button onClick={() => onSelectTab?.('discovery')} className="hover:text-on-surface transition-colors">
                   Verified Esports Orgs
                 </button>
               </li>
               <li>
-                <button onClick={() => onSelectTab?.('discovery')} className="hover:text-white transition-colors">
+                <button onClick={() => onSelectTab?.('discovery')} className="hover:text-on-surface transition-colors">
                   Tryout Pipeline
                 </button>
               </li>
@@ -1234,33 +1234,33 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
 
           {/* Nav Column 3 */}
           <div className="space-y-3">
-            <h4 className="font-mono text-xs uppercase tracking-wider text-white font-bold">
+            <h4 className="font-mono text-xs uppercase tracking-wider text-on-surface font-bold">
               Security & Admin
             </h4>
             <ul className="space-y-2">
               <li>
-                <button onClick={() => onOpenAuthWithRole?.('admin', 'login')} className="hover:text-white transition-colors flex items-center gap-1.5">
-                  <Lock className="w-3.5 h-3.5 text-zinc-500" />
+                <button onClick={() => onOpenAuthWithRole?.('admin', 'login')} className="hover:text-on-surface transition-colors flex items-center gap-1.5">
+                  <Lock className="w-3.5 h-3.5 text-on-surface-variant" />
                   <span>Admin Portal</span>
                 </button>
               </li>
               <li>
-                <button onClick={() => onSelectTab?.('discovery')} className="hover:text-white transition-colors">
+                <button onClick={() => onSelectTab?.('discovery')} className="hover:text-on-surface transition-colors">
                   Anti-Cheat Code
                 </button>
               </li>
               <li>
-                <span className="text-zinc-500 cursor-not-allowed">Terms of Service</span>
+                <span className="text-on-surface-variant/50 cursor-not-allowed">Terms of Service</span>
               </li>
               <li>
-                <span className="text-zinc-500 cursor-not-allowed">Privacy Policy</span>
+                <span className="text-on-surface-variant/50 cursor-not-allowed">Privacy Policy</span>
               </li>
             </ul>
           </div>
         </div>
 
         {/* Bottom copyright row */}
-        <div className="max-w-7xl mx-auto pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] font-mono text-zinc-500">
+        <div className="max-w-7xl mx-auto pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] font-mono text-on-surface-variant/70">
           <div>
             © 2026 Gamers'G Arena Inc. All rights reserved.
           </div>

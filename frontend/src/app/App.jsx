@@ -24,22 +24,22 @@ import { Lock, ShieldAlert, LogIn, Sparkles, Trophy, Gamepad2, Shield } from 'lu
 function ProtectedGate({ title, message, requiredRole = null, currentRole = null, onOpenAuth }) {
   return (
     <div className="max-w-xl mx-auto my-20 px-4">
-      <div className="p-8 sm:p-10 rounded-3xl bg-[#14151c] border border-white/10 text-center space-y-6 shadow-2xl">
-        <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mx-auto text-indigo-400 shadow-lg">
+      <div className="p-8 sm:p-10 rounded-3xl bg-surface-container-low border border-card-border text-center space-y-6 shadow-2xl">
+        <div className="w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto text-primary shadow-lg">
           <Lock className="w-7 h-7" />
         </div>
 
         <div className="space-y-2">
-          <h2 className="font-display font-extrabold text-2xl sm:text-3xl text-white">
+          <h2 className="font-display font-extrabold text-2xl sm:text-3xl text-on-surface">
             {title || 'Sign In Required'}
           </h2>
-          <p className="text-sm text-zinc-400 max-w-md mx-auto leading-relaxed">
+          <p className="text-sm text-on-surface-variant max-w-md mx-auto leading-relaxed">
             {message || 'Please sign in with your account credentials to access this competitive area.'}
           </p>
         </div>
 
         {currentRole && requiredRole && currentRole !== requiredRole && (
-          <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs font-mono text-amber-300">
+          <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs font-mono text-amber-500 dark:text-amber-300">
             Account role: <strong>{currentRole.toUpperCase()}</strong> · Required privileges: <strong>{requiredRole.toUpperCase()}</strong>
           </div>
         )}
@@ -47,7 +47,7 @@ function ProtectedGate({ title, message, requiredRole = null, currentRole = null
         <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
           <button
             onClick={() => onOpenAuth('player', 'login')}
-            className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-indigo-500 to-cyan-400 hover:opacity-95 text-black font-display font-bold text-xs uppercase tracking-wider shadow-lg shadow-indigo-500/20 transition-all flex items-center justify-center gap-2"
+            className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-primary to-secondary hover:opacity-95 text-black font-display font-bold text-xs uppercase tracking-wider shadow-lg shadow-primary/20 transition-all flex items-center justify-center gap-2"
           >
             <LogIn className="w-4 h-4" />
             <span>Sign In to Continue</span>
