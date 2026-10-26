@@ -3,7 +3,7 @@ const { NotFoundError, ForbiddenError } = require('../../shared/errors');
 
 async function getOrg(id) {
   const result = await query(
-    `SELECT o.id, o.name, o.email, o.verified, o.created_at,
+    `SELECT o.id, o.name, o.verified, o.created_at,
             (SELECT COUNT(*) FROM team WHERE org_id = o.id)::int AS total_teams,
             (SELECT COUNT(*) FROM player WHERE org_id = o.id)::int AS total_players
      FROM org o WHERE o.id = $1`,
@@ -13,7 +13,7 @@ async function getOrg(id) {
   const org = result.rows[0];
 
   const verif = await query(
-    'SELECT id, legal_name, gst_number, website, status, review_notes, created_at FROM org_verification WHERE org_id = $1 ORDER BY created_at DESC LIMIT 1',
+    'SELECT id, website, status, created_at FROM org_verification WHERE org_id = $1 ORDER BY created_at DESC LIMIT 1',
     [id],
   );
   org.verification_application = verif.rows[0] || null;
@@ -30,7 +30,15 @@ async function updateOrg(id, requesterId, data) {
   return result.rows[0];
 }
 
-async function getOrgTeams(id) {
+async function assertOrgAccess(id, requesterId, role) {
+  if (role === 'admin') return;
+  const org = await query('SELECT id FROM org WHERE id = $1', [id]);
+  if (org.rowCount === 0) throw new NotFoundError('Org');
+  if (id !== requesterId) throw new ForbiddenError('You cannot access another organization’s roster');
+}
+
+async function getOrgTeams(id, requesterId, role) {
+  await assertOrgAccess(id, requesterId, role);
   const result = await query(
     `SELECT t.id, t.name, t.game, t.tag, t.division, t.slots_max, t.status, t.created_at,
             COUNT(tm.id)::int AS members_count
@@ -44,9 +52,10 @@ async function getOrgTeams(id) {
   return result.rows;
 }
 
-async function getOrgPlayers(id) {
+async function getOrgPlayers(id, requesterId, role) {
+  await assertOrgAccess(id, requesterId, role);
   const result = await query(
-    'SELECT id, username, email, game_ign, primary_game, tagline, created_at FROM player WHERE org_id = $1 ORDER BY created_at DESC',
+    'SELECT id, username, game_ign, primary_game, tagline, created_at FROM player WHERE org_id = $1 ORDER BY created_at DESC',
     [id],
   );
   return result.rows;

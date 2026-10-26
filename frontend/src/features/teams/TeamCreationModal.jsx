@@ -21,26 +21,27 @@ export default function TeamCreationModal({ isOpen, onClose, onTeamCreated }) {
   const [slotsMax, setSlotsMax] = useState(5);
 
   // Initial members to add (up to 4-5)
-  const [memberInputs, setMemberInputs] = useState([
+  const [memberInputs, setMemberInputs] = useState(import.meta.env.DEV ? [
     { name: 'Rohan Sharma', ign: 'Rohan#IND', role: 'Main Assaulter' },
     { name: 'Karan Patel', ign: 'KaranSniper', role: 'Support / DMR' },
-  ]);
+  ] : []);
   const [newMemberName, setNewMemberName] = useState('');
   const [newMemberIgn, setNewMemberIgn] = useState('');
   const [newMemberRole, setNewMemberRole] = useState('');
 
   // Initial open recruitment roles
-  const [openRoles, setOpenRoles] = useState([
+  const [openRoles, setOpenRoles] = useState(import.meta.env.DEV ? [
     { roleName: 'Fifth Entry Fragger', description: 'Aggressive assaulter with 5+ KD in tier-2 scrims.', requirements: 'Daily scrim availability 7pm-11pm' }
-  ]);
+  ] : []);
   const [newRoleName, setNewRoleName] = useState('');
   const [newRoleDesc, setNewRoleDesc] = useState('');
+  const [formError, setFormError] = useState('');
 
   if (!isOpen) return null;
 
   const handleGameSelect = (g) => {
     setSelectedGame(g.id);
-    setSlotsMax(g.defaultSlots);
+    setSlotsMax(Math.min(10, Math.max(4, g.defaultSlots)));
   };
 
   const handleAddMember = (e) => {
@@ -82,7 +83,7 @@ export default function TeamCreationModal({ isOpen, onClose, onTeamCreated }) {
     setOpenRoles(openRoles.filter((_, i) => i !== idx));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!teamName.trim()) return;
 
@@ -105,20 +106,18 @@ export default function TeamCreationModal({ isOpen, onClose, onTeamCreated }) {
 
     const activeOrg = activeRole === 'org' ? orgs.find(o => o.id === activeOrgId) : null;
 
-    const created = createTeam({
-      name: teamName.trim(),
-      tag: teamTag.trim() || teamName.slice(0, 4).toUpperCase(),
-      game: selectedGame,
-      orgId: activeOrg?.id || null,
-      orgName: activeOrg?.name || 'Independent Squad',
-      division,
-      slotsMax,
-      initialMembers,
-      openRoles,
-    });
-
-    onTeamCreated?.(created);
-    onClose();
+    setFormError('');
+    try {
+      const created = await createTeam({
+        name: teamName.trim(), tag: teamTag.trim() || teamName.slice(0, 4).toUpperCase(),
+        game: selectedGame, orgId: activeOrg?.id || null,
+        orgName: activeOrg?.name || 'Independent Squad', division, slotsMax, initialMembers, openRoles,
+      });
+      onTeamCreated?.(created);
+      onClose();
+    } catch (error) {
+      setFormError(error.message || 'Could not create the team. Please try again.');
+    }
   };
 
   const selectedGameObj = GAME_OPTIONS.find((g) => g.id === selectedGame) || GAME_OPTIONS[0];
@@ -126,6 +125,7 @@ export default function TeamCreationModal({ isOpen, onClose, onTeamCreated }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
       <div className="w-full max-w-2xl rounded-3xl glass-modal p-6 sm:p-8 space-y-6 shadow-2xl border border-card-border max-h-[90vh] overflow-y-auto">
+        {formError && <p role="alert" className="p-3 rounded-xl bg-error/10 text-error text-sm">{formError}</p>}
         <div className="flex items-center justify-between">
           <div>
             <span className="font-mono text-xs uppercase tracking-wider text-secondary font-bold">
@@ -403,9 +403,9 @@ export default function TeamCreationModal({ isOpen, onClose, onTeamCreated }) {
               </button>
               <button
                 type="submit"
-                className="px-8 py-3 rounded-xl bg-primary text-black font-display font-bold text-xs uppercase tracking-wider shadow-lg shadow-primary/20 active:scale-95 transition-all flex items-center gap-2"
+                className="px-8 py-3 rounded-xl bg-primary text-white dark:text-black font-display font-bold text-xs uppercase tracking-wider shadow-lg shadow-primary/20 active:scale-95 transition-all flex items-center gap-2"
               >
-                <Zap className="w-4 h-4" />
+                <Zap className="w-4 h-4 text-white dark:text-black" />
                 Confirm & Form Squad
               </button>
             </div>

@@ -219,7 +219,7 @@ export default function AdminPortalPage({ onSelectTab }) {
           onClick={() => setActiveSubTab('orgs')}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium text-sm transition ${
             activeSubTab === 'orgs'
-              ? 'bg-primary text-black font-semibold shadow-lg shadow-primary/20'
+              ? 'bg-primary text-white dark:text-black font-semibold shadow-lg shadow-primary/20'
               : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container'
           }`}
         >
@@ -231,7 +231,7 @@ export default function AdminPortalPage({ onSelectTab }) {
           onClick={() => setActiveSubTab('organizers')}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium text-sm transition ${
             activeSubTab === 'organizers'
-              ? 'bg-primary text-black font-semibold shadow-lg shadow-primary/20'
+              ? 'bg-primary text-white dark:text-black font-semibold shadow-lg shadow-primary/20'
               : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container'
           }`}
         >
@@ -243,7 +243,7 @@ export default function AdminPortalPage({ onSelectTab }) {
           onClick={() => setActiveSubTab('users')}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium text-sm transition ${
             activeSubTab === 'users'
-              ? 'bg-primary text-black font-semibold shadow-lg shadow-primary/20'
+              ? 'bg-primary text-white dark:text-black font-semibold shadow-lg shadow-primary/20'
               : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container'
           }`}
         >

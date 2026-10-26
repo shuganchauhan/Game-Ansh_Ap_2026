@@ -45,6 +45,11 @@ async function getConnections(req, res, next) {
   catch (err) { next(err); }
 }
 
+async function getFollows(req, res, next) {
+  try { res.json({ status: 'success', data: await socialService.getFollows(req.user.id) }); }
+  catch (err) { next(err); }
+}
+
 async function getRecommendedPlayers(req, res, next) {
   try { res.json({ status: 'success', data: await socialService.getRecommendedPlayers(req.user?.id) }); }
   catch (err) { next(err); }
@@ -60,5 +65,6 @@ module.exports = {
   addComment,
   connectPlayers,
   getConnections,
+  getFollows,
   getRecommendedPlayers,
 };

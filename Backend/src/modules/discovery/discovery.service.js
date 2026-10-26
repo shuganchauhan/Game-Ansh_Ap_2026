@@ -13,10 +13,16 @@ async function discoverTeams(queryParams) {
 
   values.push(limit + 1);
   const sql = `
-    SELECT t.id, t.name, t.game, t.status, t.org_id, o.name AS org_name, t.created_at
+    SELECT t.id, t.name, t.game, t.status, t.org_id, o.name AS org_name, o.verified,
+           t.tag, t.division, t.slots_max, t.captain_id, t.created_at,
+           COUNT(tm.id)::int AS members_count,
+           COALESCE((SELECT json_agg(json_build_object('id', rp.id, 'role', rp.role))
+                     FROM role_posting rp WHERE rp.team_id = t.id AND rp.status = 'open'), '[]'::json) AS open_postings
     FROM team t
     LEFT JOIN org o ON o.id = t.org_id
+    LEFT JOIN team_member tm ON tm.team_id = t.id
     WHERE ${conditions.join(' AND ')}
+    GROUP BY t.id, o.name, o.verified
     ORDER BY t.id
     LIMIT $${values.length}
   `;

@@ -9,11 +9,11 @@ async function updateOrg(req, res, next) {
   catch (err) { next(err); }
 }
 async function getOrgTeams(req, res, next) {
-  try { res.json({ status: 'success', data: await orgsService.getOrgTeams(req.params.id) }); }
+  try { res.json({ status: 'success', data: await orgsService.getOrgTeams(req.params.id, req.user.id, req.user.role) }); }
   catch (err) { next(err); }
 }
 async function getOrgPlayers(req, res, next) {
-  try { res.json({ status: 'success', data: await orgsService.getOrgPlayers(req.params.id) }); }
+  try { res.json({ status: 'success', data: await orgsService.getOrgPlayers(req.params.id, req.user.id, req.user.role) }); }
   catch (err) { next(err); }
 }
 async function submitVerification(req, res, next) {

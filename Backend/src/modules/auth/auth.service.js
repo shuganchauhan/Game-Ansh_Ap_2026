@@ -82,8 +82,7 @@ async function login({ email, password, role }) {
       const res = await query(`SELECT ${selectMap[role]} FROM "${table}" WHERE LOWER(email) = LOWER($1)`, [cleanEmail]);
       if (res.rowCount > 0) {
         const u = res.rows[0];
-        const valid = (await bcrypt.compare(password, u.password_hash)) ||
-          (role === 'admin' && (password === 'Admin@123' || password === 'Password123!'));
+        const valid = await bcrypt.compare(password, u.password_hash);
         if (valid) {
           const { password_hash, ...safeUser } = u;
           const token = signToken({ id: u.id, role, email: u.email });
@@ -98,7 +97,7 @@ async function login({ email, password, role }) {
   const adminRes = await query('SELECT id, email, password_hash FROM "admin" WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
   if (adminRes.rowCount > 0) {
     const admin = adminRes.rows[0];
-    const valid = (await bcrypt.compare(password, admin.password_hash)) || password === 'Admin@123' || password === 'Password123!';
+    const valid = await bcrypt.compare(password, admin.password_hash);
     if (valid) {
       const token = signToken({ id: admin.id, role: 'admin', email: admin.email });
       return { token, user: { id: admin.id, email: admin.email, role: 'admin', name: 'Platform Administrator' } };

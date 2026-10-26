@@ -49,6 +49,13 @@ function globalErrorHandler(err, _req, res, _next) {
   if (err.code === '23503') {
     return res.status(400).json({ status: 'error', message: 'Referenced record does not exist' });
   }
+  if (err.code === '22P02' || err.code === '23514') {
+    return res.status(400).json({ status: 'error', message: 'Invalid request data' });
+  }
+  if (err.name === 'MulterError') {
+    const statusCode = err.code === 'LIMIT_FILE_SIZE' ? 413 : 400;
+    return res.status(statusCode).json({ status: 'error', message: 'Upload rejected' });
+  }
   console.error('[Unhandled Error]', err);
   res.status(500).json({ status: 'error', message: 'Internal server error' });
 }

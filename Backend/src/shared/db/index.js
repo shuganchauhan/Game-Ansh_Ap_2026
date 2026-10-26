@@ -2,6 +2,10 @@ const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../../../.env') });
 const { Pool } = require('pg');
 
+if (process.env.NODE_ENV === 'production' && !process.env.DATABASE_URL) {
+  throw new Error('DATABASE_URL must be configured in production.');
+}
+
 function parseDbConfig(connStr) {
   if (!connStr) return {};
   let cleaned = connStr.trim();
@@ -9,25 +13,14 @@ function parseDbConfig(connStr) {
     cleaned = cleaned.substring('DATABASE_URL='.length).trim();
   }
 
-  // Handle postgresql://user:password@host:port/dbname where password can contain '@'
-  const match = cleaned.match(/^postgres(?:ql)?:\/\/([^:]+):(.*)@([^:/@]+)(?::(\d+))?\/([^?]+)(?:\?.*)?$/);
-  if (match) {
-    const [, user, password, host, port, database] = match;
-    return {
-      user: decodeURIComponent(user),
-      password: password.includes('%') ? decodeURIComponent(password) : password,
-      host: host === 'localhost' ? '127.0.0.1' : host,
-      port: port ? Number(port) : 5432,
-      database: database.trim(),
-    };
-  }
-
+  // Let node-postgres parse credentials, IPv6 hosts, SSL parameters and
+  // escaped characters consistently.
   return { connectionString: cleaned };
 }
 
 const poolConfig = {
   ...parseDbConfig(process.env.DATABASE_URL),
-  max: 20,
+  max: Number(process.env.DB_POOL_MAX) || 20,
   idleTimeoutMillis: 30_000,
   connectionTimeoutMillis: 5_000,
 };

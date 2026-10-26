@@ -2,16 +2,18 @@ import { io } from 'socket.io-client';
 
 let socket = null;
 
-export function connectSocket(userId) {
+export function connectSocket(userId, token) {
   if (socket) {
-    if (socket.connected) return socket;
+    if (socket.connected && socket.auth?.token === token) return socket;
     socket.disconnect();
+    socket = null;
   }
 
-  if (!userId) return null;
+  const socketUrl = import.meta.env.VITE_SOCKET_URL ||
+    (import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace(/\/api\/?$/, '') : window.location.origin);
 
-  socket = io(window.location.origin, {
-    auth: { userId },
+  socket = io(socketUrl, {
+    auth: { token },
     transports: ['websocket', 'polling'],
     reconnectionAttempts: 5,
     reconnectionDelay: 1000,

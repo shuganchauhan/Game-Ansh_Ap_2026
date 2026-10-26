@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import {
   MessageSquare, Heart, Share2, CheckCircle2, Send, Plus, Users, Shield,
-  Sparkles, Filter, Swords, Trophy, ExternalLink, Flame, Bookmark
+  Sparkles, Filter, Swords, Trophy, ExternalLink, Flame, Bookmark, LogIn, Lock
 } from 'lucide-react';
+import { useAuth } from '../../stores/authContext';
 import { useGameStore } from '../../stores/gameStore';
 
 export default function SocialFeedPage({ onSelectTab, onOpenAuth }) {
+  const { user, isAuthenticated } = useAuth();
   const {
     posts,
     createPost,
@@ -29,28 +31,65 @@ export default function SocialFeedPage({ onSelectTab, onOpenAuth }) {
   const [activeCommentPostId, setActiveCommentPostId] = useState(null);
   const [commentInput, setCommentInput] = useState('');
   const [copiedPostId, setCopiedPostId] = useState(null);
+  const [actionError, setActionError] = useState('');
 
   const activeOrg = orgs.find((o) => o.id === activeOrgId);
 
-  const handleCreatePost = (e) => {
+  // Authenticated Action Handlers
+  const handleCreatePost = async (e) => {
     e.preventDefault();
+    if (!isAuthenticated) {
+      onOpenAuth?.('player', 'login');
+      return;
+    }
     if (!newContent.trim()) return;
 
-    createPost({
-      content: newContent,
-      category: selectedCategory,
-      game: selectedGame,
-    });
-
-    setNewContent('');
+    setActionError('');
+    try {
+      await createPost({ content: newContent, category: selectedCategory, game: selectedGame });
+      setNewContent('');
+    } catch (error) { setActionError(error.message || 'Could not publish your post.'); }
   };
 
-  const handleAddComment = (postId, e) => {
+  const handleAddComment = async (postId, e) => {
     e.preventDefault();
+    if (!isAuthenticated) {
+      onOpenAuth?.('player', 'login');
+      return;
+    }
     if (!commentInput.trim()) return;
 
-    addCommentToPost(postId, commentInput.trim());
-    setCommentInput('');
+    setActionError('');
+    try {
+      await addCommentToPost(postId, commentInput.trim());
+      setCommentInput('');
+    } catch (error) { setActionError(error.message || 'Could not add your comment.'); }
+  };
+
+  const handleToggleLike = (postId) => {
+    if (!isAuthenticated) {
+      onOpenAuth?.('player', 'login');
+      return;
+    }
+    toggleLikePost(postId).catch((error) => setActionError(error.message || 'Could not update your like.'));
+  };
+
+  const handleToggleConnect = (playerId) => {
+    if (!isAuthenticated) {
+      onOpenAuth?.('player', 'login');
+      return;
+    }
+    if (user?.role !== 'player') { setActionError('Player accounts can connect with other players.'); return; }
+    toggleConnectPlayer(playerId).catch((error) => setActionError(error.message || 'Could not connect to this player.'));
+  };
+
+  const handleToggleFollow = (orgId) => {
+    if (!isAuthenticated) {
+      onOpenAuth?.('player', 'login');
+      return;
+    }
+    if (user?.role !== 'player') { setActionError('Player accounts can follow organizations.'); return; }
+    toggleFollowOrg(orgId).catch((error) => setActionError(error.message || 'Could not update this follow.'));
   };
 
   const handleShare = (postId) => {
@@ -75,12 +114,13 @@ export default function SocialFeedPage({ onSelectTab, onOpenAuth }) {
             MAIN FEED COLUMN (8 Cols)
         ═══════════════════════════════════════════════════════ */}
         <div className="lg:col-span-8 space-y-6">
+          {actionError && <p role="alert" className="p-3 rounded-xl bg-error/10 text-error text-sm">{actionError}</p>}
 
           {/* Feed Header */}
           <div>
             <div className="flex items-center gap-2 mb-1">
               <span className="font-mono text-xs uppercase tracking-wider text-secondary font-bold">
-                LinkedIn for Competitive Gamers
+                Competitive Network // 2026 Season
               </span>
             </div>
             <h1 className="font-display font-bold text-3xl text-on-surface">Community Feed</h1>
@@ -89,76 +129,97 @@ export default function SocialFeedPage({ onSelectTab, onOpenAuth }) {
             </p>
           </div>
 
-          {/* ── Rich Post Composer (LinkedIn Style) ── */}
-          <section className="p-5 rounded-3xl bg-surface-container-low border border-card-border shadow-lg space-y-3">
-            <div className="flex items-center gap-3">
-              <img
-                src={activeRole === 'org' ? activeOrg?.logo : currentUser.avatar}
-                alt="Avatar"
-                className="w-10 h-10 rounded-xl object-cover ring-1 ring-card-border shrink-0"
-              />
-              <div className="flex-1 min-w-0">
-                <span className="font-display font-bold text-sm text-on-surface block truncate">
-                  {activeRole === 'org' ? activeOrg?.name : currentUser.name}
-                </span>
-                <span className="font-mono text-[10px] text-secondary font-bold">
-                  Posting as {activeRole === 'org' ? 'Verified Organization' : 'Pro Athlete'}
-                </span>
-              </div>
-            </div>
-
-            <form onSubmit={handleCreatePost} className="space-y-3">
-              <textarea
-                rows={3}
-                required
-                value={newContent}
-                onChange={(e) => setNewContent(e.target.value)}
-                placeholder={
-                  activeRole === 'org'
-                    ? "Broadcast official roster tryouts, tournament results, or signing announcements..."
-                    : "Post LFT dossier, scrim clips, match results, or connect with scouting agents..."
-                }
-                className="w-full p-3 rounded-2xl bg-surface-container border border-card-border text-on-surface placeholder:text-on-surface-variant focus:outline-none text-sm font-body"
-              />
-
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <select
-                    value={selectedCategory}
-                    onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="p-2 rounded-xl bg-surface-container border border-card-border text-xs font-mono text-on-surface focus:outline-none"
-                  >
-                    <option value="LFT / Tryout">🎯 LFT / Tryout</option>
-                    <option value="Org Announcement">📢 Org Announcement</option>
-                    <option value="Match Result">🔥 Scrim / Match Result</option>
-                    <option value="General Discussion">💬 General Discussion</option>
-                  </select>
-
-                  <select
-                    value={selectedGame}
-                    onChange={(e) => setSelectedGame(e.target.value)}
-                    className="p-2 rounded-xl bg-surface-container border border-card-border text-xs font-mono text-on-surface focus:outline-none"
-                  >
-                    <option value="valorant">⚡ VALORANT</option>
-                    <option value="bgmi">🔫 BGMI</option>
-                    <option value="freefire">🔥 Free Fire</option>
-                    <option value="coc">🏰 Clash of Clans</option>
-                    <option value="cr">👑 Clash Royale</option>
-                    <option value="cod">💀 Call of Duty</option>
-                  </select>
+          {/* ── Rich Post Composer (Guarded by Authentication) ── */}
+          {!isAuthenticated ? (
+            <section className="p-6 rounded-3xl bg-surface-container-low border border-card-border shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 text-primary flex items-center justify-center shrink-0">
+                  <MessageSquare className="w-6 h-6" />
                 </div>
-
-                <button
-                  type="submit"
-                  disabled={!newContent.trim()}
-                  className="px-6 py-2.5 rounded-xl bg-primary-container hover:bg-primary-container/90 text-on-primary font-display font-bold text-xs uppercase tracking-wider shadow-glow active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
-                >
-                  <Send className="w-3.5 h-3.5" />
-                  Publish Post
-                </button>
+                <div>
+                  <h3 className="font-display font-bold text-base text-on-surface">Join the Competitive Conversation</h3>
+                  <p className="text-xs text-on-surface-variant">Sign in with your account to publish tryouts, like match results, and reply to pro rosters.</p>
+                </div>
               </div>
-            </form>
-          </section>
+              <button
+                onClick={() => onOpenAuth?.('player', 'login')}
+                className="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-primary to-secondary text-white dark:text-black font-display font-bold text-xs uppercase tracking-wider shrink-0 hover:opacity-95 shadow-md flex items-center justify-center gap-2 transition-all"
+              >
+                <LogIn className="w-4 h-4 text-white dark:text-black" />
+                <span>Sign In to Post</span>
+              </button>
+            </section>
+          ) : (
+            <section className="p-5 rounded-3xl bg-surface-container-low border border-card-border shadow-lg space-y-3">
+              <div className="flex items-center gap-3">
+                <img
+                  src={activeRole === 'org' ? activeOrg?.logo : (user?.avatar_url || currentUser.avatar)}
+                  alt="Avatar"
+                  className="w-10 h-10 rounded-xl object-cover ring-1 ring-card-border shrink-0"
+                />
+                <div className="flex-1 min-w-0">
+                  <span className="font-display font-bold text-sm text-on-surface block truncate">
+                    {user?.name || user?.username || (activeRole === 'org' ? activeOrg?.name : currentUser.name)}
+                  </span>
+                  <span className="font-mono text-[10px] text-secondary font-bold">
+                    Posting as {user?.role ? user.role.toUpperCase() : (activeRole === 'org' ? 'Verified Organization' : 'Pro Athlete')}
+                  </span>
+                </div>
+              </div>
+
+              <form onSubmit={handleCreatePost} className="space-y-3">
+                <textarea
+                  rows={3}
+                  required
+                  value={newContent}
+                  onChange={(e) => setNewContent(e.target.value)}
+                  placeholder={
+                    activeRole === 'org'
+                      ? "Broadcast official roster tryouts, tournament results, or signing announcements..."
+                      : "Post LFT dossier, scrim clips, match results, or connect with scouting agents..."
+                  }
+                  className="w-full p-3 rounded-2xl bg-surface-container border border-card-border text-on-surface placeholder:text-on-surface-variant focus:outline-none text-sm font-body"
+                />
+
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <select
+                      value={selectedCategory}
+                      onChange={(e) => setSelectedCategory(e.target.value)}
+                      className="p-2 rounded-xl bg-surface-container border border-card-border text-xs font-mono text-on-surface focus:outline-none"
+                    >
+                      <option value="LFT / Tryout">🎯 LFT / Tryout</option>
+                      <option value="Org Announcement">📢 Org Announcement</option>
+                      <option value="Match Result">🔥 Scrim / Match Result</option>
+                      <option value="General Discussion">💬 General Discussion</option>
+                    </select>
+
+                    <select
+                      value={selectedGame}
+                      onChange={(e) => setSelectedGame(e.target.value)}
+                      className="p-2 rounded-xl bg-surface-container border border-card-border text-xs font-mono text-on-surface focus:outline-none"
+                    >
+                      <option value="valorant">⚡ VALORANT</option>
+                      <option value="bgmi">🔫 BGMI</option>
+                      <option value="freefire">🔥 Free Fire</option>
+                      <option value="coc">🏰 Clash of Clans</option>
+                      <option value="cr">👑 Clash Royale</option>
+                      <option value="cod">💀 Call of Duty</option>
+                    </select>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={!newContent.trim()}
+                    className="px-6 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white dark:text-black font-display font-bold text-xs uppercase tracking-wider shadow-lg shadow-primary/20 active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                  >
+                    <Send className="w-3.5 h-3.5 text-white dark:text-black" />
+                    <span>Publish Post</span>
+                  </button>
+                </div>
+              </form>
+            </section>
+          )}
 
           {/* ── Feed Filter Tabs ── */}
           <div className="flex items-center gap-2 overflow-x-auto pb-1">
@@ -173,7 +234,7 @@ export default function SocialFeedPage({ onSelectTab, onOpenAuth }) {
                 onClick={() => setFeedFilter(f.id)}
                 className={`px-3.5 py-1.5 rounded-xl font-mono text-xs font-bold whitespace-nowrap transition-all ${
                   feedFilter === f.id
-                    ? 'bg-primary-container text-on-primary shadow-glow'
+                    ? 'bg-primary text-white dark:text-black shadow-sm'
                     : 'bg-surface-container hover:bg-surface-container-high text-on-surface-variant'
                 }`}
               >
@@ -195,7 +256,7 @@ export default function SocialFeedPage({ onSelectTab, onOpenAuth }) {
                     <img
                       src={post.authorAvatar}
                       alt={post.authorName}
-                      className="w-11 h-11 rounded-xl object-cover shrink-0 ring-1 ring-card-border"
+                      className="w-10 h-10 rounded-xl object-cover ring-1 ring-card-border shrink-0"
                     />
                     <div className="min-w-0">
                       <div className="flex items-center gap-1.5 flex-wrap">
@@ -237,22 +298,28 @@ export default function SocialFeedPage({ onSelectTab, onOpenAuth }) {
                 {/* Social Actions row */}
                 <div className="flex items-center justify-between pt-3 border-t border-card-border text-xs font-mono">
                   <button
-                    onClick={() => toggleLikePost(post.id)}
+                    onClick={() => handleToggleLike(post.id)}
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all ${
                       post.likedByMe
                         ? 'text-error bg-error/10 font-bold'
                         : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container'
                     }`}
+                    title={!isAuthenticated ? "Sign in to like" : "Like post"}
                   >
                     <Heart className={`w-4 h-4 ${post.likedByMe ? 'fill-current' : ''}`} />
                     <span>{post.likes}</span>
                   </button>
 
                   <button
-                    onClick={() =>
-                      setActiveCommentPostId(activeCommentPostId === post.id ? null : post.id)
-                    }
+                    onClick={() => {
+                      if (!isAuthenticated) {
+                        onOpenAuth?.('player', 'login');
+                        return;
+                      }
+                      setActiveCommentPostId(activeCommentPostId === post.id ? null : post.id);
+                    }}
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all"
+                    title={!isAuthenticated ? "Sign in to comment" : "View comments"}
                   >
                     <MessageSquare className="w-4 h-4" />
                     <span>{post.comments?.length || 0} Comments</span>
@@ -280,12 +347,12 @@ export default function SocialFeedPage({ onSelectTab, onOpenAuth }) {
                         required
                         value={commentInput}
                         onChange={(e) => setCommentInput(e.target.value)}
-                        placeholder="Add your comment or scouting response..."
+                        placeholder={isAuthenticated ? "Add your comment or scouting response..." : "Sign in to reply..."}
                         className="flex-1 p-2.5 rounded-xl bg-surface-container border border-card-border text-xs text-on-surface placeholder:text-on-surface-variant focus:outline-none"
                       />
                       <button
                         type="submit"
-                        className="px-4 py-2.5 rounded-xl bg-primary-container text-on-primary font-display font-bold text-xs uppercase shadow-glow"
+                        className="px-4 py-2.5 rounded-xl bg-primary text-white dark:text-black font-display font-bold text-xs uppercase shadow-sm"
                       >
                         Send
                       </button>
@@ -299,15 +366,13 @@ export default function SocialFeedPage({ onSelectTab, onOpenAuth }) {
                             key={c.id}
                             className="p-3 rounded-xl bg-surface-container text-xs space-y-1"
                           >
-                            <div className="flex items-center justify-between">
-                              <span className="font-display font-bold text-on-surface">
-                                {c.user}
-                              </span>
-                              <span className="font-mono text-[10px] text-on-surface-variant">
-                                {c.time}
-                              </span>
+                            <div className="flex items-center justify-between font-mono text-[10px]">
+                              <span className="font-bold text-on-surface">{c.authorName}</span>
+                              <span className="text-on-surface-variant">{c.createdAt}</span>
                             </div>
-                            <p className="font-body text-on-surface-variant">{c.text}</p>
+                            <p className="font-body text-on-surface-variant leading-relaxed">
+                              {c.content}
+                            </p>
                           </div>
                         ))}
                       </div>
@@ -317,15 +382,14 @@ export default function SocialFeedPage({ onSelectTab, onOpenAuth }) {
               </article>
             ))}
           </div>
-
         </div>
 
         {/* ═══════════════════════════════════════════════════════
-            RIGHT SIDEBAR (LinkedIn Networking & Orgs) (4 Cols)
+            SIDEBAR (4 Cols) — Connections & Orgs
         ═══════════════════════════════════════════════════════ */}
         <aside className="lg:col-span-4 space-y-6">
 
-          {/* Connect with Pro Gamers Widget */}
+          {/* Player Network Widget */}
           <div className="p-5 rounded-3xl bg-surface-container-low border border-card-border space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -358,11 +422,11 @@ export default function SocialFeedPage({ onSelectTab, onOpenAuth }) {
                     </div>
 
                     <button
-                      onClick={() => toggleConnectPlayer(p.id)}
+                      onClick={() => handleToggleConnect(p.id)}
                       className={`px-3 py-1.5 rounded-lg font-mono text-[11px] font-bold shrink-0 transition-all ${
                         isConnected
                           ? 'bg-surface-container-high text-on-surface-variant'
-                          : 'bg-primary-container text-on-primary shadow-glow'
+                          : 'bg-primary text-white dark:text-black shadow-sm'
                       }`}
                     >
                       {isConnected ? 'Connected' : '+ Connect'}
@@ -409,7 +473,7 @@ export default function SocialFeedPage({ onSelectTab, onOpenAuth }) {
                     </div>
 
                     <button
-                      onClick={() => toggleFollowOrg(org.id)}
+                      onClick={() => handleToggleFollow(org.id)}
                       className={`px-3 py-1.5 rounded-lg font-mono text-[11px] font-bold shrink-0 transition-all ${
                         isFollowing
                           ? 'bg-surface-container-high text-on-surface-variant'

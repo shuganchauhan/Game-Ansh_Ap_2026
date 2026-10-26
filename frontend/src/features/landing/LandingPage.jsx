@@ -466,11 +466,11 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
             <button
               onClick={() => onOpenAuthWithRole?.('player', 'signup')}
-              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-primary to-secondary text-black font-display font-bold text-sm uppercase tracking-wider shadow-lg shadow-primary/25 hover:opacity-95 active:scale-95 transition-all flex items-center justify-center gap-2.5 group"
+              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-primary to-secondary text-white dark:text-black font-display font-bold text-sm uppercase tracking-wider shadow-lg shadow-primary/25 hover:opacity-95 active:scale-95 transition-all flex items-center justify-center gap-2.5 group"
             >
-              <Gamepad2 className="w-5 h-5 text-black" />
+              <Gamepad2 className="w-5 h-5 text-white dark:text-black" />
               <span>Create Free Account</span>
-              <ArrowRight className="w-4 h-4 text-black group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-4 h-4 text-white dark:text-black group-hover:translate-x-1 transition-transform" />
             </button>
 
             <button
@@ -716,7 +716,7 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
                     onClick={() => setActiveShowcaseTab(tab.id)}
                     className={`flex items-center gap-2 px-3.5 py-2 rounded-xl font-display text-xs font-semibold transition-all ${
                       active
-                        ? 'bg-gradient-to-r from-primary to-secondary text-black font-bold shadow-md'
+                        ? 'bg-gradient-to-r from-primary to-secondary text-white dark:text-black font-bold shadow-md'
                         : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high'
                     }`}
                   >
@@ -1132,11 +1132,11 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
           <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
               onClick={() => onOpenAuthWithRole?.('player', 'signup')}
-              className="w-full sm:w-auto px-10 py-4 rounded-2xl bg-gradient-to-r from-primary to-secondary text-black font-display font-bold text-sm uppercase tracking-wider shadow-lg shadow-primary/25 hover:opacity-95 active:scale-95 transition-all flex items-center justify-center gap-2 group"
+              className="w-full sm:w-auto px-10 py-4 rounded-2xl bg-gradient-to-r from-primary to-secondary text-white dark:text-black font-display font-bold text-sm uppercase tracking-wider shadow-lg shadow-primary/25 hover:opacity-95 active:scale-95 transition-all flex items-center justify-center gap-2 group"
             >
-              <Gamepad2 className="w-5 h-5 text-black" />
+              <Gamepad2 className="w-5 h-5 text-white dark:text-black" />
               <span>Claim Your Gamer Tag</span>
-              <ArrowRight className="w-4 h-4 text-black group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-4 h-4 text-white dark:text-black group-hover:translate-x-1 transition-transform" />
             </button>
 
             <button
@@ -1157,7 +1157,7 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
           {/* Brand Info */}
           <div className="md:col-span-2 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-black font-display font-extrabold text-xl shadow-md">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white dark:text-black font-display font-extrabold text-xl shadow-md">
                 G
               </div>
               <span className="font-display font-bold text-xl text-on-surface tracking-wider">

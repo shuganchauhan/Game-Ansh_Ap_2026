@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
-  Shield, Swords, Trophy, Briefcase, MessageSquare, Bell, LogIn, User, Sparkles,
-  LayoutDashboard, UserCheck, Building, Plus, CheckCircle2, RefreshCw, Lock, LogOut
+  Swords, Trophy, Briefcase, MessageSquare, Bell, LogIn, User, Sparkles,
+  LayoutDashboard, UserCheck, Building, CheckCircle2, RefreshCw, Lock, LogOut, Users
 } from 'lucide-react';
 import ThemeToggle from '../ui/ThemeToggle';
 import { useAuth } from '../../stores/authContext';
@@ -20,7 +20,7 @@ export default function Navbar({ activeTab, onSelectTab, onOpenAuth, onOpenChat,
     { id: 'landing', label: 'Home', icon: Sparkles },
     { id: 'discovery', label: 'Discover', icon: Swords },
     { id: 'tournaments', label: 'Tournaments & Scrims', icon: Trophy },
-    { id: 'teams', label: 'Teams & Rosters', icon: Shield },
+    { id: 'teams', label: 'Teams', icon: Users },
     { id: 'feed', label: 'Community Feed', icon: MessageSquare },
   ];
 
@@ -45,14 +45,6 @@ export default function Navbar({ activeTab, onSelectTab, onOpenAuth, onOpenChat,
     onSelectTab(tabId);
   };
 
-  const handleFormTeamClick = () => {
-    if (!isAuthenticated) {
-      onOpenAuth?.();
-      return;
-    }
-    onOpenTeamCreator?.();
-  };
-
   return (
     <header className="sticky top-0 z-40 w-full glass-panel border-b border-card-border transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
@@ -62,7 +54,7 @@ export default function Navbar({ activeTab, onSelectTab, onOpenAuth, onOpenChat,
           className="flex items-center gap-3 cursor-pointer select-none group"
         >
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-lg shadow-primary/20 group-hover:scale-105 transition-transform">
-            <span className="font-display font-extrabold text-xl text-black">G</span>
+            <span className="font-display font-extrabold text-xl text-white dark:text-black">G</span>
           </div>
           <div className="flex flex-col">
             <span className="font-display font-bold text-lg tracking-wider text-on-surface leading-tight">
@@ -98,16 +90,6 @@ export default function Navbar({ activeTab, onSelectTab, onOpenAuth, onOpenChat,
 
         {/* Action Controls & Authentication Status */}
         <div className="flex items-center gap-2.5">
-          {/* Quick Form Team Button (Requires Auth) */}
-          <button
-            onClick={handleFormTeamClick}
-            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container hover:bg-surface-container-high border border-card-border font-mono text-xs font-bold text-on-surface transition-all"
-            title="Form a new squad (Login required)"
-          >
-            <Plus className="w-3.5 h-3.5 text-secondary" />
-            <span>Form Team</span>
-          </button>
-
           <ThemeToggle />
 
           {/* If NOT Authenticated: Show Sign In & Register Buttons */}
@@ -122,9 +104,9 @@ export default function Navbar({ activeTab, onSelectTab, onOpenAuth, onOpenChat,
               </button>
               <button
                 onClick={() => onOpenAuth?.('player', 'signup')}
-                className="px-4 py-2 rounded-xl bg-primary text-black font-display font-bold text-xs uppercase tracking-wider shadow-lg shadow-primary/20 hover:bg-primary-hover active:scale-95 transition-all flex items-center gap-1.5"
+                className="px-4 py-2 rounded-xl bg-primary text-white dark:text-black font-display font-bold text-xs uppercase tracking-wider shadow-lg shadow-primary/20 hover:bg-primary-hover active:scale-95 transition-all flex items-center gap-1.5"
               >
-                <Sparkles className="w-3.5 h-3.5 text-black" />
+                <Sparkles className="w-3.5 h-3.5 text-white dark:text-black" />
                 <span>Register</span>
               </button>
             </div>
@@ -217,17 +199,6 @@ export default function Navbar({ activeTab, onSelectTab, onOpenAuth, onOpenChat,
                   >
                     <UserCheck className="w-4 h-4 text-secondary" />
                     <span>LinkedIn Gamer Profile</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setProfileDropdownOpen(false);
-                      onOpenTeamCreator?.();
-                    }}
-                    className="w-full text-left px-4 py-2.5 text-xs font-display font-semibold text-on-surface hover:bg-surface-container transition-colors flex items-center gap-2"
-                  >
-                    <Plus className="w-4 h-4 text-tertiary" />
-                    <span>Form a Squad (4-5 Rule)</span>
                   </button>
 
                   <div className="border-t border-card-border my-1" />

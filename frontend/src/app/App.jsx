@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ThemeProvider } from '../stores/themeContext';
 import { AuthProvider, useAuth } from '../stores/authContext';
 import { GameStoreProvider, useGameStore } from '../stores/gameStore';
@@ -47,9 +47,9 @@ function ProtectedGate({ title, message, requiredRole = null, currentRole = null
         <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
           <button
             onClick={() => onOpenAuth('player', 'login')}
-            className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-primary to-secondary hover:opacity-95 text-black font-display font-bold text-xs uppercase tracking-wider shadow-lg shadow-primary/20 transition-all flex items-center justify-center gap-2"
+            className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-primary to-secondary hover:opacity-95 text-white dark:text-black font-display font-bold text-xs uppercase tracking-wider shadow-lg shadow-primary/20 transition-all flex items-center justify-center gap-2"
           >
-            <LogIn className="w-4 h-4" />
+            <LogIn className="w-4 h-4 text-white dark:text-black" />
             <span>Sign In to Continue</span>
           </button>
         </div>
@@ -68,13 +68,23 @@ function AppContent() {
   const [teamCreationModalOpen, setTeamCreationModalOpen] = useState(false);
 
   const { user, isAuthenticated } = useAuth();
+  const { setCurrentUser, setActiveRole, setActiveOrgId } = useGameStore();
   const userRole = user?.role || 'guest';
+
+  useEffect(() => {
+    if (!user) return;
+    setCurrentUser(user);
+    setActiveRole(user.role);
+    if (user.role === 'org') setActiveOrgId(user.id);
+  }, [user]);
 
   const handleOpenAuthWithRole = (role = 'player', mode = 'login') => {
     setAuthInitialRole(role);
     setAuthInitialMode(mode);
     setAuthModalOpen(true);
   };
+
+  const handleLandingNavigation = (tab) => setActiveTab(tab);
 
   const handleAuthSuccess = (loggedUser) => {
     if (loggedUser?.role === 'admin') {
@@ -95,7 +105,8 @@ function AppContent() {
   };
 
   const handleTeamCreated = () => {
-    setActiveTab('teams');
+    setTeamCreationModalOpen(false);
+    setActiveTab('dashboard');
   };
 
   const handleOpenScrimLobby = (scrimId) => {
@@ -119,7 +130,7 @@ function AppContent() {
         {/* Public Routes */}
         {activeTab === 'landing' && (
           <LandingPage
-            onSelectTab={setActiveTab}
+            onSelectTab={handleLandingNavigation}
             onOpenAuthWithRole={handleOpenAuthWithRole}
           />
         )}
@@ -127,14 +138,22 @@ function AppContent() {
         {activeTab === 'discovery' && (
           <DiscoveryPage
             onSelectTab={setActiveTab}
+            onOpenAuth={handleOpenAuthWithRole}
           />
         )}
 
         {activeTab === 'tournaments' && (
           <TournamentsPage
-            onRegisterModal={() => handleOpenAuthWithRole('org')}
+            onRegisterModal={() => {
+              if (!isAuthenticated) {
+                handleOpenAuthWithRole('org', 'signup');
+              } else {
+                handleOpenTeamCreator();
+              }
+            }}
             onOpenScrimLobby={handleOpenScrimLobby}
             onSelectTab={setActiveTab}
+            onOpenAuth={handleOpenAuthWithRole}
           />
         )}
 
@@ -142,6 +161,7 @@ function AppContent() {
           <TeamsPage
             onOpenTeamCreator={handleOpenTeamCreator}
             onSelectTab={setActiveTab}
+            onOpenAuth={handleOpenAuthWithRole}
           />
         )}
 

@@ -1,12 +1,12 @@
 # Gamers'G — Backend API
 
-Express.js + TypeScript + PostgreSQL + Redis + Socket.io backend for the Gamers'G gaming platform.
+Express.js + JavaScript + PostgreSQL + Redis + Socket.io backend for the Gamers'G gaming platform.
 
 ## Stack
 
 | Layer | Tech |
 |---|---|
-| Runtime | Node.js 20 + TypeScript 5 |
+| Runtime | Node.js 20+ |
 | Framework | Express.js 4 |
 | Database | PostgreSQL (node-postgres) |
 | Cache / PubSub | Redis (ioredis) |
@@ -21,16 +21,18 @@ Express.js + TypeScript + PostgreSQL + Redis + Socket.io backend for the Gamers'
 # 1. Install
 npm install
 
-# 2. Configure
+# 2. Configure (development only)
 cp .env.example .env
-# Fill in DATABASE_URL, REDIS_URL, JWT_SECRET
+# Set DATABASE_URL, REDIS_URL and a random JWT_SECRET (32+ characters)
 
-# 3. Run migrations
+# 3. Run versioned migrations
 npm run migrate
 
 # 4. Start dev server
 npm run dev
 ```
+
+For an existing database, review the migration ledger before upgrading. Migrations run once per filename and are serialized with a PostgreSQL advisory lock. Do not use the demo seeder or example credentials in production.
 
 ## Account Types
 
@@ -81,8 +83,9 @@ npm run dev
 | GET | `/teams/:teamId/postings` | — | List team's postings |
 | PATCH | `/postings/:postingId/close` | org | Close a posting |
 | POST | `/postings/:postingId/apply` | player | Apply to posting |
+| GET | `/applications` | player/org/admin | List own applications or applications for managed teams |
 | GET | `/applications/:id` | player/org | Get application |
-| PATCH | `/applications/:id` | org | Advance application status |
+| PATCH | `/applications/:id` | team captain/org | Advance application status |
 
 ### Discovery
 | Method | Path | Auth | Purpose |
@@ -97,7 +100,7 @@ Query params: `name`, `game`, `status`, `limit`, `cursor`
 |---|---|---|---|
 | POST | `/follow` | player | Follow org or team |
 | DELETE | `/follow` | player | Unfollow |
-| GET | `/feed` | player | Paginated feed from followed entities |
+| GET | `/feed` | optional | Public feed; authenticated reads include like state |
 | POST | `/posts` | org | Create post |
 | GET | `/posts/:id` | — | Get single post |
 
@@ -131,11 +134,15 @@ Query params: `name`, `game`, `status`, `limit`, `cursor`
 - **Player exclusivity**: A player can be on a team OR directly under an org — never both. Enforced at DB level via `CHECK (team_id IS NULL OR org_id IS NULL)`.
 - **Team activation**: Draft team auto-flips to `active` when the 5th player joins. Done atomically in a transaction.
 - **Application state machine**: `applied → shortlisted → accepted | rejected`. Skipping (applied → accepted) or reversing any transition returns 400.
-- **Rate limiting**: Write endpoints — 30 req / 15 min. Tournament and posting creation — 10 req / hour. Both Redis-backed.
+- **Rate limiting**: Write endpoints use process-wide limiters and use Redis when `REDIS_URL` is configured. Keep Redis enabled for multi-instance production deployments.
+
+## Production configuration
+
+Configure `NODE_ENV=production`, a 32+ character random `JWT_SECRET`, `DATABASE_URL`, `REDIS_URL`, exact comma-separated `CORS_ORIGINS`, and `TRUST_PROXY` only when running behind a trusted proxy. The frontend must be served over HTTPS. `/health` is liveness-only; `/ready` checks PostgreSQL. Local uploads are ephemeral and verification documents need durable private object storage before production use.
 
 ## Real-time Events (Socket.io)
 
-Connect with `{ auth: { userId: "<your-id>" } }`. Clients auto-join room `user:<userId>`.
+Connect with `{ auth: { token: "<signed-jwt>" } }`. The server verifies the token and derives the user room from its subject. Scrim rooms are joined only by the host or a registered team member.
 
 | Event | Recipient | Trigger |
 |---|---|---|
@@ -173,10 +180,4 @@ src/
 
 ```bash
 npm test
-```
-
-## Type Check
-
-```bash
-npm run typecheck
 ```

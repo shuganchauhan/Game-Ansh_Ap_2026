@@ -1,7 +1,7 @@
 const recruitmentService = require('./recruitment.service');
 
 async function createPosting(req, res, next) {
-  try { res.status(201).json({ status: 'success', data: await recruitmentService.createPosting(req.params.teamId, req.user.id, req.body) }); }
+  try { res.status(201).json({ status: 'success', data: await recruitmentService.createPosting(req.params.teamId, req.user, req.body) }); }
   catch (err) { next(err); }
 }
 async function getTeamPostings(req, res, next) {
@@ -9,11 +9,11 @@ async function getTeamPostings(req, res, next) {
   catch (err) { next(err); }
 }
 async function applyToPosting(req, res, next) {
-  try { res.status(201).json({ status: 'success', data: await recruitmentService.applyToPosting(req.user.id, req.params.postingId) }); }
+  try { res.status(201).json({ status: 'success', data: await recruitmentService.applyToPosting(req.user.id, req.params.postingId, req.body) }); }
   catch (err) { next(err); }
 }
 async function updateApplicationStatus(req, res, next) {
-  try { res.json({ status: 'success', data: await recruitmentService.updateApplicationStatus(req.params.id, req.user.id, req.body.status) }); }
+  try { res.json({ status: 'success', data: await recruitmentService.updateApplicationStatus(req.params.id, req.user, req.body.status) }); }
   catch (err) { next(err); }
 }
 async function getApplication(req, res, next) {
@@ -21,8 +21,13 @@ async function getApplication(req, res, next) {
   catch (err) { next(err); }
 }
 async function closePosting(req, res, next) {
-  try { res.json({ status: 'success', data: await recruitmentService.closePosting(req.params.postingId, req.user.id) }); }
+  try { res.json({ status: 'success', data: await recruitmentService.closePosting(req.params.postingId, req.user) }); }
   catch (err) { next(err); }
 }
 
-module.exports = { createPosting, getTeamPostings, applyToPosting, updateApplicationStatus, getApplication, closePosting };
+async function listApplications(req, res, next) {
+  try { res.json({ status: 'success', data: await recruitmentService.listApplications(req.user) }); }
+  catch (err) { next(err); }
+}
+
+module.exports = { createPosting, getTeamPostings, applyToPosting, updateApplicationStatus, getApplication, closePosting, listApplications };

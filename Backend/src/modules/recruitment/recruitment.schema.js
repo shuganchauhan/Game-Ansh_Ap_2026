@@ -10,4 +10,9 @@ const updateApplicationSchema = z.object({
 
 });
 
-module.exports = { createPostingSchema, updateApplicationSchema };
+const applyToPostingSchema = z.object({
+  pitch: z.string().max(2000).optional().default(''),
+  vod_link: z.string().url().max(500).optional().or(z.literal('')),
+});
+
+module.exports = { createPostingSchema, updateApplicationSchema, applyToPostingSchema };

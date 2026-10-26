@@ -26,10 +26,11 @@ export const teamService = {
   getPostings: (teamId) => api.get(`/teams/${teamId}/postings`),
   createPosting: (teamId, data) => api.post(`/teams/${teamId}/postings`, data),
   closePosting: (postingId) => api.patch(`/postings/${postingId}/close`),
-  applyToPosting: (postingId, pitch) => api.post(`/postings/${postingId}/apply`, { pitch }),
+  applyToPosting: (postingId, pitch, vod_link = '') => api.post(`/postings/${postingId}/apply`, { pitch, vod_link }),
 };
 
 export const recruitmentService = {
+  getApplications: () => api.get('/applications'),
   getApplication: (id) => api.get(`/applications/${id}`),
   updateStatus: (id, status) => api.patch(`/applications/${id}`, { status }),
 };
@@ -96,6 +97,7 @@ export const socialService = {
   unfollow: (target_id, target_type) => api.delete('/social/follow', { body: JSON.stringify({ target_id, target_type }) }),
   connect: (targetPlayerId) => api.post(`/social/connections/${targetPlayerId}`),
   getConnections: () => api.get('/social/connections'),
+  getFollows: () => api.get('/social/follows'),
   getRecommendedPlayers: () => api.get('/social/players/recommended'),
 };
 
@@ -104,8 +106,7 @@ export const messageService = {
     const qs = new URLSearchParams(params).toString();
     return api.get(`/messages/${threadId}${qs ? `?${qs}` : ''}`);
   },
-  sendMessage: (threadId, receiver_id, content) =>
-    api.post(`/messages/${threadId}`, { receiver_id, content }),
+  sendMessage: (threadId, content) => api.post(`/messages/${threadId}`, { content }),
 };
 
 export const playerService = {

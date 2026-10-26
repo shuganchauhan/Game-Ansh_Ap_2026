@@ -1,65 +1,33 @@
+require('dotenv').config({ path: require('path').resolve(__dirname, '.env') });
 const { Client } = require('pg');
-const fs = require('fs');
-const path = require('path');
-
-const config = {
-  host: '127.0.0.1',
-  port: 5432,
-  user: 'postgres',
-  password: 'Sh@gun190120',
-};
+const { migrate } = require('./src/shared/db/migrate');
+const { pool } = require('./src/shared/db');
 
 async function setupDatabase() {
-  console.log('[Setup] Connecting to PostgreSQL server...');
-  const rootClient = new Client({
-    ...config,
-    database: 'postgres',
-  });
+  if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL must be set.');
+  const databaseUrl = new URL(process.env.DATABASE_URL);
+  const databaseName = decodeURIComponent(databaseUrl.pathname.replace(/^\//, ''));
+  if (!databaseName || databaseName === 'postgres') throw new Error('DATABASE_URL must name an application database.');
 
-  await rootClient.connect();
-  console.log('[Setup] Connected to Postgres root.');
-
-  // Check if off_ground exists
-  const checkRes = await rootClient.query("SELECT 1 FROM pg_database WHERE datname = 'off_ground'");
-  if (checkRes.rows.length === 0) {
-    console.log('[Setup] Database "off_ground" does not exist. Creating...');
-    await rootClient.query('CREATE DATABASE off_ground');
-    console.log('[Setup] Database "off_ground" created successfully.');
-  } else {
-    console.log('[Setup] Database "off_ground" already exists.');
+  const adminUrl = new URL(databaseUrl);
+  adminUrl.pathname = '/postgres';
+  const client = new Client({ connectionString: adminUrl.toString() });
+  await client.connect();
+  try {
+    const exists = await client.query('SELECT 1 FROM pg_database WHERE datname = $1', [databaseName]);
+    if (!exists.rowCount) {
+      const quotedName = `"${databaseName.replace(/"/g, '""')}"`;
+      await client.query(`CREATE DATABASE ${quotedName}`);
+    }
+  } finally {
+    await client.end();
   }
-  await rootClient.end();
 
-  // Now connect to off_ground
-  console.log('[Setup] Connecting to "off_ground" database...');
-  const appClient = new Client({
-    ...config,
-    database: 'off_ground',
-  });
-  await appClient.connect();
-  console.log('[Setup] Connected to "off_ground". Running schema migrations...');
-
-  const schemaPath = path.join(__dirname, '../database/migrations/001_initial_schema.sql');
-  const sql = fs.readFileSync(schemaPath, 'utf8');
-
-  await appClient.query(sql);
-  console.log('[Setup] Schema 001_initial_schema.sql executed successfully!');
-
-  // Check existing tables
-  const tables = await appClient.query(`
-    SELECT table_name 
-    FROM information_schema.tables 
-    WHERE table_schema = 'public' 
-    ORDER BY table_name;
-  `);
-  console.log('[Setup] Verified tables in off_ground:');
-  tables.rows.forEach(r => console.log(' - ' + r.table_name));
-
-  await appClient.end();
-  console.log('[Setup] Database setup complete!');
+  await migrate();
+  console.log(`Database ${databaseName} is ready.`);
 }
 
-setupDatabase().catch(err => {
-  console.error('[Setup] Error setting up database:', err);
-  process.exit(1);
-});
+setupDatabase().catch((error) => {
+  console.error('[Setup] Database setup failed:', error.message);
+  process.exitCode = 1;
+}).finally(() => pool.end());

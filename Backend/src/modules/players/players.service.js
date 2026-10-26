@@ -3,7 +3,7 @@ const { NotFoundError, ForbiddenError } = require('../../shared/errors');
 
 async function getPlayer(id) {
   const result = await query(
-    `SELECT p.id, p.username, p.email, p.game_ign, p.team_id, p.org_id, p.created_at,
+    `SELECT p.id, p.username, p.game_ign, p.team_id, p.org_id, p.created_at,
             p.tagline, p.bio, p.avatar_url, p.banner_url, p.location, p.primary_game,
             p.discord, p.lft_status, p.scrim_availability, p.game_accounts, p.stats, p.career_milestones,
             t.name AS team_name, t.tag AS team_tag, t.game AS team_game, t.status AS team_status,

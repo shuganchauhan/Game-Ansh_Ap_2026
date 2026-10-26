@@ -15,6 +15,21 @@ function authenticate(req, _res, next) {
   }
 }
 
+function optionalAuthenticate(req, _res, next) {
+  const header = req.headers.authorization;
+  if (!header || !header.startsWith('Bearer ')) {
+    req.user = null;
+    return next();
+  }
+  const token = header.slice(7);
+  try {
+    req.user = verifyToken(token);
+  } catch {
+    req.user = null;
+  }
+  next();
+}
+
 function authorize(...roles) {
   const allowed = roles.flat();
   return (req, _res, next) => {
@@ -26,4 +41,4 @@ function authorize(...roles) {
   };
 }
 
-module.exports = { authenticate, authorize };
+module.exports = { authenticate, optionalAuthenticate, authorize };

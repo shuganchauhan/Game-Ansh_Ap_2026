@@ -35,8 +35,7 @@ async function start() {
   const shutdown = async () => {
     console.log('[Server] Shutting down gracefully...');
     httpServer.close(async () => {
-      await pool.end();
-      await redis.quit();
+      await Promise.allSettled([pool.end(), redis.quit()]);
       process.exit(0);
     });
   };

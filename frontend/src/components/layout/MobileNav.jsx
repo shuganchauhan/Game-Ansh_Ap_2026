@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, Swords, Trophy, Shield, MessageSquare, LayoutDashboard } from 'lucide-react';
+import { Sparkles, Swords, Trophy, MessageSquare, LayoutDashboard } from 'lucide-react';
 import { useGameStore } from '../../stores/gameStore';
 
 export default function MobileNav({ activeTab, onSelectTab }) {
@@ -8,7 +8,7 @@ export default function MobileNav({ activeTab, onSelectTab }) {
   const tabs = [
     { id: 'landing', label: 'Home', icon: Sparkles },
     { id: 'discovery', label: 'Discover', icon: Swords },
-    { id: 'teams', label: 'Teams', icon: Shield },
+    { id: 'tournaments', label: 'Tourneys', icon: Trophy },
     { id: 'feed', label: 'Feed', icon: MessageSquare },
     { id: 'dashboard', label: activeRole === 'org' ? 'Org' : 'Dash', icon: LayoutDashboard },
   ];

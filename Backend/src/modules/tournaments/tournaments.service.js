@@ -112,9 +112,29 @@ async function listScrims({ game, status } = {}) {
   return res.rows;
 }
 
-async function getScrimLobby(id) {
+async function getScrimLobby(id, user) {
+  const access = await query(
+    `SELECT EXISTS (
+       SELECT 1 FROM scrim s
+       WHERE s.id = $1 AND (
+         ($3 = 'admin') OR
+         ($3 = 'organizer' AND s.organizer_id = $2) OR
+         EXISTS (
+           SELECT 1 FROM scrim_registration sr
+           JOIN team t ON t.id = sr.team_id
+           LEFT JOIN team_member tm ON tm.team_id = t.id
+           WHERE sr.scrim_id = s.id AND (
+             ($3 = 'org' AND t.org_id = $2) OR
+             ($3 = 'player' AND (t.captain_id = $2 OR tm.player_id = $2))
+           )
+         )
+       )
+     ) AS allowed`,
+    [id, user.id, user.role],
+  );
+  if (!access.rows[0].allowed) throw new ForbiddenError('Only the host or a registered team member can view lobby details');
   const scrimRes = await query(
-    `SELECT s.*, o.name AS organizer_name, o.email AS organizer_email, o.verified AS organizer_verified
+    `SELECT s.*, o.name AS organizer_name, o.verified AS organizer_verified
      FROM scrim s
      JOIN tournament_organizer o ON o.id = s.organizer_id
      WHERE s.id = $1`,
@@ -142,10 +162,10 @@ async function getScrimLobby(id) {
   return scrim;
 }
 
-async function updateScrimCredentials(id, organizerId, { room_id, room_password, status }) {
+async function updateScrimCredentials(id, user, { room_id, room_password, status }) {
   const check = await query('SELECT organizer_id FROM scrim WHERE id = $1', [id]);
   if (check.rowCount === 0) throw new NotFoundError('Scrim');
-  if (check.rows[0].organizer_id !== organizerId) throw new ForbiddenError('Only the hosting organizer can update this lobby');
+  if (check.rows[0].organizer_id !== user.id && user.role !== 'admin') throw new ForbiddenError('Only the hosting organizer can update this lobby');
 
   const sets = [];
   const vals = [];
@@ -165,50 +185,47 @@ async function updateScrimCredentials(id, organizerId, { room_id, room_password,
 }
 
 async function registerTeamForScrim(scrimId, teamId, user) {
-  const scrimRes = await query('SELECT id, slots_max, status FROM scrim WHERE id = $1', [scrimId]);
-  if (scrimRes.rowCount === 0) throw new NotFoundError('Scrim');
-  if (scrimRes.rows[0].status === 'locked' || scrimRes.rows[0].status === 'completed') {
-    throw new BadRequestError('This scrim lobby is closed for registrations');
-  }
+  const registration = await withTransaction(async (client) => {
+    const scrimRes = await client.query('SELECT id, slots_max, status FROM scrim WHERE id = $1 FOR UPDATE', [scrimId]);
+    if (scrimRes.rowCount === 0) throw new NotFoundError('Scrim');
+    if (['locked', 'completed', 'cancelled'].includes(scrimRes.rows[0].status)) {
+      throw new BadRequestError('This scrim lobby is closed for registrations');
+    }
 
-  const teamRes = await query('SELECT id, org_id, captain_id, status FROM team WHERE id = $1', [teamId]);
-  if (teamRes.rowCount === 0) throw new NotFoundError('Team');
-  const team = teamRes.rows[0];
+    const teamRes = await client.query('SELECT id, org_id, captain_id, status FROM team WHERE id = $1', [teamId]);
+    if (teamRes.rowCount === 0) throw new NotFoundError('Team');
+    const team = teamRes.rows[0];
+    const isAuthorized = (team.org_id && team.org_id === user.id) ||
+                         (team.captain_id && team.captain_id === user.id) || user.role === 'admin';
+    if (!isAuthorized) throw new ForbiddenError('You are not authorized to register this team');
+    if (team.status !== 'registered' && user.role !== 'admin') throw new BadRequestError('Only complete team rosters can register');
 
-  const isAuthorized = (team.org_id && team.org_id === user.id) ||
-                       (team.captain_id && team.captain_id === user.id) ||
-                       user.role === 'admin';
-  if (!isAuthorized) throw new ForbiddenError('You are not authorized to register this team');
-
-  const existing = await query(
-    'SELECT id FROM scrim_registration WHERE scrim_id = $1 AND team_id = $2',
-    [scrimId, teamId],
-  );
-  if (existing.rowCount > 0) throw new ConflictError('Team is already registered for this scrim');
-
-  const countRes = await query('SELECT COUNT(*) AS cnt FROM scrim_registration WHERE scrim_id = $1', [scrimId]);
-  if (parseInt(countRes.rows[0].cnt, 10) >= scrimRes.rows[0].slots_max) {
-    throw new BadRequestError('Scrim lobby is full');
-  }
-
-  const regRes = await query(
-    `INSERT INTO scrim_registration (scrim_id, team_id, check_in_status)
-     VALUES ($1, $2, 'registered')
-     RETURNING *`,
-    [scrimId, teamId],
-  );
-  emitToScrimLobby(scrimId, 'scrim:team_registered', regRes.rows[0]);
-  return regRes.rows[0];
+    const existing = await client.query('SELECT id FROM scrim_registration WHERE scrim_id = $1 AND team_id = $2', [scrimId, teamId]);
+    if (existing.rowCount > 0) throw new ConflictError('Team is already registered for this scrim');
+    const countRes = await client.query('SELECT COUNT(*) AS cnt FROM scrim_registration WHERE scrim_id = $1', [scrimId]);
+    if (parseInt(countRes.rows[0].cnt, 10) >= scrimRes.rows[0].slots_max) throw new BadRequestError('Scrim lobby is full');
+    const result = await client.query(
+      `INSERT INTO scrim_registration (scrim_id, team_id, check_in_status)
+       VALUES ($1, $2, 'registered') RETURNING *`,
+      [scrimId, teamId],
+    );
+    return result.rows[0];
+  });
+  emitToScrimLobby(scrimId, 'scrim:team_registered', registration);
+  return registration;
 }
 
 async function updateScrimCheckin(scrimId, teamId, user, checkInStatus = 'checked_in') {
+  if (!['checked_in', 'ready'].includes(checkInStatus)) throw new BadRequestError('Invalid check-in status');
   const teamRes = await query('SELECT id, org_id, captain_id FROM team WHERE id = $1', [teamId]);
   if (teamRes.rowCount === 0) throw new NotFoundError('Team');
+  const scrimRes = await query('SELECT organizer_id FROM scrim WHERE id = $1', [scrimId]);
+  if (scrimRes.rowCount === 0) throw new NotFoundError('Scrim');
   const team = teamRes.rows[0];
 
   const isAuthorized = (team.org_id && team.org_id === user.id) ||
                        (team.captain_id && team.captain_id === user.id) ||
-                       user.role === 'organizer' ||
+                       (user.role === 'organizer' && scrimRes.rows[0].organizer_id === user.id) ||
                        user.role === 'admin';
   if (!isAuthorized) throw new ForbiddenError('Unauthorized to update check-in');
 
@@ -258,13 +275,16 @@ async function updateTournament(id, organizerId, data) {
   return result.rows[0];
 }
 
-async function registerTeam(tournamentId, teamId, orgId) {
+async function registerTeam(tournamentId, teamId, user) {
   const tourneyRes = await query('SELECT id FROM tournament WHERE id = $1', [tournamentId]);
   if (tourneyRes.rowCount === 0) throw new NotFoundError('Tournament');
 
-  const teamRes = await query('SELECT id, org_id FROM team WHERE id = $1', [teamId]);
+  const teamRes = await query('SELECT id, org_id, captain_id, status FROM team WHERE id = $1', [teamId]);
   if (teamRes.rowCount === 0) throw new NotFoundError('Team');
-  if (teamRes.rows[0].org_id !== orgId) throw new ForbiddenError('You do not own this team');
+  const team = teamRes.rows[0];
+  const isOwner = user.role === 'admin' || (user.role === 'org' && team.org_id === user.id) || (user.role === 'player' && team.captain_id === user.id);
+  if (!isOwner) throw new ForbiddenError('You do not own this team');
+  if (team.status !== 'registered' && user.role !== 'admin') throw new BadRequestError('Only complete team rosters can register');
 
   const existing = await query(
     'SELECT id FROM registration WHERE tournament_id = $1 AND team_id = $2',

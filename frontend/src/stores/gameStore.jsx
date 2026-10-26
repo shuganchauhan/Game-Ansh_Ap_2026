@@ -1,9 +1,42 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { discoveryService, teamService, socialService } from '../services';
+import { discoveryService, teamService, socialService, recruitmentService } from '../services';
 
 const GameStoreContext = createContext();
 
 const STORAGE_KEY = 'gamersg_store_v1';
+
+function fromApiPost(post) {
+  return {
+    id: post.id,
+    authorName: post.author_name || 'Gamer',
+    authorHandle: post.author_type === 'player' ? `@${post.author_ign || post.author_name || 'gamer'}` : post.author_name,
+    authorAvatar: post.author_avatar || post.avatar_url || '',
+    isOrg: post.author_type === 'org' || post.author_type === 'organizer',
+    isVerified: Boolean(post.author_verified),
+    category: post.category || 'General',
+    game: post.game || 'valorant',
+    content: post.content,
+    createdAt: post.created_at ? new Date(post.created_at).toLocaleString() : '',
+    likes: Number(post.likes_count) || 0,
+    likedByMe: Boolean(post.liked),
+    comments: (post.comments || []).map((comment) => ({
+      id: comment.id,
+      authorName: comment.author_name,
+      createdAt: comment.created_at ? new Date(comment.created_at).toLocaleString() : '',
+      content: comment.content,
+    })),
+    shares: 0,
+  };
+}
+
+function fromApiApplication(app) {
+  return {
+    id: app.id, teamId: app.team_id, teamName: app.team_name || 'Team', game: app.game || '',
+    roleName: app.role, applicantId: app.player_id, applicantName: app.applicant_name || '',
+    applicantRank: app.applicant_rank || '', pitch: app.pitch || '', vodLink: app.vod_link || '',
+    status: app.status, appliedAt: app.created_at ? new Date(app.created_at).toLocaleString() : '',
+  };
+}
 
 /* ── Initial Mock Players (LinkedIn-style network) ── */
 const INITIAL_PLAYERS = [
@@ -443,6 +476,14 @@ const INITIAL_APPLICATIONS = [
 export function GameStoreProvider({ children }) {
   // Load or fallback
   const [storeState, setStoreState] = useState(() => {
+    if (import.meta.env.PROD) {
+      return {
+        activeRole: 'player', activeOrgId: null,
+        currentUser: { id: '', name: '', username: '', avatar: '', stats: {}, gameAccounts: {} },
+        players: [], orgs: [], teams: [], posts: [], applications: [],
+        connectedPlayerIds: [], followedOrgIds: [],
+      };
+    }
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) return JSON.parse(saved);
@@ -465,6 +506,7 @@ export function GameStoreProvider({ children }) {
 
   // Save on state change
   useEffect(() => {
+    if (import.meta.env.PROD) return;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(storeState));
     } catch (e) {
@@ -476,41 +518,36 @@ export function GameStoreProvider({ children }) {
   useEffect(() => {
     async function syncBackendData() {
       try {
-        const teamsRes = await discoveryService.getTeams();
-        const backendTeams = Array.isArray(teamsRes) ? teamsRes : (teamsRes?.data || []);
-        if (backendTeams.length > 0) {
+        const [teamsResult, feedResult] = await Promise.allSettled([
+          discoveryService.getTeams(),
+          socialService.getFeed(),
+        ]);
+        if (teamsResult.status === 'fulfilled') {
+          const teamsRes = teamsResult.value;
+          const backendTeams = Array.isArray(teamsRes) ? teamsRes : (teamsRes?.data || []);
           setStoreState((prev) => {
-            const existingNames = new Set(prev.teams.map((t) => t.name.toLowerCase()));
-            const newTeams = backendTeams
-              .filter((bt) => !existingNames.has(bt.name.toLowerCase()))
-              .map((bt) => ({
+            const newTeams = backendTeams.map((bt) => ({
                 id: bt.id,
                 name: bt.name,
-                tag: bt.name.slice(0, 4).toUpperCase(),
+                tag: bt.tag || bt.name.slice(0, 4).toUpperCase(),
                 game: bt.game?.toLowerCase() || 'valorant',
                 orgId: bt.org_id,
                 orgName: bt.org_name || 'Independent Squad',
                 verified: Boolean(bt.org_id),
-                division: 'Competitive Tier 1',
-                winrate: '74%',
-                captainId: 'player-me',
-                slotsMax: 5,
-                roster: [
-                  { id: `m-${bt.id}-1`, name: 'Squad Captain', role: 'Captain / IGL', ign: `${bt.name.split(' ')[0]}#1`, isCaptain: true },
-                  { id: `m-${bt.id}-2`, name: 'Assaulter', role: 'Main Fragger', ign: `${bt.name.split(' ')[0]}#2` },
-                  { id: `m-${bt.id}-3`, name: 'Support', role: 'Support / DMR', ign: `${bt.name.split(' ')[0]}#3` },
-                ],
-                openRoles: [
-                  { id: `r-${bt.id}`, roleName: 'Flex Trial Member', description: 'Open tryout slot for competitive season.', requirements: 'Daily scrim availability' },
-                ],
+                division: bt.division || 'Competitive',
+                winrate: bt.winrate || '0%',
+                captainId: bt.captain_id || null,
+                slotsMax: bt.slots_max || 5,
+                roster: [],
+                openRoles: [],
+                membersCount: bt.members_count || 0,
               }));
-
-            if (newTeams.length === 0) return prev;
-            return {
-              ...prev,
-              teams: [...newTeams, ...prev.teams],
-            };
+            return { ...prev, teams: import.meta.env.PROD ? newTeams : [...newTeams, ...prev.teams] };
           });
+        }
+        if (feedResult.status === 'fulfilled') {
+          const posts = Array.isArray(feedResult.value) ? feedResult.value.map(fromApiPost) : [];
+          setStoreState((prev) => ({ ...prev, posts: import.meta.env.PROD ? posts : [...posts, ...prev.posts] }));
         }
       } catch (err) {
         // Backend offline; local store functions smoothly
@@ -529,6 +566,10 @@ export function GameStoreProvider({ children }) {
     setStoreState((prev) => ({ ...prev, activeOrgId: orgId }));
   };
 
+  const setTeamDetails = (teamId, details) => {
+    setStoreState((prev) => ({ ...prev, teams: prev.teams.map((team) => team.id === teamId ? { ...team, ...details } : team) }));
+  };
+
   const setCurrentUser = (user) => {
     if (!user) return;
     setStoreState((prev) => ({
@@ -544,8 +585,30 @@ export function GameStoreProvider({ children }) {
         tagline: user.tagline || prev.currentUser.tagline,
         primaryGame: user.primary_game || prev.currentUser.primaryGame,
         bio: user.bio || prev.currentUser.bio,
+        avatar: user.avatar_url || prev.currentUser.avatar,
+        stats: user.stats || prev.currentUser.stats,
+        gameAccounts: user.game_accounts || prev.currentUser.gameAccounts,
+        location: user.location || prev.currentUser.location,
       },
     }));
+    if (user.role === 'player') {
+      Promise.all([socialService.getConnections(), socialService.getFollows(), socialService.getRecommendedPlayers()])
+        .then(([connections, follows, recommended]) => setStoreState((prev) => ({
+          ...prev,
+          connectedPlayerIds: connections.map((player) => player.id),
+          followedOrgIds: follows.filter((follow) => follow.target_type === 'org').map((follow) => follow.target_id),
+          players: recommended.map((player) => ({
+            ...player, name: player.username, avatar: player.avatar_url,
+            primaryGame: player.primary_game, lftStatus: player.lft_status,
+          })),
+        })))
+        .catch(() => {});
+    }
+    if (['player', 'org', 'admin'].includes(user.role)) {
+      recruitmentService.getApplications()
+        .then((applications) => setStoreState((prev) => ({ ...prev, applications: applications.map(fromApiApplication) })))
+        .catch(() => {});
+    }
   };
 
   /* ── LinkedIn-Style Profile Update ── */
@@ -564,30 +627,23 @@ export function GameStoreProvider({ children }) {
   };
 
   /* ── Team Formation (NO SEPARATE LOGIN! Any player or org creates teams) ── */
-  const createTeam = ({ name, tag, game, orgId = null, orgName = '', division = 'Open Tier', slotsMax = 5, initialMembers = [], openRoles = [] }) => {
-    const newTeamId = `team-${Date.now()}`;
+  const createTeam = async ({ name, tag, game, orgId = null, orgName = '', division = 'Open Tier', slotsMax = 5, initialMembers = [], openRoles = [] }) => {
+    const created = await teamService.createTeam({
+      name, tag, game, division, slots_max: Number(slotsMax),
+      members: initialMembers.filter((member) => !member.isCaptain).map(({ name: memberName, ign, role }) => ({ name: memberName, ign, role })),
+    });
+    const postingResults = await Promise.allSettled(openRoles.map((posting) => teamService.createPosting(created.id, {
+      role: posting.roleName, description: posting.description,
+    })));
     const newTeam = {
-      id: newTeamId,
-      name,
-      tag: tag || name.slice(0, 4).toUpperCase(),
-      game,
-      orgId: orgId || (storeState.activeRole === 'org' ? storeState.activeOrgId : null),
-      orgName: orgName || (storeState.activeRole === 'org' ? (storeState.orgs.find(o => o.id === storeState.activeOrgId)?.name || 'Independent Org') : 'Independent Squad'),
-      verified: storeState.activeRole === 'org',
-      division,
-      winrate: '0.0%',
-      captainId: storeState.currentUser.id,
-      slotsMax: Number(slotsMax) || 5,
-      roster: initialMembers.length > 0 ? initialMembers : [
-        {
-          id: `member-${Date.now()}`,
-          name: storeState.currentUser.name,
-          role: 'Captain / IGL',
-          ign: storeState.currentUser.gameAccounts?.[game] || storeState.currentUser.username,
-          isCaptain: true,
-        },
-      ],
-      openRoles: openRoles || [],
+      id: created.id, name: created.name, tag: created.tag || tag || name.slice(0, 4).toUpperCase(), game: created.game,
+      orgId: created.org_id, orgName: orgName || 'Independent Squad', verified: false,
+      division: created.division || division, winrate: '0%', captainId: created.captain_id,
+      slotsMax: created.slots_max || Number(slotsMax) || 5,
+      roster: (created.members || []).map((member) => ({ ...member, isCaptain: member.is_captain })),
+      openRoles: postingResults.filter((result) => result.status === 'fulfilled').map((result) => ({
+        id: result.value.id, roleName: result.value.role, description: result.value.description || '',
+      })),
     };
 
     setStoreState((prev) => ({
@@ -595,55 +651,44 @@ export function GameStoreProvider({ children }) {
       teams: [newTeam, ...prev.teams],
     }));
 
-    // Asynchronously sync to live backend if available
-    teamService.createTeam({
-      name,
-      game,
-      status: 'active',
-      org_id: orgId || null,
-    }).catch(() => {});
-
     return newTeam;
   };
 
   /* ── Roster & Open Role Management ── */
-  const addTeamMember = (teamId, member) => {
+  const addTeamMember = async (teamId, member) => {
+    const result = await teamService.addMember(teamId, { name: member.name, ign: member.ign, role: member.role });
     setStoreState((prev) => ({
       ...prev,
       teams: prev.teams.map((t) => {
         if (t.id !== teamId) return t;
-        if (t.roster.length >= t.slotsMax) return t;
-        return {
-          ...t,
-          roster: [...t.roster, { id: `m-${Date.now()}`, ...member }],
-        };
+        return { ...t, roster: result.members.map((item) => ({ ...item, isCaptain: item.is_captain })), status: result.status };
       }),
     }));
   };
 
-  const removeTeamMember = (teamId, memberId) => {
+  const removeTeamMember = async (teamId, memberId) => {
+    await teamService.removeMember(teamId, memberId);
+    const fresh = await teamService.getTeam(teamId);
     setStoreState((prev) => ({
       ...prev,
       teams: prev.teams.map((t) => {
         if (t.id !== teamId) return t;
-        return {
-          ...t,
-          roster: t.roster.filter((m) => m.id !== memberId),
-        };
+        return { ...t, roster: (fresh.members || []).map((item) => ({ ...item, isCaptain: item.is_captain })), status: fresh.status };
       }),
     }));
   };
 
-  const openRecruitmentRole = (teamId, roleData) => {
+  const openRecruitmentRole = async (teamId, roleData) => {
+    const role = await teamService.createPosting(teamId, { role: roleData.roleName, description: roleData.description });
     setStoreState((prev) => ({
       ...prev,
       teams: prev.teams.map((t) => {
         if (t.id !== teamId) return t;
         const newRole = {
-          id: `role-${Date.now()}`,
-          roleName: roleData.roleName,
-          description: roleData.description || 'Open competitive slot.',
-          requirements: roleData.requirements || 'Daily scrim availability.',
+          id: role.id,
+          roleName: role.role,
+          description: role.description || '',
+          requirements: roleData.requirements || '',
         };
         return {
           ...t,
@@ -653,7 +698,8 @@ export function GameStoreProvider({ children }) {
     }));
   };
 
-  const closeRecruitmentRole = (teamId, roleId) => {
+  const closeRecruitmentRole = async (teamId, roleId) => {
+    await teamService.closePosting(roleId);
     setStoreState((prev) => ({
       ...prev,
       teams: prev.teams.map((t) => {
@@ -667,23 +713,10 @@ export function GameStoreProvider({ children }) {
   };
 
   /* ── Tryouts Application Pipeline ── */
-  const submitApplication = ({ teamId, roleName, pitch, vodLink }) => {
-    const targetTeam = storeState.teams.find((t) => t.id === teamId);
-    const newApp = {
-      id: `app-${Date.now()}`,
-      teamId,
-      teamName: targetTeam?.name || 'Competitive Team',
-      game: targetTeam?.game || 'valorant',
-      roleName: roleName || 'Active Roster Slot',
-      applicantId: storeState.currentUser.id,
-      applicantName: storeState.currentUser.name,
-      applicantRank: storeState.currentUser.stats?.[targetTeam?.game]?.rank || 'Competitive',
-      pitch,
-      vodLink,
-      status: 'applied',
-      appliedAt: 'Just now',
-    };
-
+  const submitApplication = async ({ postingId, teamId, roleName, pitch, vodLink }) => {
+    const response = await teamService.applyToPosting(postingId, pitch, vodLink);
+    const targetTeam = storeState.teams.find((team) => team.id === teamId);
+    const newApp = fromApiApplication({ ...response, team_id: teamId, team_name: targetTeam?.name, game: targetTeam?.game, role: roleName, applicant_name: storeState.currentUser.name });
     setStoreState((prev) => ({
       ...prev,
       applications: [newApp, ...prev.applications],
@@ -692,41 +725,16 @@ export function GameStoreProvider({ children }) {
     return newApp;
   };
 
-  const updateApplicationStatus = (appId, status) => {
+  const updateApplicationStatus = async (appId, status) => {
+    await recruitmentService.updateStatus(appId, status);
     setStoreState((prev) => {
-      const app = prev.applications.find((a) => a.id === appId);
       const updatedApplications = prev.applications.map((a) =>
         a.id === appId ? { ...a, status } : a
       );
 
-      // If accepted, optionally auto-add applicant to team roster!
-      let updatedTeams = prev.teams;
-      if (status === 'accepted' && app) {
-        updatedTeams = prev.teams.map((t) => {
-          if (t.id !== app.teamId) return t;
-          if (t.roster.some((m) => m.name === app.applicantName)) return t;
-          return {
-            ...t,
-            roster: [
-              ...t.roster,
-              {
-                id: `m-accepted-${Date.now()}`,
-                name: app.applicantName,
-                role: app.roleName,
-                ign: app.applicantName.split(' ')[0],
-                isCaptain: false,
-              },
-            ],
-            // Remove the corresponding open role if matched
-            openRoles: t.openRoles.filter((r) => r.roleName !== app.roleName),
-          };
-        });
-      }
-
       return {
         ...prev,
         applications: updatedApplications,
-        teams: updatedTeams,
       };
     });
   };
@@ -768,7 +776,12 @@ export function GameStoreProvider({ children }) {
   };
 
   /* ── Follow / Unfollow Organization ── */
-  const toggleFollowOrg = (orgId) => {
+  const toggleFollowOrg = async (orgId) => {
+    const isFollowing = storeState.followedOrgIds.includes(orgId);
+    try {
+      if (isFollowing) await socialService.unfollow(orgId, 'org');
+      else await socialService.follow(orgId, 'org');
+    } catch (error) { throw error; }
     setStoreState((prev) => {
       const isFollowing = prev.followedOrgIds.includes(orgId);
       const newFollowed = isFollowing
@@ -793,95 +806,49 @@ export function GameStoreProvider({ children }) {
   };
 
   /* ── Player Connection (LinkedIn Style) ── */
-  const toggleConnectPlayer = (playerId) => {
+  const toggleConnectPlayer = async (playerId) => {
+    if (storeState.connectedPlayerIds.includes(playerId)) return;
+    try { await socialService.connect(playerId); }
+    catch (error) { throw error; }
     setStoreState((prev) => {
-      const isConnected = prev.connectedPlayerIds.includes(playerId);
-      const newConnected = isConnected
-        ? prev.connectedPlayerIds.filter((id) => id !== playerId)
-        : [...prev.connectedPlayerIds, playerId];
+      const newConnected = prev.connectedPlayerIds.includes(playerId) ? prev.connectedPlayerIds : [...prev.connectedPlayerIds, playerId];
 
       return {
         ...prev,
         connectedPlayerIds: newConnected,
         currentUser: {
           ...prev.currentUser,
-          connectionsCount: isConnected
-            ? prev.currentUser.connectionsCount - 1
-            : prev.currentUser.connectionsCount + 1,
+          connectionsCount: (prev.currentUser.connectionsCount || 0) + 1,
         },
       };
     });
   };
 
   /* ── Community Feed Posts & Comments ── */
-  const createPost = ({ content, category = 'General', game = 'valorant' }) => {
-    const isOrg = storeState.activeRole === 'org';
-    const activeOrg = storeState.orgs.find((o) => o.id === storeState.activeOrgId);
-
-    const newPost = {
-      id: `post-${Date.now()}`,
-      authorName: isOrg ? activeOrg?.name || 'My Organization' : storeState.currentUser.name,
-      authorHandle: isOrg ? activeOrg?.twitter || `@${activeOrg?.tag || 'org'}` : `@${storeState.currentUser.username}`,
-      authorAvatar: isOrg ? activeOrg?.logo : storeState.currentUser.avatar,
-      isOrg,
-      isVerified: isOrg ? activeOrg?.verified : storeState.currentUser.isVerified,
-      category,
-      game,
-      content,
-      createdAt: 'Just now',
-      likes: 0,
-      likedByMe: false,
-      comments: [],
-      shares: 0,
-    };
-
-    setStoreState((prev) => ({
-      ...prev,
-      posts: [newPost, ...prev.posts],
-    }));
-
-    // Asynchronously sync to live backend if available
-    socialService.createPost({
-      content,
-    }).catch(() => {});
-
+  const createPost = async ({ content, category = 'General', game = 'valorant' }) => {
+    const response = await socialService.createPost({ content, category, game });
+    const newPost = fromApiPost(response);
+    setStoreState((prev) => ({ ...prev, posts: [newPost, ...prev.posts] }));
     return newPost;
   };
 
-  const toggleLikePost = (postId) => {
-    setStoreState((prev) => ({
-      ...prev,
-      posts: prev.posts.map((p) => {
-        if (p.id !== postId) return p;
-        const liked = !p.likedByMe;
-        return {
-          ...p,
-          likedByMe: liked,
-          likes: liked ? p.likes + 1 : p.likes - 1,
-        };
-      }),
-    }));
+  const toggleLikePost = async (postId) => {
+    try {
+      const result = await socialService.likePost(postId);
+      setStoreState((prev) => ({ ...prev, posts: prev.posts.map((post) => post.id !== postId ? post : {
+        ...post, likedByMe: result.liked, likes: Math.max(0, post.likes + (result.liked ? 1 : -1)),
+      }) }));
+    } catch (error) { throw error; }
   };
 
-  const addCommentToPost = (postId, text) => {
+  const addCommentToPost = async (postId, text) => {
     if (!text.trim()) return;
-    const authorName = storeState.activeRole === 'org'
-      ? (storeState.orgs.find((o) => o.id === storeState.activeOrgId)?.name || 'Organization')
-      : storeState.currentUser.username;
-
-    setStoreState((prev) => ({
-      ...prev,
-      posts: prev.posts.map((p) => {
-        if (p.id !== postId) return p;
-        return {
-          ...p,
-          comments: [
-            ...p.comments,
-            { id: `c-${Date.now()}`, user: authorName, text, time: 'Just now' },
-          ],
-        };
-      }),
-    }));
+    try {
+      const comment = await socialService.addComment(postId, text);
+      setStoreState((prev) => ({ ...prev, posts: prev.posts.map((post) => post.id !== postId ? post : {
+        ...post, comments: [...post.comments, { id: comment.id, authorName: comment.author_name, createdAt: new Date(comment.created_at).toLocaleString(), content: comment.content }],
+      }) }));
+    } catch (error) { throw error; }
   };
 
   const value = {
@@ -889,6 +856,7 @@ export function GameStoreProvider({ children }) {
     setCurrentUser,
     setActiveRole,
     setActiveOrgId,
+    setTeamDetails,
     updateCurrentUserProfile,
     createTeam,
     addTeamMember,

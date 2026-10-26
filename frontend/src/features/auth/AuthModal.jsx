@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  X, Lock, AlertCircle, ArrowRight, Mail, User, Eye, EyeOff, ShieldCheck, CheckCircle2
+  X, Lock, AlertCircle, ArrowRight, Mail, User, Eye, EyeOff, ShieldCheck
 } from 'lucide-react';
 import { useAuth } from '../../stores/authContext';
 import { useGameStore } from '../../stores/gameStore';
@@ -10,11 +10,13 @@ export default function AuthModal({
   onClose,
   onSuccess,
   initialMode = 'login',
+  initialRole = 'player',
 }) {
   const { login, signup } = useAuth();
   const { setActiveRole, setCurrentUser } = useGameStore();
 
   const [mode, setMode] = useState(initialMode); // 'login' | 'signup'
+  const [role, setRole] = useState(initialRole);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -24,16 +26,17 @@ export default function AuthModal({
   const [agreedTerms, setAgreedTerms] = useState(true);
 
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [forgotSent, setForgotSent] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   React.useEffect(() => {
     if (isOpen) {
       setMode(initialMode || 'login');
+      setRole(initialRole || 'player');
       setError(null);
       setForgotSent(false);
     }
-  }, [isOpen, initialMode]);
+  }, [isOpen, initialMode, initialRole]);
 
   if (!isOpen) return null;
 
@@ -53,8 +56,8 @@ export default function AuthModal({
     }
 
     if (mode === 'signup') {
-      if (password.length < 6) {
-        setError('Password must be at least 6 characters.');
+      if (password.length < 12) {
+        setError('Password must be at least 12 characters.');
         return;
       }
       if (password !== confirmPassword) {
@@ -74,7 +77,15 @@ export default function AuthModal({
       if (mode === 'login') {
         resultUser = await login(cleanEmail, password);
       } else {
-        resultUser = await signup(cleanEmail, password);
+        const accountName = username.trim();
+        if (role !== 'player' && accountName.length < 2) {
+          setError('Please enter an organization or organizer name (at least 2 characters).');
+          setLoading(false);
+          return;
+        }
+        resultUser = await signup(role, role === 'player'
+          ? { email: cleanEmail, password, username: accountName || undefined }
+          : { email: cleanEmail, password, name: accountName });
       }
 
       const role = resultUser.role || 'player';
@@ -95,11 +106,10 @@ export default function AuthModal({
 
   const handleForgotPassword = () => {
     if (!email) {
-      setError('Please enter your email address above to receive a password reset link.');
+      setError('Enter your account email first.');
       return;
     }
-    setError(null);
-    setForgotSent(true);
+    setError('Password recovery is not configured yet. Contact platform support.');
   };
 
   return (
@@ -117,7 +127,7 @@ export default function AuthModal({
         {/* Brand Header */}
         <div className="text-center space-y-2 pt-1">
           <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center mx-auto shadow-lg shadow-primary/20">
-            <span className="font-display font-extrabold text-2xl text-black">G</span>
+            <span className="font-display font-extrabold text-2xl text-white dark:text-black">G</span>
           </div>
           <div>
             <h2 className="font-display font-bold text-2xl text-on-surface tracking-tight">
@@ -142,7 +152,7 @@ export default function AuthModal({
             }}
             className={`py-2.5 rounded-xl font-display text-xs font-bold uppercase tracking-wider transition-all ${
               mode === 'login'
-                ? 'bg-primary text-black dark:text-black font-extrabold shadow-md'
+                ? 'bg-primary text-white dark:text-black font-extrabold shadow-md'
                 : 'text-on-surface-variant hover:text-on-surface'
             }`}
           >
@@ -157,13 +167,22 @@ export default function AuthModal({
             }}
             className={`py-2.5 rounded-xl font-display text-xs font-bold uppercase tracking-wider transition-all ${
               mode === 'signup'
-                ? 'bg-primary text-black dark:text-black font-extrabold shadow-md'
+                ? 'bg-primary text-white dark:text-black font-extrabold shadow-md'
                 : 'text-on-surface-variant hover:text-on-surface'
             }`}
           >
             Sign Up
           </button>
         </div>
+
+        {mode === 'signup' && <label className="block">
+          <span className="block font-mono text-[11px] uppercase tracking-wider text-on-surface-variant mb-1.5 font-bold">Account type</span>
+          <select value={role} onChange={(e) => setRole(e.target.value)} className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-card-border text-on-surface text-sm focus:outline-none focus:border-primary" aria-label="Account type">
+            <option value="player">Player</option>
+            <option value="org">Organization</option>
+            <option value="organizer">Tournament organizer</option>
+          </select>
+        </label>}
 
         {/* Feedback Alerts */}
         {error && (
@@ -173,27 +192,18 @@ export default function AuthModal({
           </div>
         )}
 
-        {forgotSent && (
-          <div className="flex items-start gap-2.5 p-3.5 rounded-2xl bg-secondary/15 border border-secondary/30 text-secondary text-xs font-body animate-in fade-in">
-            <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" />
-            <span className="leading-relaxed">
-              If an account matches <strong>{email}</strong>, a password reset link has been dispatched to your inbox.
-            </span>
-          </div>
-        )}
-
         {/* Main Authentication Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Sign Up: Gamer Tag Field */}
+          {/* Sign Up: Gamer Tag or organization name */}
           {mode === 'signup' && (
             <div>
               <label className="block font-mono text-[11px] uppercase tracking-wider text-on-surface-variant mb-1.5 flex items-center gap-1.5 font-bold">
                 <User className="w-3.5 h-3.5 text-secondary" />
-                Gamer Tag / Display Name
+                {role === 'player' ? 'Gamer Tag / Display Name' : role === 'org' ? 'Organization Name' : 'Organizer Name'}
               </label>
               <input
                 type="text"
-                placeholder="e.g. Vortex_99"
+                placeholder={role === 'player' ? 'e.g. Vortex_99' : role === 'org' ? 'e.g. Northern Esports' : 'e.g. Campus Gaming League'}
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 className="w-full px-4 py-3 rounded-xl bg-surface-container-low dark:bg-white/5 border border-card-border text-on-surface placeholder:text-on-surface-variant/50 text-sm focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary font-body transition-all"
@@ -208,7 +218,7 @@ export default function AuthModal({
               Email Address
             </label>
             <input
-              type="text"
+              type="email"
               required
               autoFocus
               placeholder="you@domain.com"
@@ -306,17 +316,17 @@ export default function AuthModal({
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-primary to-secondary hover:opacity-95 text-black font-display font-bold text-xs uppercase tracking-wider shadow-lg shadow-primary/25 active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+            className="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-primary to-secondary hover:opacity-95 text-white dark:text-black font-display font-bold text-xs uppercase tracking-wider shadow-lg shadow-primary/25 active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
           >
             {loading ? (
               <span className="inline-flex items-center gap-2">
-                <span className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                <span className="w-4 h-4 border-2 border-white dark:border-black border-t-transparent rounded-full animate-spin" />
                 <span>Authenticating...</span>
               </span>
             ) : (
               <>
                 <span>{mode === 'login' ? 'Sign In to Account' : 'Create Account'}</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4 text-white dark:text-black" />
               </>
             )}
           </button>

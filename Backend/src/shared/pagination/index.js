@@ -4,16 +4,17 @@ function encodeCursor(id) {
 
 function decodeCursor(cursor) {
   try {
-    return Buffer.from(cursor, 'base64url').toString('utf8');
+    const decoded = Buffer.from(cursor, 'base64url').toString('utf8');
+    return decoded && Buffer.from(decoded).toString('base64url') === cursor ? decoded : null;
   } catch {
     return null;
   }
 }
 
-function buildCursorPage(rows, limit) {
+function buildCursorPage(rows, limit, cursorForRow = (row) => row.id) {
   const hasMore = rows.length > limit;
   const data = hasMore ? rows.slice(0, limit) : rows;
-  const nextCursor = hasMore && data.length > 0 ? encodeCursor(data[data.length - 1].id) : null;
+  const nextCursor = hasMore && data.length > 0 ? encodeCursor(cursorForRow(data[data.length - 1])) : null;
   return { data, nextCursor, hasMore };
 }
 

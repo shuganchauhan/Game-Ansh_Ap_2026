@@ -1,4 +1,4 @@
-const { query } = require('../../shared/db');
+const { query, withTransaction } = require('../../shared/db');
 const { NotFoundError, ConflictError, BadRequestError } = require('../../shared/errors');
 
 async function follow(playerId, { target_type, target_id }) {
@@ -35,6 +35,7 @@ async function createPost(user, { content, category = 'General', game = 'valoran
   if (!content || !content.trim()) throw new BadRequestError('Content cannot be empty');
 
   const authorType = user.role || 'player';
+  if (authorType === 'admin') throw new BadRequestError('Administrators cannot publish community posts');
   const authorId = user.id;
 
   const result = await query(
@@ -110,14 +111,23 @@ async function getFeed(userId = null) {
 
   const result = await query(sql, [userId || '00000000-0000-0000-0000-000000000000']);
   
-  // Attach recent comments for each post
-  for (const post of result.rows) {
-    const commentsRes = await query(
-      'SELECT id, author_name, content, created_at FROM post_comment WHERE post_id = $1 ORDER BY created_at ASC LIMIT 5',
-      [post.id],
-    );
-    post.comments = commentsRes.rows;
+  const postIds = result.rows.map((post) => post.id);
+  const commentsRes = postIds.length
+    ? await query(
+      `SELECT id, post_id, author_name, content, created_at FROM (
+         SELECT id, post_id, author_name, content, created_at,
+                ROW_NUMBER() OVER (PARTITION BY post_id ORDER BY created_at ASC) AS position
+         FROM post_comment WHERE post_id = ANY($1::uuid[])
+       ) recent WHERE position <= 5 ORDER BY post_id, created_at ASC`,
+      [postIds],
+    )
+    : { rows: [] };
+  const commentsByPost = new Map();
+  for (const comment of commentsRes.rows) {
+    if (!commentsByPost.has(comment.post_id)) commentsByPost.set(comment.post_id, []);
+    commentsByPost.get(comment.post_id).push(comment);
   }
+  for (const post of result.rows) post.comments = commentsByPost.get(post.id) || [];
 
   return result.rows;
 }
@@ -157,16 +167,19 @@ async function getPost(id, userId = null) {
 }
 
 async function toggleLike(postId, userId) {
-  const existing = await query('SELECT id FROM post_like WHERE post_id = $1 AND user_id = $2', [postId, userId]);
-  if (existing.rowCount > 0) {
-    await query('DELETE FROM post_like WHERE post_id = $1 AND user_id = $2', [postId, userId]);
-    await query('UPDATE post SET likes_count = GREATEST(0, likes_count - 1) WHERE id = $1', [postId]);
-    return { liked: false };
-  } else {
-    await query('INSERT INTO post_like (post_id, user_id) VALUES ($1, $2)', [postId, userId]);
-    await query('UPDATE post SET likes_count = likes_count + 1 WHERE id = $1', [postId]);
+  return withTransaction(async (client) => {
+    const post = await client.query('SELECT id FROM post WHERE id = $1 FOR UPDATE', [postId]);
+    if (post.rowCount === 0) throw new NotFoundError('Post');
+    const existing = await client.query('SELECT id FROM post_like WHERE post_id = $1 AND user_id = $2', [postId, userId]);
+    if (existing.rowCount > 0) {
+      await client.query('DELETE FROM post_like WHERE post_id = $1 AND user_id = $2', [postId, userId]);
+      await client.query('UPDATE post SET likes_count = GREATEST(0, likes_count - 1) WHERE id = $1', [postId]);
+      return { liked: false };
+    }
+    await client.query('INSERT INTO post_like (post_id, user_id) VALUES ($1, $2)', [postId, userId]);
+    await client.query('UPDATE post SET likes_count = likes_count + 1 WHERE id = $1', [postId]);
     return { liked: true };
-  }
+  });
 }
 
 async function addComment(postId, user, content) {
@@ -229,6 +242,11 @@ async function getConnections(playerId) {
   return res.rows;
 }
 
+async function getFollows(playerId) {
+  const result = await query('SELECT target_type, target_id FROM follow WHERE player_id = $1', [playerId]);
+  return result.rows;
+}
+
 async function getRecommendedPlayers(currentUserId = null) {
   const params = [];
   let filterClause = '';
@@ -266,5 +284,6 @@ module.exports = {
   addComment,
   connectPlayers,
   getConnections,
+  getFollows,
   getRecommendedPlayers,
 };

@@ -26,7 +26,7 @@ router.get('/organizer/verification/status', authenticate, authorize(['organizer
 // Scrims
 router.get('/scrims', listScrims);
 router.post('/scrims', authenticate, authorize(['organizer', 'admin']), createScrim);
-router.get('/scrims/:id', getScrimLobby);
+router.get('/scrims/:id', authenticate, authorize(['player', 'org', 'organizer', 'admin']), getScrimLobby);
 router.patch('/scrims/:id/credentials', authenticate, authorize(['organizer', 'admin']), updateScrimCredentials);
 router.post('/scrims/:id/register', authenticate, authorize(['player', 'org', 'admin']), registerTeamForScrim);
 router.post('/scrims/:id/checkin/:teamId', authenticate, authorize(['player', 'org', 'organizer', 'admin']), updateScrimCheckin);
@@ -35,7 +35,7 @@ router.post('/scrims/:id/checkin/:teamId', authenticate, authorize(['player', 'o
 router.post('/', authenticate, authorize('organizer'), createTournament);
 router.get('/:id', getTournament);
 router.patch('/:id', authenticate, authorize('organizer'), updateTournament);
-router.post('/:id/register', authenticate, authorize(['org', 'player']), registerTeam);
+router.post('/:id/register', authenticate, authorize(['org', 'player', 'admin']), registerTeam);
 router.get('/:id/registrations', authenticate, authorize('organizer'), getTournamentRegistrations);
 router.patch('/:id/registrations/:regId', authenticate, authorize('organizer'), updateRegistration);
 

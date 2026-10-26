@@ -17,10 +17,11 @@ function assertForwardTransition(current, next) {
   }
 }
 
-async function createPosting(teamId, orgId, { role, description }) {
-  const teamRes = await query('SELECT id, org_id FROM team WHERE id = $1', [teamId]);
+async function createPosting(teamId, user, { role, description }) {
+  const teamRes = await query('SELECT id, org_id, captain_id FROM team WHERE id = $1', [teamId]);
   if (teamRes.rowCount === 0) throw new NotFoundError('Team');
-  if (teamRes.rows[0].org_id !== orgId) throw new ForbiddenError('You do not own this team');
+  const team = teamRes.rows[0];
+  if (user.role !== 'admin' && team.org_id !== user.id && team.captain_id !== user.id) throw new ForbiddenError('You do not own this team');
   const result = await query(
     `INSERT INTO role_posting (team_id, role, description)
      VALUES ($1, $2, $3) RETURNING id, team_id, role, description, status, created_at`,
@@ -37,7 +38,7 @@ async function getTeamPostings(teamId) {
   return result.rows;
 }
 
-async function applyToPosting(playerId, postingId) {
+async function applyToPosting(playerId, postingId, { pitch = '', vod_link = '' } = {}) {
   const postingRes = await query('SELECT id, status FROM role_posting WHERE id = $1', [postingId]);
   if (postingRes.rowCount === 0) throw new NotFoundError('Posting');
   if (postingRes.rows[0].status === 'closed') throw new BadRequestError('This posting is closed');
@@ -49,16 +50,16 @@ async function applyToPosting(playerId, postingId) {
   if (existing.rowCount > 0) throw new ConflictError('Already applied to this posting');
 
   const result = await query(
-    `INSERT INTO application (player_id, posting_id)
-     VALUES ($1, $2) RETURNING id, player_id, posting_id, status, created_at`,
-    [playerId, postingId],
+    `INSERT INTO application (player_id, posting_id, pitch, vod_link)
+     VALUES ($1, $2, $3, $4) RETURNING id, player_id, posting_id, pitch, vod_link, status, created_at`,
+    [playerId, postingId, pitch, vod_link || null],
   );
   return result.rows[0];
 }
 
-async function updateApplicationStatus(applicationId, orgId, {newStatus, message}) {
+async function updateApplicationStatus(applicationId, user, newStatus) {
   const appRes = await query(
-    `SELECT a.id, a.status, a.player_id, rp.team_id, t.org_id
+    `SELECT a.id, a.status, a.player_id, rp.team_id, t.org_id, t.captain_id
      FROM application a
      JOIN role_posting rp ON rp.id = a.posting_id
      JOIN team t ON t.id = rp.team_id
@@ -67,7 +68,9 @@ async function updateApplicationStatus(applicationId, orgId, {newStatus, message
   );
   if (appRes.rowCount === 0) throw new NotFoundError('Application');
   const app = appRes.rows[0];
-  if (app.org_id !== orgId) throw new ForbiddenError('You do not own the team for this application');
+  if (user.role !== 'admin' && app.org_id !== user.id && app.captain_id !== user.id) {
+    throw new ForbiddenError('You do not own the team for this application');
+  }
 
   assertForwardTransition(app.status, newStatus);
 
@@ -84,28 +87,51 @@ async function updateApplicationStatus(applicationId, orgId, {newStatus, message
 async function getApplication(applicationId, requesterId, role) {
   const result = await query(
     `SELECT a.id, a.player_id, a.posting_id, a.status, a.created_at, a.updated_at,
-            rp.role, rp.team_id, t.org_id
+            rp.role, rp.team_id, t.org_id, t.captain_id, a.pitch, a.vod_link,
+            t.name AS team_name, t.game, p.username AS applicant_name, p.primary_game AS applicant_rank
      FROM application a
      JOIN role_posting rp ON rp.id = a.posting_id
      JOIN team t ON t.id = rp.team_id
+     JOIN player p ON p.id = a.player_id
      WHERE a.id = $1`,
     [applicationId],
   );
   if (result.rowCount === 0) throw new NotFoundError('Application');
   const app = result.rows[0];
-  if (role === 'player' && app.player_id !== requesterId) throw new ForbiddenError('Access denied');
+  if (role === 'player' && app.player_id !== requesterId && app.captain_id !== requesterId) throw new ForbiddenError('Access denied');
   if (role === 'org' && app.org_id !== requesterId) throw new ForbiddenError('Access denied');
+  if (!['player', 'org', 'admin'].includes(role)) throw new ForbiddenError('Access denied');
   return app;
 }
 
-async function closePosting(postingId, orgId) {
+async function listApplications(user) {
+  if (!['player', 'org', 'admin'].includes(user.role)) throw new ForbiddenError('Access denied');
+  const result = await query(
+    `SELECT a.id, a.player_id, a.posting_id, a.pitch, a.vod_link, a.status, a.created_at, a.updated_at,
+            rp.role, rp.team_id, t.name AS team_name, t.game,
+            p.username AS applicant_name, p.primary_game AS applicant_rank, p.avatar_url AS applicant_avatar
+     FROM application a
+     JOIN role_posting rp ON rp.id = a.posting_id
+     JOIN team t ON t.id = rp.team_id
+     JOIN player p ON p.id = a.player_id
+     WHERE ($2 = 'admin')
+        OR ($2 = 'player' AND (a.player_id = $1 OR t.captain_id = $1))
+        OR ($2 = 'org' AND t.org_id = $1)
+     ORDER BY a.created_at DESC
+     LIMIT 100`,
+    [user.id, user.role],
+  );
+  return result.rows;
+}
+
+async function closePosting(postingId, user) {
   const res = await query(
-    `SELECT rp.id, t.org_id FROM role_posting rp
+    `SELECT rp.id, t.org_id, t.captain_id FROM role_posting rp
      JOIN team t ON t.id = rp.team_id WHERE rp.id = $1`,
     [postingId],
   );
   if (res.rowCount === 0) throw new NotFoundError('Posting');
-  if (res.rows[0].org_id !== orgId) throw new ForbiddenError('Access denied');
+  if (user.role !== 'admin' && res.rows[0].org_id !== user.id && res.rows[0].captain_id !== user.id) throw new ForbiddenError('Access denied');
   const result = await query(
     "UPDATE role_posting SET status = 'closed' WHERE id = $1 RETURNING *",
     [postingId],
@@ -120,5 +146,6 @@ module.exports = {
   applyToPosting,
   updateApplicationStatus,
   getApplication,
+  listApplications,
   closePosting,
 };

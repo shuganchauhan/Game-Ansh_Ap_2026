@@ -16,8 +16,8 @@ const GAME_TABS = [
   { id: 'cod', label: 'Call of Duty' },
 ];
 
-export default function TournamentsPage({ onRegisterModal, onOpenScrimLobby, onSelectTab }) {
-  const { user } = useAuth();
+export default function TournamentsPage({ onRegisterModal, onOpenScrimLobby, onSelectTab, onOpenAuth }) {
+  const { user, isAuthenticated } = useAuth();
   const [selectedRound, setSelectedRound] = useState('finals'); // 'quarter' | 'semi' | 'finals'
   const [selectedGameFilter, setSelectedGameFilter] = useState('all');
   const [scrims, setScrims] = useState([]);
@@ -106,7 +106,7 @@ export default function TournamentsPage({ onRegisterModal, onOpenScrimLobby, onS
 
             <button
               onClick={() => onRegisterModal && onRegisterModal()}
-              className="w-full py-2.5 px-5 rounded-xl bg-primary text-black font-display font-bold text-xs uppercase tracking-wider shadow-lg shadow-primary/20 active:scale-95 transition-all"
+              className="w-full py-2.5 px-5 rounded-xl bg-primary text-white dark:text-black font-display font-bold text-xs uppercase tracking-wider shadow-lg shadow-primary/20 active:scale-95 transition-all"
             >
               Register Qualified Squad
             </button>
@@ -138,7 +138,7 @@ export default function TournamentsPage({ onRegisterModal, onOpenScrimLobby, onS
                 onClick={() => setSelectedGameFilter(tab.id)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold whitespace-nowrap transition-all ${
                   selectedGameFilter === tab.id
-                    ? 'bg-primary text-black shadow-sm'
+                    ? 'bg-primary text-white dark:text-black shadow-sm'
                     : 'text-on-surface-variant hover:text-on-surface'
                 }`}
               >
@@ -191,7 +191,7 @@ export default function TournamentsPage({ onRegisterModal, onOpenScrimLobby, onS
 
                 <button
                   onClick={() => onOpenScrimLobby?.(scrim.id)}
-                  className="w-full py-2.5 px-4 rounded-xl bg-surface-container-high group-hover:bg-primary group-hover:text-black font-display font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition"
+                  className="w-full py-2.5 px-4 rounded-xl bg-surface-container-high group-hover:bg-primary group-hover:text-white dark:group-hover:text-black font-display font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition"
                 >
                   Enter Scrim Match Room
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -215,7 +215,7 @@ export default function TournamentsPage({ onRegisterModal, onOpenScrimLobby, onS
               onClick={() => setSelectedRound('semi')}
               className={`px-3 py-1.5 rounded-lg font-mono text-xs font-semibold transition-all ${
                 selectedRound === 'semi'
-                  ? 'bg-primary text-black font-bold shadow-sm'
+                  ? 'bg-primary text-white dark:text-black font-bold shadow-sm'
                   : 'bg-surface-container text-on-surface-variant border border-card-border'
               }`}
             >
@@ -225,7 +225,7 @@ export default function TournamentsPage({ onRegisterModal, onOpenScrimLobby, onS
               onClick={() => setSelectedRound('finals')}
               className={`px-3 py-1.5 rounded-lg font-mono text-xs font-semibold transition-all ${
                 selectedRound === 'finals'
-                  ? 'bg-primary text-black font-bold shadow-sm'
+                  ? 'bg-primary text-white dark:text-black font-bold shadow-sm'
                   : 'bg-surface-container text-on-surface-variant border border-card-border'
               }`}
             >

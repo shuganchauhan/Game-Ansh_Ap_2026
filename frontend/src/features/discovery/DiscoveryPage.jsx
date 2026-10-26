@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Search, Users, Trophy, CheckCircle2, ChevronRight, Sparkles, ArrowLeft, Shield, Zap } from 'lucide-react';
+import { useAuth } from '../../stores/authContext';
 import { useGSAPReveal } from '../../hooks/useGSAP';
 
 /* ═══════════════════════════════════════════════════════
@@ -331,7 +332,7 @@ function TeamCard({ team, gameColor, onApply }) {
 /* ═══════════════════════════════════════════════════════
    TOURNAMENT CARD
 ═══════════════════════════════════════════════════════ */
-function TournamentCard({ tourney, gameColor }) {
+function TournamentCard({ tourney, gameColor, onRegister }) {
   const fillPct = Math.round((tourney.registered / tourney.maxTeams) * 100);
   return (
     <div className="p-5 rounded-2xl bg-surface-container-low border border-card-border hover:border-secondary/40 transition-all duration-300 hover:scale-[1.01] flex flex-col justify-between">
@@ -388,6 +389,7 @@ function TournamentCard({ tourney, gameColor }) {
       <div className="pt-4 mt-2 border-t border-card-border">
         <button
           disabled={fillPct >= 100}
+          onClick={onRegister}
           className="w-full py-2.5 rounded-xl font-display font-bold text-xs uppercase tracking-wider text-white flex items-center justify-center gap-2 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           style={{ backgroundColor: fillPct >= 100 ? 'var(--color-surface-container-high)' : (gameColor || 'var(--color-secondary-container)') }}
         >
@@ -401,7 +403,8 @@ function TournamentCard({ tourney, gameColor }) {
 /* ═══════════════════════════════════════════════════════
    MAIN DISCOVERY PAGE
 ═══════════════════════════════════════════════════════ */
-export default function DiscoveryPage({ onSelectTab }) {
+export default function DiscoveryPage({ onSelectTab, onOpenAuth }) {
+  const { isAuthenticated } = useAuth();
   const [selectedGame, setSelectedGame] = useState(null);
   const [activeSection, setActiveSection] = useState('teams');
   const [search, setSearch] = useState('');
@@ -442,6 +445,11 @@ export default function DiscoveryPage({ onSelectTab }) {
 
   const handleSubmitApply = (e) => {
     e.preventDefault();
+    if (!isAuthenticated) {
+      setApplyTarget(null);
+      onOpenAuth?.('player', 'login');
+      return;
+    }
     setApplySubmitted(true);
     setTimeout(() => {
       setApplyTarget(null);
@@ -623,7 +631,14 @@ export default function DiscoveryPage({ onSelectTab }) {
                   <TeamCard
                     team={team}
                     gameColor={selectedGame.color}
-                    onApply={(t) => { setApplyTarget(t); setApplySubmitted(false); }}
+                    onApply={(t) => {
+                      if (!isAuthenticated) {
+                        onOpenAuth?.('player', 'login');
+                        return;
+                      }
+                      setApplyTarget(t);
+                      setApplySubmitted(false);
+                    }}
                   />
                 </div>
               ))}
@@ -639,7 +654,17 @@ export default function DiscoveryPage({ onSelectTab }) {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {filteredTournaments.map((tr) => (
                 <div key={tr.id} data-reveal>
-                  <TournamentCard tourney={tr} gameColor={selectedGame.color} />
+                  <TournamentCard
+                    tourney={tr}
+                    gameColor={selectedGame.color}
+                    onRegister={() => {
+                      if (!isAuthenticated) {
+                        onOpenAuth?.('org', 'login');
+                      } else {
+                        onSelectTab?.('tournaments');
+                      }
+                    }}
+                  />
                 </div>
               ))}
             </div>

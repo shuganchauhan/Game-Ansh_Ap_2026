@@ -6,12 +6,15 @@ import {
 import { io } from 'socket.io-client';
 import { scrimService } from '../../services';
 import { useGameStore } from '../../stores/gameStore';
+import { useAuth } from '../../stores/authContext';
 
 export default function ScrimLobbyPage({ scrimId, onBack, onSelectTab }) {
+  const { token } = useAuth();
   const { currentUser, activeRole, teams } = useGameStore();
 
   const [lobby, setLobby] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [lobbyError, setLobbyError] = useState('');
   const [copiedRoom, setCopiedRoom] = useState(false);
   const [copiedPass, setCopiedPass] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
@@ -32,11 +35,12 @@ export default function ScrimLobbyPage({ scrimId, onBack, onSelectTab }) {
     try {
       const data = await scrimService.getScrimLobby(scrimId);
       setLobby(data);
+      setLobbyError('');
       setEditRoomId(data.room_id || '');
       setEditPassword(data.room_password || '');
       setEditStatus(data.status || 'open');
     } catch (err) {
-      console.error('Failed to load scrim lobby:', err);
+      setLobbyError(err.message || 'You may need to register a team before viewing this lobby.');
     } finally {
       setLoading(false);
     }
@@ -47,7 +51,7 @@ export default function ScrimLobbyPage({ scrimId, onBack, onSelectTab }) {
     fetchLobby();
 
     // Real-Time Socket Connection to Scrim Match Room
-    const socket = io('/', { path: '/socket.io', transports: ['websocket', 'polling'] });
+    const socket = io('/', { path: '/socket.io', transports: ['websocket', 'polling'], auth: { token } });
     socket.emit('join_scrim_lobby', scrimId);
 
     socket.on('scrim:credentials_updated', (updated) => {
@@ -80,7 +84,7 @@ export default function ScrimLobbyPage({ scrimId, onBack, onSelectTab }) {
       socket.emit('leave_scrim_lobby', scrimId);
       socket.disconnect();
     };
-  }, [scrimId]);
+  }, [scrimId, token]);
 
   const copyToClipboard = (text, type) => {
     if (!text) return;
@@ -158,7 +162,8 @@ export default function ScrimLobbyPage({ scrimId, onBack, onSelectTab }) {
     return (
       <div className="max-w-6xl mx-auto px-4 py-20 text-center space-y-4">
         <AlertCircle className="w-12 h-12 text-red-400 mx-auto" />
-        <h2 className="text-2xl font-bold">Scrim Lobby Not Found</h2>
+        <h2 className="text-2xl font-bold">Unable to Open Scrim Lobby</h2>
+        {lobbyError && <p role="alert" className="text-sm text-on-surface-variant">{lobbyError}</p>}
         <button
           onClick={onBack}
           className="px-6 py-2.5 rounded-xl bg-surface-container-highest hover:bg-surface-bright font-semibold text-sm"
@@ -174,7 +179,10 @@ export default function ScrimLobbyPage({ scrimId, onBack, onSelectTab }) {
   const isFull = registeredCount >= (lobby.slots_max || 16);
 
   // Available qualified teams the user can register
-  const myTeams = teams.filter(t => t.status === 'registered' || t.status === 'active');
+  const myTeams = teams.filter((team) =>
+    (team.status === 'registered' || team.status === 'active') &&
+    (team.orgId === currentUser.id || team.captainId === currentUser.id)
+  );
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8 animate-fadeIn">
@@ -235,7 +243,7 @@ export default function ScrimLobbyPage({ scrimId, onBack, onSelectTab }) {
               </span>
               <span className={`px-2.5 py-1 rounded-full text-[10px] font-mono font-bold border transition-all flex items-center gap-1.5 ${
                 realtimePulse
-                  ? 'bg-primary text-black border-primary scale-105'
+                  ? 'bg-primary text-white dark:text-black border-primary scale-105'
                   : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
               }`}>
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
@@ -371,7 +379,7 @@ export default function ScrimLobbyPage({ scrimId, onBack, onSelectTab }) {
               <button
                 type="submit"
                 disabled={actionLoading}
-                className="px-6 py-2 rounded-xl bg-primary text-black font-bold text-sm shadow-lg shadow-primary/20"
+                className="px-6 py-2 rounded-xl bg-primary text-white dark:text-black font-bold text-sm shadow-lg shadow-primary/20"
               >
                 Save Lobby Credentials
               </button>
@@ -409,7 +417,7 @@ export default function ScrimLobbyPage({ scrimId, onBack, onSelectTab }) {
             <button
               type="submit"
               disabled={!selectedTeamToReg || actionLoading}
-              className="px-5 py-2.5 rounded-xl bg-secondary text-black font-bold text-xs shadow-lg shadow-secondary/20 transition disabled:opacity-50"
+              className="px-5 py-2.5 rounded-xl bg-secondary text-white dark:text-black font-bold text-xs shadow-lg shadow-secondary/20 transition disabled:opacity-50"
             >
               Register Squad
             </button>

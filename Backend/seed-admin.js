@@ -4,47 +4,19 @@ const bcrypt = require('bcrypt');
 const { pool } = require('./src/shared/db');
 
 async function seedAdmin() {
-  console.log('[Seed] Seeding Admin accounts into PostgreSQL (off_ground)...');
-
-  const hashAdmin123 = await bcrypt.hash('Admin@123', 10);
-  const hashPassword123 = await bcrypt.hash('Password123!', 10);
-
-  // 1. Primary admin: admin@gamersg.com
+  const email = process.env.ADMIN_EMAIL?.trim().toLowerCase();
+  const password = process.env.ADMIN_PASSWORD;
+  if (!email || !password || password.length < 12) {
+    throw new Error('Set ADMIN_EMAIL and an ADMIN_PASSWORD of at least 12 characters before creating an admin account.');
+  }
+  const passwordHash = await bcrypt.hash(password, 12);
   await pool.query(
     `INSERT INTO "admin" (email, password_hash)
-     VALUES ('admin@gamersg.com', $1)
+     VALUES ($1, $2)
      ON CONFLICT (email) DO UPDATE SET password_hash = EXCLUDED.password_hash`,
-    [hashAdmin123],
+    [email, passwordHash],
   );
-
-  // 2. Simple admin: admin@admin.com
-  await pool.query(
-    `INSERT INTO "admin" (email, password_hash)
-     VALUES ('admin@admin.com', $1)
-     ON CONFLICT (email) DO UPDATE SET password_hash = EXCLUDED.password_hash`,
-    [hashAdmin123],
-  );
-
-  // 3. Root admin: root@gamersg.com
-  await pool.query(
-    `INSERT INTO "admin" (email, password_hash)
-     VALUES ('root@gamersg.com', $1)
-     ON CONFLICT (email) DO UPDATE SET password_hash = EXCLUDED.password_hash`,
-    [hashAdmin123],
-  );
-
-  console.log('\n=============================================================');
-  console.log('  PLATFORM ADMINISTRATOR ACCOUNTS SEEDED SUCCESSFULLY!');
-  console.log('=============================================================');
-  console.log('  Email:    admin@gamersg.com');
-  console.log('  Password: Admin@123  (or Password123!)');
-  console.log('-------------------------------------------------------------');
-  console.log('  Email:    admin@admin.com');
-  console.log('  Password: Admin@123');
-  console.log('-------------------------------------------------------------');
-  console.log('  Email:    root@gamersg.com');
-  console.log('  Password: Admin@123');
-  console.log('=============================================================\n');
+  console.log(`Admin account provisioned if it did not already exist: ${email}.`);
 
   await pool.end();
 }

@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Shield, Users, Plus, CheckCircle2, Trophy, Swords, Zap, Search,
   ChevronRight, Sparkles, X, ArrowLeft, ExternalLink, Check, Trash2, Edit3
 } from 'lucide-react';
+import { useAuth } from '../../stores/authContext';
 import { useGameStore } from '../../stores/gameStore';
+import { teamService } from '../../services';
 
-export default function TeamsPage({ onOpenTeamCreator, onSelectTab }) {
+export default function TeamsPage({ onOpenTeamCreator, onSelectTab, onOpenAuth }) {
+  const { user, isAuthenticated } = useAuth();
   const {
     teams,
     currentUser,
@@ -17,11 +20,34 @@ export default function TeamsPage({ onOpenTeamCreator, onSelectTab }) {
     closeRecruitmentRole,
     applications,
     updateApplicationStatus,
+    setTeamDetails,
   } = useGameStore();
 
   const [selectedGameFilter, setSelectedGameFilter] = useState('all');
   const [search, setSearch] = useState('');
   const [selectedTeam, setSelectedTeam] = useState(null);
+  const [teamLoading, setTeamLoading] = useState(false);
+  const [teamActionError, setTeamActionError] = useState('');
+
+  useEffect(() => {
+    if (!selectedTeam?.id) return undefined;
+    let active = true;
+    setTeamLoading(true);
+    teamService.getTeam(selectedTeam.id).then((team) => {
+      if (!active) return;
+      const details = {
+        ...selectedTeam,
+        ...team,
+        slotsMax: team.slots_max || selectedTeam.slotsMax,
+        captainId: team.captain_id,
+        roster: (team.members || []).map((member) => ({ ...member, isCaptain: member.is_captain })),
+        openRoles: (team.open_roles || []).map((role) => ({ ...role, roleName: role.role })),
+      };
+      setTeamDetails(team.id, details);
+      setSelectedTeam((current) => current?.id !== team.id ? current : details);
+    }).catch((error) => console.error('Could not load team:', error.message)).finally(() => active && setTeamLoading(false));
+    return () => { active = false; };
+  }, [selectedTeam?.id]);
 
   // Apply modal state
   const [applyModalRole, setApplyModalRole] = useState(null);
@@ -52,7 +78,7 @@ export default function TeamsPage({ onOpenTeamCreator, onSelectTab }) {
   });
 
   const activeTeamObj = selectedTeam
-    ? teams.find((t) => t.id === selectedTeam.id) || selectedTeam
+    ? teams.find((team) => team.id === selectedTeam.id) || selectedTeam
     : null;
 
   const isCaptainOrManager = activeTeamObj
@@ -63,16 +89,20 @@ export default function TeamsPage({ onOpenTeamCreator, onSelectTab }) {
     ? applications.filter((a) => a.teamId === activeTeamObj.id)
     : [];
 
-  const handleApplySubmit = (e) => {
+  const handleApplySubmit = async (e) => {
     e.preventDefault();
+    if (!isAuthenticated) {
+      setApplyModalRole(null);
+      onOpenAuth?.('player', 'login');
+      return;
+    }
+    if (user?.role !== 'player') { setTeamActionError('Only player accounts can apply to a tryout.'); return; }
     if (!applyModalRole || !activeTeamObj) return;
 
-    submitApplication({
-      teamId: activeTeamObj.id,
-      roleName: applyModalRole.roleName,
-      pitch,
-      vodLink,
-    });
+    setTeamActionError('');
+    try {
+      await submitApplication({ postingId: applyModalRole.id, teamId: activeTeamObj.id, roleName: applyModalRole.roleName, pitch, vodLink });
+    } catch (error) { setTeamActionError(error.message || 'Could not submit your application.'); return; }
 
     setApplySuccess(true);
     setTimeout(() => {
@@ -121,6 +151,8 @@ export default function TeamsPage({ onOpenTeamCreator, onSelectTab }) {
   if (activeTeamObj) {
     return (
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+        {teamActionError && <p role="alert" className="p-3 rounded-xl bg-error/10 text-error text-sm">{teamActionError}</p>}
+        {teamLoading && <p className="text-xs text-on-surface-variant">Loading current roster…</p>}
         {/* Back navigation */}
         <button
           onClick={() => setSelectedTeam(null)}
@@ -315,8 +347,14 @@ export default function TeamsPage({ onOpenTeamCreator, onSelectTab }) {
 
                   {!isCaptainOrManager && (
                     <button
-                      onClick={() => setApplyModalRole(role)}
-                      className="w-full py-2.5 rounded-xl bg-primary-container text-on-primary font-display font-bold text-xs uppercase tracking-wider shadow-glow active:scale-95 transition-all flex items-center justify-center gap-1.5"
+                      onClick={() => {
+                        if (!isAuthenticated) {
+                          onOpenAuth?.('player', 'login');
+                          return;
+                        }
+                        setApplyModalRole(role);
+                      }}
+                      className="w-full py-2.5 rounded-xl bg-primary text-white dark:text-black font-display font-bold text-xs uppercase tracking-wider shadow-glow active:scale-95 transition-all flex items-center justify-center gap-1.5"
                     >
                       <Zap className="w-3.5 h-3.5" />
                       Apply for Tryout
@@ -636,10 +674,10 @@ export default function TeamsPage({ onOpenTeamCreator, onSelectTab }) {
 
         <button
           onClick={onOpenTeamCreator}
-          className="px-6 py-3 rounded-2xl bg-primary-container text-on-primary font-display font-bold text-xs uppercase tracking-wider shadow-glow hover:shadow-[0_0_40px_var(--glow-primary)] active:scale-95 transition-all flex items-center gap-2 shrink-0"
+          className="px-6 py-3 rounded-2xl bg-primary text-white dark:text-black font-display font-bold text-xs uppercase tracking-wider shadow-glow hover:shadow-[0_0_40px_var(--glow-primary)] active:scale-95 transition-all flex items-center gap-2 shrink-0"
         >
-          <Plus className="w-4 h-4" />
-          Form a Team (No Login Needed)
+          <Plus className="w-4 h-4 text-white dark:text-black" />
+          Form a Squad
         </button>
       </div>
 
@@ -753,7 +791,7 @@ export default function TeamsPage({ onOpenTeamCreator, onSelectTab }) {
 
               <div className="mt-4 pt-3 border-t border-card-border">
                 <button
-                  onClick={() => setSelectedTeam(team)}
+                  onClick={() => { setTeamLoading(true); setSelectedTeam(team); }}
                   className="w-full py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high border border-card-border font-display font-bold text-xs uppercase tracking-wider text-on-surface transition-all flex items-center justify-center gap-1.5"
                 >
                   <span>View Roster &amp; Tryouts</span>

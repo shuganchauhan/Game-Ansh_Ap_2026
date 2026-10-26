@@ -2,7 +2,10 @@ const { Router } = require('express');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const crypto = require('crypto');
 const { authenticate } = require('../../shared/auth/middleware');
+const { writeLimiter } = require('../../shared/ratelimit');
+const { BadRequestError } = require('../../shared/errors');
 
 const router = Router();
 
@@ -17,18 +20,21 @@ const storage = multer.diskStorage({
   },
   filename: (_req, file, cb) => {
     const ext = path.extname(file.originalname).toLowerCase();
-    const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+    const uniqueSuffix = `${Date.now()}-${crypto.randomUUID()}`;
     cb(null, `asset-${uniqueSuffix}${ext}`);
   },
 });
 
 const fileFilter = (_req, file, cb) => {
-  const allowed = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.pdf'];
   const ext = path.extname(file.originalname).toLowerCase();
-  if (allowed.includes(ext)) {
+  const allowedMimeTypes = {
+    '.jpg': ['image/jpeg'], '.jpeg': ['image/jpeg'], '.png': ['image/png'],
+    '.webp': ['image/webp'], '.gif': ['image/gif'], '.pdf': ['application/pdf'],
+  };
+  if (allowedMimeTypes[ext]?.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(new Error('Invalid file type. Allowed: Images (jpg, png, webp) and Documents (pdf)'));
+    cb(new BadRequestError('Unsupported file type'));
   }
 };
 
@@ -38,7 +44,7 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
 });
 
-router.post('/', authenticate, upload.single('file'), (req, res, next) => {
+router.post('/', authenticate, writeLimiter, upload.single('file'), (req, res, next) => {
   try {
     if (!req.file) {
       return res.status(400).json({ status: 'error', message: 'No file uploaded' });

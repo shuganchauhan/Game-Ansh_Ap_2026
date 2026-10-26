@@ -1,25 +1,34 @@
 require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
-const { pool } = require('./index');
+const { pool, withTransaction } = require('./index');
 
 async function migrate() {
   const migrationsDir = path.join(__dirname, '../../../../database/migrations');
-  const files = fs.readdirSync(migrationsDir).sort();
+  const files = fs.readdirSync(migrationsDir).filter((file) => file.endsWith('.sql')).sort();
+  await withTransaction(async (client) => {
+    await client.query('SELECT pg_advisory_xact_lock(hashtext($1))', ['gamersg:migrations']);
+    await client.query(`CREATE TABLE IF NOT EXISTS schema_migrations (
+      filename TEXT PRIMARY KEY,
+      applied_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )`);
+    const applied = await client.query('SELECT filename FROM schema_migrations');
+    const appliedFiles = new Set(applied.rows.map((row) => row.filename));
 
-  for (const file of files) {
-    if (!file.endsWith('.sql')) continue;
-    const sql = fs.readFileSync(path.join(migrationsDir, file), 'utf8');
-    console.log(`Running migration: ${file}`);
-    await pool.query(sql);
-    console.log(`Done: ${file}`);
-  }
-
+    for (const file of files) {
+      if (appliedFiles.has(file)) continue;
+      const sql = fs.readFileSync(path.join(migrationsDir, file), 'utf8');
+      console.log(`Running migration: ${file}`);
+      await client.query(sql);
+      await client.query('INSERT INTO schema_migrations (filename) VALUES ($1)', [file]);
+    }
+  });
   console.log('All migrations complete.');
-  await pool.end();
 }
 
-migrate().catch((err) => {
+if (require.main === module) migrate().catch((err) => {
   console.error('Migration failed:', err);
-  process.exit(1);
-});
+  process.exitCode = 1;
+}).finally(() => pool.end());
+
+module.exports = { migrate };

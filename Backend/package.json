@@ -3,12 +3,14 @@
   "version": "1.0.0",
   "description": "Gamers G — Gaming Platform Backend",
   "main": "src/server.js",
+  "engines": { "node": ">=20" },
   "scripts": {
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
     "migrate": "node src/shared/db/migrate.js",
     "setup-db": "node setup-db.js",
     "seed": "node seed.js",
+    "seed:admin": "node seed-admin.js",
     "verify": "node verify-backend.js",
     "test": "jest --runInBand --forceExit"
   },

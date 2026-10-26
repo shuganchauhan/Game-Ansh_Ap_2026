@@ -38,7 +38,7 @@ async function listScrims(req, res, next) {
 
 async function getScrimLobby(req, res, next) {
   try {
-    const data = await tournamentsService.getScrimLobby(req.params.id);
+    const data = await tournamentsService.getScrimLobby(req.params.id, req.user);
     res.json({ status: 'success', data });
   } catch (err) {
     next(err);
@@ -47,7 +47,7 @@ async function getScrimLobby(req, res, next) {
 
 async function updateScrimCredentials(req, res, next) {
   try {
-    const data = await tournamentsService.updateScrimCredentials(req.params.id, req.user.id, req.body);
+    const data = await tournamentsService.updateScrimCredentials(req.params.id, req.user, req.body);
     res.json({ status: 'success', data });
   } catch (err) {
     next(err);
@@ -102,7 +102,7 @@ async function updateTournament(req, res, next) {
 
 async function registerTeam(req, res, next) {
   try {
-    const data = await tournamentsService.registerTeam(req.params.id, req.body.team_id, req.user.id);
+    const data = await tournamentsService.registerTeam(req.params.id, req.body.team_id, req.user);
     res.status(201).json({ status: 'success', data });
   } catch (err) {
     next(err);

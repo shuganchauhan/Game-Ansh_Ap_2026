@@ -5,6 +5,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 
 const { globalErrorHandler } = require('./shared/errors');
+const { query } = require('./shared/db');
 
 const authRoutes = require('./modules/auth/auth.routes');
 const playersRoutes = require('./modules/players/players.routes');
@@ -21,8 +22,18 @@ const path = require('path');
 
 const app = express();
 
+const allowedOrigins = (process.env.CORS_ORIGINS || '').split(',').map((origin) => origin.trim()).filter(Boolean);
+if (process.env.NODE_ENV === 'production' && allowedOrigins.some((origin) => origin === '*')) {
+  throw new Error('CORS_ORIGINS must list explicit trusted origins in production.');
+}
+const corsOrigin = process.env.NODE_ENV === 'production'
+  ? (origin, callback) => callback(null, !origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app'))
+  : true;
+
+app.set('trust proxy', Number(process.env.TRUST_PROXY) || 0);
+
 app.use(helmet({ crossOriginResourcePolicy: false }));
-app.use(cors());
+app.use(cors({ origin: corsOrigin }));
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
@@ -31,6 +42,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
 
 app.get('/health', (_req, res) => res.json({ status: 'ok', timestamp: new Date().toISOString() }));
+app.get('/ready', async (_req, res) => {
+  try {
+    await query('SELECT 1');
+    res.json({ status: 'ready' });
+  } catch {
+    res.status(503).json({ status: 'not_ready' });
+  }
+});
 
 app.use('/auth', authRoutes);
 app.use('/players', playersRoutes);

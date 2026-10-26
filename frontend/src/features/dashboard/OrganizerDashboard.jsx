@@ -160,9 +160,9 @@ export default function OrganizerDashboard({ onSelectTab, onOpenScrimLobby }) {
             )}
             <button
               onClick={() => setCreateScrimModalOpen(true)}
-              className="px-5 py-2.5 rounded-2xl bg-primary hover:bg-primary-hover text-black text-sm font-bold shadow-lg shadow-primary/20 transition flex items-center gap-2"
+              className="px-5 py-2.5 rounded-2xl bg-primary hover:bg-primary-hover text-white dark:text-black text-sm font-bold shadow-lg shadow-primary/20 transition flex items-center gap-2"
             >
-              <Plus className="w-4 h-4" />
+              <Plus className="w-4 h-4 text-white dark:text-black" />
               Create New Scrim Lobby
             </button>
           </div>
@@ -205,7 +205,7 @@ export default function OrganizerDashboard({ onSelectTab, onOpenScrimLobby }) {
             </p>
             <button
               onClick={() => setCreateScrimModalOpen(true)}
-              className="px-5 py-2 rounded-xl bg-primary text-black font-bold text-sm"
+              className="px-5 py-2 rounded-xl bg-primary text-white dark:text-black font-bold text-sm"
             >
               Create Scrim Now
             </button>
@@ -246,7 +246,7 @@ export default function OrganizerDashboard({ onSelectTab, onOpenScrimLobby }) {
 
                   <button
                     onClick={() => onOpenScrimLobby?.(scrim.id)}
-                    className="w-full py-2.5 rounded-xl bg-surface-container-high group-hover:bg-primary group-hover:text-black font-bold text-xs flex items-center justify-center gap-2 transition"
+                    className="w-full py-2.5 rounded-xl bg-surface-container-high group-hover:bg-primary group-hover:text-white dark:group-hover:text-black font-bold text-xs flex items-center justify-center gap-2 transition"
                   >
                     Enter Dedicated Lobby
                     <ChevronRight className="w-4 h-4" />
@@ -368,7 +368,7 @@ export default function OrganizerDashboard({ onSelectTab, onOpenScrimLobby }) {
                 <button
                   type="submit"
                   disabled={actionLoading}
-                  className="px-6 py-2.5 rounded-xl bg-primary text-black font-bold text-sm shadow-lg shadow-primary/20"
+                  className="px-6 py-2.5 rounded-xl bg-primary text-white dark:text-black font-bold text-sm shadow-lg shadow-primary/20"
                 >
                   Create & Launch Lobby
                 </button>

@@ -1,7 +1,20 @@
 const { query, withTransaction } = require('../../shared/db');
 const { NotFoundError, ForbiddenError, BadRequestError } = require('../../shared/errors');
 
+async function claimPlayerForTeam(client, teamId, playerId) {
+  const player = await client.query('SELECT id, team_id, org_id FROM player WHERE id = $1 FOR UPDATE', [playerId]);
+  if (player.rowCount === 0) throw new NotFoundError('Player');
+  if (player.rows[0].org_id || (player.rows[0].team_id && player.rows[0].team_id !== teamId)) {
+    throw new BadRequestError('Player already belongs to another team or organization');
+  }
+  const duplicate = await client.query('SELECT id FROM team_member WHERE player_id = $1 AND team_id = $2', [playerId, teamId]);
+  if (duplicate.rowCount > 0) throw new BadRequestError('Player is already on this roster');
+  await client.query('UPDATE player SET team_id = $1 WHERE id = $2', [teamId, playerId]);
+}
+
 async function createTeam(user, { name, game, tag = '', division = 'Competitive Tier', slots_max = 5, members = [] }) {
+  if (!['org', 'player'].includes(user.role)) throw new ForbiddenError('Only a player or organization can create a team');
+  if (members.length + (user.role === 'player' ? 1 : 0) > slots_max) throw new BadRequestError('Initial roster exceeds the team slot limit');
   return withTransaction(async (client) => {
     const isOrg = user.role === 'org';
     const isPlayer = user.role === 'player';
@@ -21,12 +34,12 @@ async function createTeam(user, { name, game, tag = '', division = 'Competitive 
       const pRes = await client.query('SELECT id, username, game_ign FROM player WHERE id = $1', [user.id]);
       if (pRes.rowCount > 0) {
         const p = pRes.rows[0];
+        await claimPlayerForTeam(client, team.id, p.id);
         await client.query(
           `INSERT INTO team_member (team_id, player_id, name, ign, role, is_captain)
            VALUES ($1, $2, $3, $4, 'Captain / IGL', true)`,
           [team.id, p.id, p.username, p.game_ign || p.username],
         );
-        await client.query('UPDATE player SET team_id = $1 WHERE id = $2', [team.id, p.id]);
       }
     }
 
@@ -34,14 +47,12 @@ async function createTeam(user, { name, game, tag = '', division = 'Competitive 
     if (Array.isArray(members) && members.length > 0) {
       for (const m of members) {
         if (!m.name && !m.ign) continue;
+        if (m.player_id) await claimPlayerForTeam(client, team.id, m.player_id);
         await client.query(
           `INSERT INTO team_member (team_id, player_id, name, ign, role, is_captain)
            VALUES ($1, $2, $3, $4, $5, false)`,
           [team.id, m.player_id || null, m.name || m.ign, m.ign || m.name, m.role || 'Player / Member'],
         );
-        if (m.player_id) {
-          await client.query('UPDATE player SET team_id = $1 WHERE id = $2', [team.id, m.player_id]);
-        }
       }
     }
 
@@ -159,7 +170,7 @@ async function updateTeam(id, user, data) {
 
 async function addMember(teamId, user, { name, ign, role = 'Member', player_id = null }) {
   return withTransaction(async (client) => {
-    const teamRes = await client.query('SELECT id, org_id, captain_id, status FROM team WHERE id = $1', [teamId]);
+    const teamRes = await client.query('SELECT id, org_id, captain_id, status, slots_max FROM team WHERE id = $1 FOR UPDATE', [teamId]);
     if (teamRes.rowCount === 0) throw new NotFoundError('Team');
     const team = teamRes.rows[0];
 
@@ -167,6 +178,10 @@ async function addMember(teamId, user, { name, ign, role = 'Member', player_id =
                          (team.captain_id && team.captain_id === user.id) ||
                          user.role === 'admin';
     if (!isAuthorized) throw new ForbiddenError('Only the captain or team organization can manage the roster');
+
+    const countRes = await client.query('SELECT COUNT(*) AS cnt FROM team_member WHERE team_id = $1', [teamId]);
+    if (parseInt(countRes.rows[0].cnt, 10) >= team.slots_max) throw new BadRequestError('Team roster is full');
+    if (player_id) await claimPlayerForTeam(client, teamId, player_id);
 
     // Insert into team_member
     const memRes = await client.query(
@@ -176,13 +191,9 @@ async function addMember(teamId, user, { name, ign, role = 'Member', player_id =
       [teamId, player_id, name, ign || name, role],
     );
 
-    if (player_id) {
-      await client.query('UPDATE player SET team_id = $1 WHERE id = $2', [teamId, player_id]);
-    }
-
     // Check count and apply 4-5 member registration rule
-    const countRes = await client.query('SELECT COUNT(*) AS cnt FROM team_member WHERE team_id = $1', [teamId]);
-    const memberCount = parseInt(countRes.rows[0].cnt, 10);
+    const updatedCount = await client.query('SELECT COUNT(*) AS cnt FROM team_member WHERE team_id = $1', [teamId]);
+    const memberCount = parseInt(updatedCount.rows[0].cnt, 10);
     const newStatus = memberCount >= 4 ? 'registered' : 'draft';
 
     await client.query('UPDATE team SET status = $1 WHERE id = $2', [newStatus, teamId]);
