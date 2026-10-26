@@ -1,4 +1,5 @@
 const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 require('dotenv').config({ path: path.resolve(__dirname, '../../../.env') });
 const { Pool } = require('pg');
 
@@ -13,9 +14,12 @@ function parseDbConfig(connStr) {
     cleaned = cleaned.substring('DATABASE_URL='.length).trim();
   }
 
-  // Let node-postgres parse credentials, IPv6 hosts, SSL parameters and
-  // escaped characters consistently.
-  return { connectionString: cleaned };
+  const config = { connectionString: cleaned };
+  // Automatically enable SSL for cloud-hosted databases (Render, Supabase, Neon)
+  if (!cleaned.includes('localhost') && !cleaned.includes('127.0.0.1')) {
+    config.ssl = { rejectUnauthorized: false };
+  }
+  return config;
 }
 
 const poolConfig = {
