@@ -3,7 +3,20 @@ require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 require('dotenv').config({ path: path.resolve(__dirname, '../../../.env') });
 const { Pool } = require('pg');
 
-const rawDbUrl = process.env.DATABASE_URL;
+function sanitizeConnStr(connStr) {
+  if (!connStr) return '';
+  let cleaned = connStr.trim();
+  while (cleaned.startsWith('DATABASE_URL=')) {
+    cleaned = cleaned.substring('DATABASE_URL='.length).trim();
+  }
+  // Strip 'psql' prefix if user copied from terminal command tab
+  cleaned = cleaned.replace(/^psql\s+/i, '').trim();
+  // Strip leading and trailing quotes (' or ")
+  cleaned = cleaned.replace(/^['"]+|['"]+$/g, '').trim();
+  return cleaned;
+}
+
+const rawDbUrl = sanitizeConnStr(process.env.DATABASE_URL);
 
 if (!rawDbUrl) {
   if (process.env.RENDER || process.env.NODE_ENV === 'production') {
@@ -11,9 +24,9 @@ if (!rawDbUrl) {
       '\n=======================================================\n' +
       '[RENDER CONFIGURATION ERROR] DATABASE_URL is missing!\n' +
       'Render Web Services run in an isolated cloud container without a local database.\n' +
-      '1. Create a PostgreSQL database on Render (New + -> PostgreSQL)\n' +
-      '2. Copy its "Internal Database URL"\n' +
-      '3. In your Web Service -> Environment tab, add: DATABASE_URL=<Internal Database URL>\n' +
+      '1. Create a PostgreSQL database on Aiven, Neon, or Render\n' +
+      '2. Copy the Service URI (postgres://...)\n' +
+      '3. In your Web Service -> Environment tab, add: DATABASE_URL=<URI>\n' +
       '=======================================================\n'
     );
   }
@@ -24,22 +37,18 @@ if (rawDbUrl && (rawDbUrl.includes('127.0.0.1') || rawDbUrl.includes('localhost'
     '\n=======================================================\n' +
     '[RENDER CONFIGURATION ERROR] DATABASE_URL is pointing to 127.0.0.1 / localhost!\n' +
     'Localhost (127.0.0.1) does NOT exist inside cloud containers on Render.\n' +
-    'Please copy the "Internal Database URL" from your Render PostgreSQL database\n' +
-    '(looks like: postgresql://user:pass@dpg-xxxxxx.oregon-postgres.render.com/gamers_g)\n' +
+    'Please copy the cloud Service URI from Aiven/Neon/Render\n' +
     'and paste it into your Render Web Service Environment tab as DATABASE_URL.\n' +
     '=======================================================\n'
   );
 }
 
 function parseDbConfig(connStr) {
-  if (!connStr) return {};
-  let cleaned = connStr.trim();
-  while (cleaned.startsWith('DATABASE_URL=')) {
-    cleaned = cleaned.substring('DATABASE_URL='.length).trim();
-  }
+  const cleaned = sanitizeConnStr(connStr);
+  if (!cleaned) return {};
 
   const config = { connectionString: cleaned };
-  // Automatically enable SSL for cloud-hosted databases (Render, Supabase, Neon)
+  // Automatically enable SSL for cloud-hosted databases (Aiven, Neon, Supabase, Render)
   if (!cleaned.includes('localhost') && !cleaned.includes('127.0.0.1')) {
     config.ssl = { rejectUnauthorized: false };
   }
