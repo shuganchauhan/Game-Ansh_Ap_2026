@@ -51,18 +51,22 @@ app.get('/ready', async (_req, res) => {
   }
 });
 
-app.use('/auth', authRoutes);
-app.use('/players', playersRoutes);
-app.use('/orgs', orgsRoutes);
-app.use('/teams', teamsRoutes);
-app.use('/', recruitmentRoutes);       // /teams/:id/postings, /postings/:id/apply, /applications/:id
-app.use('/discovery', discoveryRoutes);
-app.use('/social', socialRoutes);
-app.use('/', socialRoutes);             // /follow, /feed, /posts
-app.use('/messages', messagingRoutes);
-app.use('/tournaments', tournamentsRoutes);
-app.use('/admin', adminRoutes);
-app.use('/uploads', uploadsRoutes);
+const apiRouter = express.Router();
+apiRouter.use('/auth', authRoutes);
+apiRouter.use('/players', playersRoutes);
+apiRouter.use('/orgs', orgsRoutes);
+apiRouter.use('/teams', teamsRoutes);
+apiRouter.use('/', recruitmentRoutes);       // /teams/:id/postings, /postings/:id/apply, /applications/:id
+apiRouter.use('/discovery', discoveryRoutes);
+apiRouter.use('/social', socialRoutes);
+apiRouter.use('/', socialRoutes);             // /follow, /feed, /posts
+apiRouter.use('/messages', messagingRoutes);
+apiRouter.use('/tournaments', tournamentsRoutes);
+apiRouter.use('/admin', adminRoutes);
+apiRouter.use('/uploads', uploadsRoutes);
+
+app.use('/api', apiRouter);
+app.use('/', apiRouter);
 
 app.use((_req, res) => res.status(404).json({ status: 'error', message: 'Route not found' }));
 app.use(globalErrorHandler);

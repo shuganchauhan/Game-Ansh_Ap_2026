@@ -3,8 +3,8 @@ require('dotenv').config({ path: path.resolve(__dirname, '.env') });
 const bcrypt = require('bcrypt');
 const { pool } = require('./src/shared/db');
 
-if (process.env.NODE_ENV === 'production' || process.env.ALLOW_DEMO_SEED !== 'true') {
-  throw new Error('Demo seed data is disabled. Set ALLOW_DEMO_SEED=true in a non-production environment to opt in.');
+if (process.env.ALLOW_DEMO_SEED !== 'true') {
+  throw new Error('Demo seed data is disabled. Set ALLOW_DEMO_SEED=true to opt in.');
 }
 
 async function seed() {
