@@ -43,19 +43,38 @@ if (rawDbUrl && (rawDbUrl.includes('127.0.0.1') || rawDbUrl.includes('localhost'
   );
 }
 
+const { parse: parseConnectionString } = require('pg-connection-string');
+
 function parseDbConfig(connStr) {
   const cleaned = sanitizeConnStr(connStr);
   if (!cleaned) return {};
 
-  const config = { connectionString: cleaned };
+  const isLocal = cleaned.includes('localhost') || cleaned.includes('127.0.0.1');
+
+  // Strip sslmode from query parameters so pg-connection-string doesn't overwrite our custom ssl object
+  const urlWithoutSslMode = cleaned.replace(/([?&])sslmode=[^&]+(&|$)/i, '$1').replace(/[?&]$/, '');
+
+  let parsed = {};
+  try {
+    parsed = parseConnectionString(urlWithoutSslMode);
+    delete parsed.ssl;
+    delete parsed.sslmode;
+  } catch {
+    parsed = { connectionString: cleaned };
+  }
+
+  const config = { ...parsed };
   // Automatically enable SSL for cloud-hosted databases (Aiven, Neon, Supabase, Render)
-  if (!cleaned.includes('localhost') && !cleaned.includes('127.0.0.1')) {
+  if (!isLocal) {
     config.ssl = { rejectUnauthorized: false };
   }
+
   try {
-    const parsed = new URL(cleaned);
-    console.log(`[DB] Connecting to PostgreSQL host: ${parsed.host}, database: ${parsed.pathname.slice(1)}`);
+    const host = parsed.host || new URL(cleaned).host;
+    const db = parsed.database || new URL(cleaned).pathname.slice(1);
+    console.log(`[DB] Connecting to PostgreSQL host: ${host}, database: ${db}, ssl: ${!isLocal}`);
   } catch {}
+
   return config;
 }
 

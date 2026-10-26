@@ -4,7 +4,16 @@ const path = require('path');
 const { pool, withTransaction } = require('./index');
 
 async function migrate() {
-  const migrationsDir = path.join(__dirname, '../../../../database/migrations');
+  const candidateDirs = [
+    path.join(__dirname, '../../../../database/migrations'),
+    path.join(__dirname, '../../../database/migrations'),
+    path.join(process.cwd(), 'database/migrations'),
+    path.join(process.cwd(), '../database/migrations'),
+  ];
+  const migrationsDir = candidateDirs.find((d) => fs.existsSync(d));
+  if (!migrationsDir) {
+    throw new Error('Migrations directory not found in candidate paths: ' + candidateDirs.join(', '));
+  }
   const files = fs.readdirSync(migrationsDir).filter((file) => file.endsWith('.sql')).sort();
   await withTransaction(async (client) => {
     await client.query('SELECT pg_advisory_xact_lock(hashtext($1))', ['gamersg:migrations']);
