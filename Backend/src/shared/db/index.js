@@ -3,8 +3,32 @@ require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 require('dotenv').config({ path: path.resolve(__dirname, '../../../.env') });
 const { Pool } = require('pg');
 
-if (process.env.NODE_ENV === 'production' && !process.env.DATABASE_URL) {
-  throw new Error('DATABASE_URL must be configured in production.');
+const rawDbUrl = process.env.DATABASE_URL;
+
+if (!rawDbUrl) {
+  if (process.env.RENDER || process.env.NODE_ENV === 'production') {
+    throw new Error(
+      '\n=======================================================\n' +
+      '[RENDER CONFIGURATION ERROR] DATABASE_URL is missing!\n' +
+      'Render Web Services run in an isolated cloud container without a local database.\n' +
+      '1. Create a PostgreSQL database on Render (New + -> PostgreSQL)\n' +
+      '2. Copy its "Internal Database URL"\n' +
+      '3. In your Web Service -> Environment tab, add: DATABASE_URL=<Internal Database URL>\n' +
+      '=======================================================\n'
+    );
+  }
+}
+
+if (rawDbUrl && (rawDbUrl.includes('127.0.0.1') || rawDbUrl.includes('localhost')) && (process.env.RENDER || process.env.NODE_ENV === 'production')) {
+  throw new Error(
+    '\n=======================================================\n' +
+    '[RENDER CONFIGURATION ERROR] DATABASE_URL is pointing to 127.0.0.1 / localhost!\n' +
+    'Localhost (127.0.0.1) does NOT exist inside cloud containers on Render.\n' +
+    'Please copy the "Internal Database URL" from your Render PostgreSQL database\n' +
+    '(looks like: postgresql://user:pass@dpg-xxxxxx.oregon-postgres.render.com/gamers_g)\n' +
+    'and paste it into your Render Web Service Environment tab as DATABASE_URL.\n' +
+    '=======================================================\n'
+  );
 }
 
 function parseDbConfig(connStr) {
@@ -19,6 +43,10 @@ function parseDbConfig(connStr) {
   if (!cleaned.includes('localhost') && !cleaned.includes('127.0.0.1')) {
     config.ssl = { rejectUnauthorized: false };
   }
+  try {
+    const parsed = new URL(cleaned);
+    console.log(`[DB] Connecting to PostgreSQL host: ${parsed.host}, database: ${parsed.pathname.slice(1)}`);
+  } catch {}
   return config;
 }
 
@@ -26,7 +54,7 @@ const poolConfig = {
   ...parseDbConfig(process.env.DATABASE_URL),
   max: Number(process.env.DB_POOL_MAX) || 20,
   idleTimeoutMillis: 30_000,
-  connectionTimeoutMillis: 5_000,
+  connectionTimeoutMillis: 10_000,
 };
 
 const pool = new Pool(poolConfig);
