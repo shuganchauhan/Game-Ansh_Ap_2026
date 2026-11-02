@@ -338,16 +338,16 @@ export default function TournamentsPage({ onRegisterModal, onOpenScrimLobby, onS
 
             {/* Bracket Connector Line */}
             <div className="flex flex-col items-center justify-center text-on-surface-variant opacity-40 font-mono text-lg select-none">
-              ➔
+              <ArrowRight className="w-5 h-5" />
             </div>
 
             {/* Grand Finals Column */}
             <div className="flex-1 space-y-4">
               <div className="text-center font-mono text-xs uppercase text-secondary tracking-wider font-bold">
-                🏆 Grand Finals (BO5)
+                <Trophy className="w-4 h-4 text-tertiary inline mr-1.5" /> Grand Finals (BO5)
               </div>
               <div className="p-5 rounded-2xl bg-surface-container-high border-2 border-secondary/40 shadow-glow-accent space-y-3 relative">
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-secondary text-black font-mono text-[10px] uppercase font-bold tracking-widest">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-secondary text-on-secondary font-mono text-[10px] uppercase font-bold tracking-widest">
                   Live Match
                 </div>
 

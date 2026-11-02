@@ -107,7 +107,7 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
 
       {copiedLink && (
         <div className="p-3 rounded-xl bg-secondary/15 border border-secondary/30 text-secondary font-mono text-xs text-center animate-in fade-in">
-          ✓ Profile link copied to clipboard!
+          Profile link copied to clipboard!
         </div>
       )}
 
@@ -130,12 +130,18 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             {/* Avatar */}
             <div className="relative">
-              <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl overflow-hidden p-1 bg-gradient-to-tr from-secondary to-primary-container shadow-2xl">
-                <img
-                  src={currentUser.avatar}
-                  alt={currentUser.name}
-                  className="w-full h-full object-cover rounded-xl"
-                />
+              <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl p-1 bg-gradient-to-tr from-secondary via-primary to-primary-container shadow-2xl flex items-center justify-center">
+                {currentUser.avatar && !currentUser.avatar.includes('unsplash') && !currentUser.avatar.includes('dicebear') ? (
+                  <img
+                    src={currentUser.avatar}
+                    alt={currentUser.name}
+                    className="w-full h-full object-cover rounded-[14px]"
+                  />
+                ) : (
+                  <div className="w-full h-full rounded-[14px] bg-[#272932] flex items-center justify-center font-display font-extrabold text-3xl text-primary">
+                    {(currentUser.name || 'G').slice(0, 2).toUpperCase()}
+                  </div>
+                )}
               </div>
               <span className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-surface-container-lowest flex items-center justify-center shadow-lg">
                 <span className="w-3.5 h-3.5 rounded-full bg-secondary shadow-[0_0_8px_#41eec2]" />
@@ -180,7 +186,7 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
             </p>
 
             <div className="flex items-center gap-4 text-xs font-mono text-on-surface-variant flex-wrap pt-1">
-              <span>📍 {currentUser.location}</span>
+              <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5 text-secondary" /> {currentUser.location}</span>
               <span>•</span>
               <span className="text-secondary font-bold">
                 {currentUser.connectionsCount || 428} Pro Connections
@@ -289,7 +295,7 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
               {currentUser.bio}
             </p>
             <div className="pt-2 flex items-center gap-4 text-xs font-mono text-on-surface-variant">
-              <span>🕒 Scrim Windows: <b className="text-on-surface">{currentUser.scrimAvailability}</b></span>
+              <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5 text-secondary" /> Scrim Windows: <b className="text-on-surface">{currentUser.scrimAvailability}</b></span>
             </div>
           </div>
 
@@ -306,9 +312,9 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {/* Valorant */}
-              <div className="p-4 rounded-2xl bg-surface-container-low border border-[#ff4655]/30 space-y-2">
+              <div className="p-4 rounded-2xl bg-surface-container-low border border-[#37ebf3]/30 space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="font-display font-bold text-sm text-[#ff4655]">⚡ VALORANT</span>
+                  <span className="font-display font-bold text-sm text-[#37ebf3] flex items-center gap-1.5"><Zap className="w-4 h-4" /> VALORANT</span>
                   <CheckCircle2 className="w-4 h-4 text-secondary" />
                 </div>
                 <div className="font-mono text-xs text-on-surface font-semibold">
@@ -316,14 +322,14 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
                 </div>
                 <div className="flex items-center justify-between text-xs font-mono text-on-surface-variant pt-1 border-t border-card-border">
                   <span>Immortal 3 (284 RR)</span>
-                  <span className="text-[#ff4655] font-bold">1.38 KD</span>
+                  <span className="text-[#37ebf3] font-bold">1.38 KD</span>
                 </div>
               </div>
 
               {/* BGMI */}
-              <div className="p-4 rounded-2xl bg-surface-container-low border border-[#f5a623]/30 space-y-2">
+              <div className="p-4 rounded-2xl bg-surface-container-low border border-[#fdf500]/30 space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="font-display font-bold text-sm text-[#f5a623]">🔫 BGMI</span>
+                  <span className="font-display font-bold text-sm text-[#fdf500] flex items-center gap-1.5"><Crosshair className="w-4 h-4" /> BGMI</span>
                   <CheckCircle2 className="w-4 h-4 text-secondary" />
                 </div>
                 <div className="font-mono text-xs text-on-surface font-semibold">
@@ -331,29 +337,29 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
                 </div>
                 <div className="flex items-center justify-between text-xs font-mono text-on-surface-variant pt-1 border-t border-card-border">
                   <span>Conqueror (6400 pts)</span>
-                  <span className="text-[#f5a623] font-bold">5.20 KD</span>
+                  <span className="text-[#fdf500] font-bold">5.20 KD</span>
                 </div>
               </div>
 
               {/* Free Fire */}
-              <div className="p-4 rounded-2xl bg-surface-container-low border border-[#ff6b00]/30 space-y-2">
+              <div className="p-4 rounded-2xl bg-surface-container-low border border-[#e455ae]/30 space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="font-display font-bold text-sm text-[#ff6b00]">🔥 FREE FIRE</span>
+                  <span className="font-display font-bold text-sm text-[#e455ae] flex items-center gap-1.5"><Flame className="w-4 h-4" /> FREE FIRE</span>
                   <CheckCircle2 className="w-4 h-4 text-secondary" />
                 </div>
                 <div className="font-mono text-xs text-on-surface font-semibold">
                   UID: {currentUser.gameAccounts?.freefire || '891240182'}
                 </div>
                 <div className="flex items-center justify-between text-xs font-mono text-on-surface-variant pt-1 border-t border-card-border">
-                  <span>Grandmaster (84★)</span>
-                  <span className="text-[#ff6b00] font-bold">62% HS</span>
+                  <span>Grandmaster (84 Stars)</span>
+                  <span className="text-[#e455ae] font-bold">62% HS</span>
                 </div>
               </div>
 
               {/* Clash of Clans */}
-              <div className="p-4 rounded-2xl bg-surface-container-low border border-[#4db6ac]/30 space-y-2">
+              <div className="p-4 rounded-2xl bg-surface-container-low border border-[#1ac5b0]/30 space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="font-display font-bold text-sm text-[#4db6ac]">🏰 CLASH OF CLANS</span>
+                  <span className="font-display font-bold text-sm text-[#1ac5b0] flex items-center gap-1.5"><Shield className="w-4 h-4" /> CLASH OF CLANS</span>
                   <CheckCircle2 className="w-4 h-4 text-secondary" />
                 </div>
                 <div className="font-mono text-xs text-on-surface font-semibold">
@@ -361,14 +367,14 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
                 </div>
                 <div className="flex items-center justify-between text-xs font-mono text-on-surface-variant pt-1 border-t border-card-border">
                   <span>Town Hall 17 Max</span>
-                  <span className="text-[#4db6ac] font-bold">1,840 War★</span>
+                  <span className="text-[#1ac5b0] font-bold">1,840 War Stars</span>
                 </div>
               </div>
 
               {/* Clash Royale */}
-              <div className="p-4 rounded-2xl bg-surface-container-low border border-[#7e57c2]/30 space-y-2">
+              <div className="p-4 rounded-2xl bg-surface-container-low border border-[#9381ff]/30 space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="font-display font-bold text-sm text-[#7e57c2]">👑 CLASH ROYALE</span>
+                  <span className="font-display font-bold text-sm text-[#9381ff] flex items-center gap-1.5"><Crown className="w-4 h-4" /> CLASH ROYALE</span>
                   <CheckCircle2 className="w-4 h-4 text-secondary" />
                 </div>
                 <div className="font-mono text-xs text-on-surface font-semibold">
@@ -376,14 +382,14 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
                 </div>
                 <div className="flex items-center justify-between text-xs font-mono text-on-surface-variant pt-1 border-t border-card-border">
                   <span>Ultimate Champion</span>
-                  <span className="text-[#7e57c2] font-bold">8,400 Trophies</span>
+                  <span className="text-[#9381ff] font-bold">8,400 Trophies</span>
                 </div>
               </div>
 
               {/* Call of Duty */}
-              <div className="p-4 rounded-2xl bg-surface-container-low border border-[#4caf50]/30 space-y-2">
+              <div className="p-4 rounded-2xl bg-surface-container-low border border-[#cb1dcd]/30 space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="font-display font-bold text-sm text-[#4caf50]">💀 CALL OF DUTY</span>
+                  <span className="font-display font-bold text-sm text-[#cb1dcd] flex items-center gap-1.5"><Target className="w-4 h-4" /> CALL OF DUTY</span>
                   <CheckCircle2 className="w-4 h-4 text-secondary" />
                 </div>
                 <div className="font-mono text-xs text-on-surface font-semibold">
@@ -445,7 +451,7 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
                       <span className="font-mono text-[10px] text-on-surface-variant">Team Owner &amp; Captain</span>
                     </div>
                   </div>
-                  <span className="font-mono text-[10px] text-secondary font-bold">★ Verified Review</span>
+                  <span className="font-mono text-[10px] text-secondary font-bold">Verified Review</span>
                 </div>
                 <p className="font-body text-xs text-on-surface-variant italic">
                   &ldquo;Alex is one of the most disciplined communicators we've scrimmed with. Excellent mid-round reads and ice-cold clutches in overtime.&rdquo;
@@ -463,7 +469,7 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
                       <span className="font-mono text-[10px] text-on-surface-variant">Tactical Scout Department</span>
                     </div>
                   </div>
-                  <span className="font-mono text-[10px] text-primary font-bold">★ Scout Endorsement</span>
+                  <span className="font-mono text-[10px] text-primary font-bold">Scout Endorsement</span>
                 </div>
                 <p className="font-body text-xs text-on-surface-variant italic">
                   &ldquo;High mechanical baseline with 34% headshot accuracy. Strong candidate for any tier-1 academy or VCT split roster.&rdquo;

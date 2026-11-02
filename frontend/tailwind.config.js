@@ -8,6 +8,19 @@ export default {
   theme: {
     extend: {
       colors: {
+        /* Dedicated Palette Tokens */
+        brand: {
+          charcoal: '#272932',
+          crimson: '#710000',
+          yellow: '#fdf500',
+          teal: '#1ac5b0',
+          aqua: '#37ebf3',
+          violet: '#9381ff',
+          fuchsia: '#e455ae',
+          orchid: '#cb1dcd',
+          mist: '#d1c5c0',
+        },
+
         /* Surface scale */
         surface: "var(--color-surface)",
         "surface-dim": "var(--color-surface-dim)",

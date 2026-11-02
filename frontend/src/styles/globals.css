@@ -3,102 +3,101 @@
 @tailwind utilities;
 
 @layer base {
-  /* ─── Gamers'G Brand Design Tokens — Light Mode ─── */
+  /* ─── Gamers'G Brand Design Tokens — Custom Esports Palette ─── */
   :root {
-    /* Backgrounds */
-    --color-surface: #F5F6FA;
-    --color-surface-dim: #E8EAF0;
-    --color-surface-bright: #FFFFFF;
-    --color-surface-container-lowest: #FFFFFF;
-    --color-surface-container-low: #ECEEF5;
-    --color-surface-container: #E4E6EF;
-    --color-surface-container-high: #D8DBE8;
-    --color-surface-container-highest: #CDD0DE;
+    /* Backgrounds — #272932 Charcoal Slate Base */
+    --color-surface: #1e2027;
+    --color-surface-dim: #18191f;
+    --color-surface-bright: #272932;
+    --color-surface-container-lowest: #131418;
+    --color-surface-container-low: #1f2128;
+    --color-surface-container: #272932;
+    --color-surface-container-high: #31343f;
+    --color-surface-container-highest: #3b3f4d;
 
-    /* Text */
-    --color-on-surface: #0F1117;
-    --color-on-surface-variant: #4B5068;
-    --color-outline: #8890A8;
-    --color-outline-variant: #C8CCDf;
-    --color-card-border: #D4D8E8;
+    /* Text & Accents — #d1c5c0 Platinum Mist */
+    --color-on-surface: #FFFFFF;
+    --color-on-surface-variant: #d1c5c0;
+    --color-outline: #5c6070;
+    --color-outline-variant: #3a3d4a;
+    --color-card-border: rgba(209, 197, 192, 0.16);
 
-    /* Brand — Electric Violet */
-    --color-primary: #7C3AED;
+    /* Brand — #9381ff Soft Slate Violet & #cb1dcd Royal Orchid */
+    --color-primary: #9381ff;
     --color-on-primary: #FFFFFF;
-    --color-primary-container: #8B5CF6;
+    --color-primary-container: #cb1dcd;
     --color-on-primary-container: #FFFFFF;
-    --color-primary-hover: #6D28D9;
+    --color-primary-hover: #826df5;
 
-    /* Accent — Cyan */
-    --color-secondary: #0891B2;
-    --color-on-secondary: #FFFFFF;
-    --color-secondary-container: #22D3EE;
-    --color-on-secondary-container: #083344;
+    /* Accent — #37ebf3 Electric Aqua & #1ac5b0 Jade Teal */
+    --color-secondary: #37ebf3;
+    --color-on-secondary: #131418;
+    --color-secondary-container: #1ac5b0;
+    --color-on-secondary-container: #131418;
 
-    /* Tertiary — Amber/Gold */
-    --color-tertiary: #D97706;
-    --color-on-tertiary: #FFFFFF;
-    --color-tertiary-container: #FDE68A;
+    /* Highlight / Attention — #fdf500 Canary Yellow & #e455ae Vivid Fuchsia */
+    --color-tertiary: #fdf500;
+    --color-on-tertiary: #131418;
+    --color-tertiary-container: #e455ae;
 
-    /* Semantic */
-    --color-error: #DC2626;
+    /* Semantic — #e455ae / #710000 Deep Crimson & #1ac5b0 Jade Teal */
+    --color-error: #e455ae;
     --color-on-error: #FFFFFF;
-    --color-error-container: #FEE2E2;
-    --color-success: #059669;
-    --color-warning: #D97706;
+    --color-error-container: #710000;
+    --color-success: #1ac5b0;
+    --color-warning: #fdf500;
 
     /* Glow effects */
-    --glow-primary: rgba(124, 58, 237, 0.18);
-    --glow-secondary: rgba(8, 145, 178, 0.2);
+    --glow-primary: rgba(147, 129, 255, 0.32);
+    --glow-secondary: rgba(55, 235, 243, 0.3);
+    --glow-accent: rgba(228, 85, 174, 0.3);
+    --glow-yellow: rgba(253, 245, 0, 0.28);
+    --glow-crimson: rgba(113, 0, 0, 0.4);
   }
 
-  /* ─── Gamers'G Brand Design Tokens — Dark Mode (Production Esports) ─── */
   .dark {
-    /* Backgrounds — deep dark esports */
-    --color-surface: #0B0D12;
-    --color-surface-dim: #090B0F;
-    --color-surface-bright: #1E2130;
-    --color-surface-container-lowest: #080A0E;
-    --color-surface-container-low: #12151D;
-    --color-surface-container: #181D28;
-    --color-surface-container-high: #202635;
-    --color-surface-container-highest: #293040;
+    /* Same refined high-contrast palette in dark mode */
+    --color-surface: #1e2027;
+    --color-surface-dim: #18191f;
+    --color-surface-bright: #272932;
+    --color-surface-container-lowest: #131418;
+    --color-surface-container-low: #1f2128;
+    --color-surface-container: #272932;
+    --color-surface-container-high: #31343f;
+    --color-surface-container-highest: #3b3f4d;
 
-    /* Text */
-    --color-on-surface: #F4F6FC;
-    --color-on-surface-variant: #9CA3B8;
-    --color-outline: #5A6380;
-    --color-outline-variant: #2A3040;
-    --color-card-border: #2A3040;
+    --color-on-surface: #FFFFFF;
+    --color-on-surface-variant: #d1c5c0;
+    --color-outline: #5c6070;
+    --color-outline-variant: #3a3d4a;
+    --color-card-border: rgba(209, 197, 192, 0.16);
 
-    /* Brand — Electric Violet (vivid in dark) */
-    --color-primary: #8B5CF6;
+    --color-primary: #9381ff;
     --color-on-primary: #FFFFFF;
-    --color-primary-container: #7C3AED;
+    --color-primary-container: #cb1dcd;
     --color-on-primary-container: #FFFFFF;
-    --color-primary-hover: #7C3AED;
+    --color-primary-hover: #826df5;
 
-    /* Accent — Cyan (vivid in dark) */
-    --color-secondary: #22D3EE;
-    --color-on-secondary: #0A1929;
-    --color-secondary-container: #0891B2;
-    --color-on-secondary-container: #E0F7FA;
+    --color-secondary: #37ebf3;
+    --color-on-secondary: #131418;
+    --color-secondary-container: #1ac5b0;
+    --color-on-secondary-container: #131418;
 
-    /* Tertiary — Amber */
-    --color-tertiary: #FBBF24;
-    --color-on-tertiary: #1C1000;
-    --color-tertiary-container: #92400E;
+    --color-tertiary: #fdf500;
+    --color-on-tertiary: #131418;
+    --color-tertiary-container: #e455ae;
 
-    /* Semantic */
-    --color-error: #FB7185;
-    --color-on-error: #2D0010;
-    --color-error-container: #5C0A1E;
-    --color-success: #34D399;
-    --color-warning: #FBBF24;
+    --color-error: #e455ae;
+    --color-on-error: #FFFFFF;
+    --color-error-container: #710000;
+    --color-success: #1ac5b0;
+    --color-warning: #fdf500;
 
-    /* Glow effects */
-    --glow-primary: rgba(139, 92, 246, 0.35);
-    --glow-secondary: rgba(34, 211, 238, 0.28);
+    --glow-primary: rgba(147, 129, 255, 0.35);
+    --glow-secondary: rgba(55, 235, 243, 0.35);
+    --glow-accent: rgba(228, 85, 174, 0.32);
+    --glow-yellow: rgba(253, 245, 0, 0.3);
+    --glow-crimson: rgba(113, 0, 0, 0.45);
   }
 
   * {
@@ -113,7 +112,7 @@
     background-color: var(--color-surface);
     color: var(--color-on-surface);
     font-family: 'Inter', 'Hanken Grotesk', sans-serif;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.2s ease, color 0.2s ease;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;

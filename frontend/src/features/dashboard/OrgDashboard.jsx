@@ -90,12 +90,18 @@ export default function OrgDashboard({ onSelectTab, onOpenTeamCreator, onSelectT
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="flex items-start sm:items-center gap-5">
             {/* Org Logo */}
-            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden p-1 bg-surface-container-high border border-card-border shrink-0 shadow-lg">
-              <img
-                src={currentOrg.logo}
-                alt={currentOrg.name}
-                className="w-full h-full object-cover rounded-xl"
-              />
+            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden p-0.5 bg-gradient-to-tr from-secondary via-primary to-primary-container shrink-0 shadow-lg flex items-center justify-center">
+              {currentOrg.logo ? (
+                <img
+                  src={currentOrg.logo}
+                  alt={currentOrg.name}
+                  className="w-full h-full object-cover rounded-[14px]"
+                />
+              ) : (
+                <div className="w-full h-full rounded-[14px] bg-[#272932] flex items-center justify-center font-display font-extrabold text-2xl text-secondary">
+                  {(currentOrg.tag || currentOrg.name || 'OG').slice(0, 3).toUpperCase()}
+                </div>
+              )}
             </div>
 
             {/* Info */}
@@ -127,7 +133,7 @@ export default function OrgDashboard({ onSelectTab, onOpenTeamCreator, onSelectT
               </p>
 
               <div className="flex items-center gap-4 text-xs font-mono text-on-surface-variant flex-wrap pt-1">
-                <span>📍 {currentOrg.location}</span>
+                <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5 text-secondary" /> {currentOrg.location}</span>
                 <span>•</span>
                 <span className="text-secondary font-bold">
                   {currentOrg.followers.toLocaleString()} Followers
@@ -198,7 +204,7 @@ export default function OrgDashboard({ onSelectTab, onOpenTeamCreator, onSelectT
                   className="px-3 py-2 rounded-xl bg-surface-container-high hover:bg-surface-container-highest border border-card-border text-[11px] font-mono text-secondary font-bold"
                   title="Demo helper to instantly approve verification for testing"
                 >
-                  ⚡ Instant Approve (Demo)
+                  Instant Approve (Demo)
                 </button>
               </div>
             ) : (
@@ -319,7 +325,7 @@ export default function OrgDashboard({ onSelectTab, onOpenTeamCreator, onSelectT
                           key={m.id}
                           className="px-2 py-0.5 rounded text-[11px] font-mono bg-surface-container border border-card-border text-on-surface flex items-center gap-1"
                         >
-                          {m.isCaptain && <span className="text-tertiary">★</span>}
+                          {m.isCaptain && <Crown className="w-3 h-3 text-tertiary shrink-0" />}
                           {m.name} ({m.role.split(' ')[0]})
                         </span>
                       ))}
@@ -330,7 +336,7 @@ export default function OrgDashboard({ onSelectTab, onOpenTeamCreator, onSelectT
                   {team.openRoles?.length > 0 ? (
                     <div className="p-2.5 rounded-xl bg-primary/10 border border-primary/20">
                       <div className="flex items-center justify-between text-xs font-mono font-bold text-primary">
-                        <span>🎯 {team.openRoles.length} Open Tryout Role(s)</span>
+                        <span className="flex items-center gap-1.5"><Target className="w-3.5 h-3.5" /> {team.openRoles.length} Open Tryout Role(s)</span>
                       </div>
                       <p className="font-body text-[11px] text-on-surface-variant mt-0.5">
                         {team.openRoles.map((r) => r.roleName).join(', ')}
@@ -408,7 +414,7 @@ export default function OrgDashboard({ onSelectTab, onOpenTeamCreator, onSelectT
                       {app.applicantRank}
                     </span>
                     <span className="font-mono text-xs text-on-surface-variant">
-                      → Applied for: <b className="text-secondary">{app.roleName}</b> on {app.teamName}
+                      Applied for: <b className="text-secondary">{app.roleName}</b> on {app.teamName}
                     </span>
                   </div>
 
@@ -447,7 +453,7 @@ export default function OrgDashboard({ onSelectTab, onOpenTeamCreator, onSelectT
                             : 'bg-surface-container-high hover:bg-surface-container-highest text-on-surface border-card-border'
                         }`}
                       >
-                        {app.status === 'shortlisted' ? '⭐ Shortlisted' : 'Shortlist'}
+                        {app.status === 'shortlisted' ? 'Shortlisted' : 'Shortlist'}
                       </button>
 
                       <button
@@ -536,7 +542,7 @@ export default function OrgDashboard({ onSelectTab, onOpenTeamCreator, onSelectT
 
           <div className="flex items-center justify-between">
             <span className="font-mono text-xs text-on-surface-variant">
-              {announcementPosted ? '✓ Broadcast published to Feed!' : 'Will appear with Verified Org Badge'}
+              {announcementPosted ? 'Broadcast published to Feed!' : 'Will appear with Verified Org Badge'}
             </span>
             <button
               type="submit"

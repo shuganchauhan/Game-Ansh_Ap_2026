@@ -94,7 +94,7 @@ const PLATFORM_PILLARS = [
       'Direct application to verified Esports Organizations',
       'Talent Radar for scouts to discover high-ELO free agents',
       'Video-linked tryout dossiers with timestamped VODs',
-      'State-machine application tracking (Submitted → Shortlisted → Signed)',
+      'State-machine application tracking (Submitted -> Shortlisted -> Signed)',
     ],
     metric: '35+',
     metricLabel: 'Verified Esports Orgs',

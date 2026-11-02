@@ -152,11 +152,21 @@ export default function SocialFeedPage({ onSelectTab, onOpenAuth }) {
           ) : (
             <section className="p-5 rounded-3xl bg-surface-container-low border border-card-border shadow-lg space-y-3">
               <div className="flex items-center gap-3">
-                <img
-                  src={activeRole === 'org' ? activeOrg?.logo : (user?.avatar_url || currentUser.avatar)}
-                  alt="Avatar"
-                  className="w-10 h-10 rounded-xl object-cover ring-1 ring-card-border shrink-0"
-                />
+                {(() => {
+                  const avatarSrc = activeRole === 'org' ? activeOrg?.logo : (user?.avatar_url || currentUser.avatar);
+                  const avatarName = user?.name || user?.username || (activeRole === 'org' ? activeOrg?.name : currentUser.name);
+                  return avatarSrc ? (
+                    <img
+                      src={avatarSrc}
+                      alt="Avatar"
+                      className="w-10 h-10 rounded-xl object-cover ring-1 ring-card-border shrink-0"
+                    />
+                  ) : (
+                    <div className="w-10 h-10 rounded-xl bg-surface-container-high border border-card-border flex items-center justify-center font-display font-bold text-xs text-primary shrink-0 shadow-sm">
+                      {(avatarName || 'G').slice(0, 2).toUpperCase()}
+                    </div>
+                  );
+                })()}
                 <div className="flex-1 min-w-0">
                   <span className="font-display font-bold text-sm text-on-surface block truncate">
                     {user?.name || user?.username || (activeRole === 'org' ? activeOrg?.name : currentUser.name)}
@@ -188,10 +198,10 @@ export default function SocialFeedPage({ onSelectTab, onOpenAuth }) {
                       onChange={(e) => setSelectedCategory(e.target.value)}
                       className="p-2 rounded-xl bg-surface-container border border-card-border text-xs font-mono text-on-surface focus:outline-none"
                     >
-                      <option value="LFT / Tryout">🎯 LFT / Tryout</option>
-                      <option value="Org Announcement">📢 Org Announcement</option>
-                      <option value="Match Result">🔥 Scrim / Match Result</option>
-                      <option value="General Discussion">💬 General Discussion</option>
+                      <option value="LFT / Tryout">LFT / Tryout</option>
+                      <option value="Org Announcement">Org Announcement</option>
+                      <option value="Match Result">Scrim / Match Result</option>
+                      <option value="General Discussion">General Discussion</option>
                     </select>
 
                     <select
@@ -199,12 +209,12 @@ export default function SocialFeedPage({ onSelectTab, onOpenAuth }) {
                       onChange={(e) => setSelectedGame(e.target.value)}
                       className="p-2 rounded-xl bg-surface-container border border-card-border text-xs font-mono text-on-surface focus:outline-none"
                     >
-                      <option value="valorant">⚡ VALORANT</option>
-                      <option value="bgmi">🔫 BGMI</option>
-                      <option value="freefire">🔥 Free Fire</option>
-                      <option value="coc">🏰 Clash of Clans</option>
-                      <option value="cr">👑 Clash Royale</option>
-                      <option value="cod">💀 Call of Duty</option>
+                      <option value="valorant">VALORANT</option>
+                      <option value="bgmi">BGMI</option>
+                      <option value="freefire">Free Fire</option>
+                      <option value="coc">Clash of Clans</option>
+                      <option value="cr">Clash Royale</option>
+                      <option value="cod">Call of Duty</option>
                     </select>
                   </div>
 
@@ -225,9 +235,9 @@ export default function SocialFeedPage({ onSelectTab, onOpenAuth }) {
           <div className="flex items-center gap-2 overflow-x-auto pb-1">
             {[
               { id: 'all', label: 'All Dispatches' },
-              { id: 'lft', label: '🎯 LFT & Tryouts' },
-              { id: 'org', label: '🏢 Org Announcements' },
-              { id: 'matches', label: '⚔️ Scrim Results' },
+              { id: 'lft', label: 'LFT & Tryouts' },
+              { id: 'org', label: 'Org Announcements' },
+              { id: 'matches', label: 'Scrim Results' },
             ].map((f) => (
               <button
                 key={f.id}
@@ -253,11 +263,17 @@ export default function SocialFeedPage({ onSelectTab, onOpenAuth }) {
                 {/* Author row */}
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-3 min-w-0">
-                    <img
-                      src={post.authorAvatar}
-                      alt={post.authorName}
-                      className="w-10 h-10 rounded-xl object-cover ring-1 ring-card-border shrink-0"
-                    />
+                    {post.authorAvatar ? (
+                      <img
+                        src={post.authorAvatar}
+                        alt={post.authorName}
+                        className="w-10 h-10 rounded-xl object-cover ring-1 ring-card-border shrink-0"
+                      />
+                    ) : (
+                      <div className="w-10 h-10 rounded-xl bg-surface-container-high border border-card-border flex items-center justify-center font-display font-bold text-xs text-primary shrink-0 shadow-sm">
+                        {(post.authorName || 'G').slice(0, 2).toUpperCase()}
+                      </div>
+                    )}
                     <div className="min-w-0">
                       <div className="flex items-center gap-1.5 flex-wrap">
                         <span className="font-display font-bold text-sm text-on-surface truncate">
@@ -410,7 +426,13 @@ export default function SocialFeedPage({ onSelectTab, onOpenAuth }) {
                     className="flex items-center justify-between p-3 rounded-2xl bg-surface-container border border-card-border gap-2.5"
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
-                      <img src={p.avatar} alt={p.name} className="w-9 h-9 rounded-xl object-cover shrink-0" />
+                      {p.avatar ? (
+                        <img src={p.avatar} alt={p.name} className="w-9 h-9 rounded-xl object-cover shrink-0" />
+                      ) : (
+                        <div className="w-9 h-9 rounded-xl bg-surface-container-high border border-card-border flex items-center justify-center font-display font-bold text-[11px] text-primary shrink-0">
+                          {(p.name || 'P').slice(0, 2).toUpperCase()}
+                        </div>
+                      )}
                       <div className="min-w-0">
                         <span className="font-display font-bold text-xs text-on-surface block truncate">
                           {p.name}
@@ -458,7 +480,13 @@ export default function SocialFeedPage({ onSelectTab, onOpenAuth }) {
                     className="flex items-center justify-between p-3 rounded-2xl bg-surface-container border border-card-border gap-2.5"
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
-                      <img src={org.logo} alt={org.name} className="w-9 h-9 rounded-xl object-cover shrink-0" />
+                      {org.logo ? (
+                        <img src={org.logo} alt={org.name} className="w-9 h-9 rounded-xl object-cover shrink-0" />
+                      ) : (
+                        <div className="w-9 h-9 rounded-xl bg-surface-container-high border border-card-border flex items-center justify-center font-display font-bold text-[11px] text-secondary shrink-0">
+                          {(org.tag || org.name || 'OG').slice(0, 2).toUpperCase()}
+                        </div>
+                      )}
                       <div className="min-w-0">
                         <div className="flex items-center gap-1">
                           <span className="font-display font-bold text-xs text-on-surface truncate">

@@ -1,14 +1,23 @@
 import React, { useState } from 'react';
-import { Shield, Plus, X, Users, CheckCircle2, Sparkles, Zap } from 'lucide-react';
+import { Shield, Plus, X, Users, CheckCircle2, Sparkles, Zap, Crosshair, Flame, Crown, Target } from 'lucide-react';
 import { useGameStore } from '../../stores/gameStore';
 
+const GAME_ICONS = {
+  valorant: Zap,
+  bgmi: Crosshair,
+  freefire: Flame,
+  coc: Shield,
+  cr: Crown,
+  cod: Target,
+};
+
 const GAME_OPTIONS = [
-  { id: 'valorant', name: 'VALORANT', defaultSlots: 5, color: '#ff4655', icon: '⚡' },
-  { id: 'bgmi', name: 'BGMI', defaultSlots: 5, color: '#f5a623', icon: '🔫' },
-  { id: 'freefire', name: 'Free Fire', defaultSlots: 4, color: '#ff6b00', icon: '🔥' },
-  { id: 'coc', name: 'Clash of Clans', defaultSlots: 15, color: '#4db6ac', icon: '🏰' },
-  { id: 'cr', name: 'Clash Royale', defaultSlots: 3, color: '#7e57c2', icon: '👑' },
-  { id: 'cod', name: 'Call of Duty', defaultSlots: 5, color: '#4caf50', icon: '💀' },
+  { id: 'valorant', name: 'VALORANT', defaultSlots: 5, color: '#37ebf3' },
+  { id: 'bgmi', name: 'BGMI', defaultSlots: 5, color: '#fdf500' },
+  { id: 'freefire', name: 'Free Fire', defaultSlots: 4, color: '#e455ae' },
+  { id: 'coc', name: 'Clash of Clans', defaultSlots: 15, color: '#1ac5b0' },
+  { id: 'cr', name: 'Clash Royale', defaultSlots: 3, color: '#9381ff' },
+  { id: 'cod', name: 'Call of Duty', defaultSlots: 5, color: '#cb1dcd' },
 ];
 
 export default function TeamCreationModal({ isOpen, onClose, onTeamCreated }) {
@@ -150,24 +159,29 @@ export default function TeamCreationModal({ isOpen, onClose, onTeamCreated }) {
               1. Select Esports Title *
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-              {GAME_OPTIONS.map((g) => (
-                <button
-                  type="button"
-                  key={g.id}
-                  onClick={() => handleGameSelect(g)}
-                  className={`p-3 rounded-xl border text-left transition-all flex items-center gap-2.5 ${
-                    selectedGame === g.id
-                      ? 'border-primary bg-primary/15 shadow-glow'
-                      : 'border-card-border bg-surface-container hover:bg-surface-container-high'
-                  }`}
-                >
-                  <span className="text-xl">{g.icon}</span>
-                  <div>
-                    <span className="font-display font-bold text-xs text-on-surface block">{g.name}</span>
-                    <span className="font-mono text-[9px] text-on-surface-variant">{g.defaultSlots} Player Slots</span>
-                  </div>
-                </button>
-              ))}
+              {GAME_OPTIONS.map((g) => {
+                const GameIcon = GAME_ICONS[g.id] || Zap;
+                return (
+                  <button
+                    type="button"
+                    key={g.id}
+                    onClick={() => handleGameSelect(g)}
+                    className={`p-3 rounded-xl border text-left transition-all flex items-center gap-2.5 ${
+                      selectedGame === g.id
+                        ? 'border-primary bg-primary/15 shadow-glow'
+                        : 'border-card-border bg-surface-container hover:bg-surface-container-high'
+                    }`}
+                  >
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 border border-card-border" style={{ backgroundColor: `${g.color}15`, color: g.color }}>
+                      <GameIcon className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <span className="font-display font-bold text-xs text-on-surface block">{g.name}</span>
+                      <span className="font-mono text-[9px] text-on-surface-variant">{g.defaultSlots} Player Slots</span>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -245,7 +259,7 @@ export default function TeamCreationModal({ isOpen, onClose, onTeamCreated }) {
             {/* Current Members preview */}
             <div className="flex flex-wrap gap-2">
               <span className="px-3 py-1 rounded-xl bg-primary/20 border border-primary/40 font-mono text-xs text-primary font-bold flex items-center gap-1.5">
-                ★ {currentUser.name} (Captain)
+                <Crown className="w-3.5 h-3.5 text-tertiary" /> {currentUser.name} (Captain)
               </span>
               {memberInputs.map((m, idx) => (
                 <span
@@ -318,7 +332,7 @@ export default function TeamCreationModal({ isOpen, onClose, onTeamCreated }) {
                 >
                   <div>
                     <span className="font-display font-bold text-on-surface block">
-                      🎯 {r.roleName}
+                      <Target className="w-3.5 h-3.5 text-secondary inline mr-1.5" />{r.roleName}
                     </span>
                     <span className="font-body text-on-surface-variant text-[11px]">
                       {r.description}

@@ -25,7 +25,7 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
 
   const displayName = user?.name || user?.username || (user?.email ? user.email.split('@')[0] : currentUser.name);
   const displayEmail = user?.email || currentUser.email || '';
-  const displayAvatar = currentUser.avatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(displayName || 'gamer')}`;
+  const displayAvatar = currentUser.avatar && !currentUser.avatar.includes('dicebear') && !currentUser.avatar.includes('unsplash') ? currentUser.avatar : null;
 
   const [activeGameStatsTab, setActiveGameStatsTab] = useState(currentUser.primaryGame || 'valorant');
 
@@ -332,7 +332,7 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
                 className="w-full py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high border border-card-border font-display font-bold text-xs uppercase tracking-wider text-on-surface active:scale-95 transition-all flex items-center justify-center gap-1.5"
               >
                 {orgStatus?.status === 'approved' ? (
-                  <span className="text-green-400 flex items-center gap-1">✓ Verified Org</span>
+                  <span className="text-green-400 flex items-center gap-1">Verified Org</span>
                 ) : orgStatus?.status === 'pending' ? (
                   <span className="text-amber-300 flex items-center gap-1">Application Sent</span>
                 ) : (
@@ -384,7 +384,7 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
                 className="w-full py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high border border-card-border font-display font-bold text-xs uppercase tracking-wider text-on-surface active:scale-95 transition-all flex items-center justify-center gap-1.5"
               >
                 {organizerStatus?.status === 'approved' ? (
-                  <span className="text-cyan-400 flex items-center gap-1">✓ Verified Host</span>
+                  <span className="text-cyan-400 flex items-center gap-1">Verified Host</span>
                 ) : organizerStatus?.status === 'pending' ? (
                   <span className="text-amber-300 flex items-center gap-1">Application Sent</span>
                 ) : (
@@ -411,12 +411,18 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
           <div className="flex items-start sm:items-center gap-5">
             {/* Avatar with cyan online halo */}
             <div className="relative shrink-0">
-              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden p-0.5 bg-gradient-to-tr from-secondary via-primary to-primary-container shadow-2xl">
-                <img
-                  src={displayAvatar}
-                  alt={displayName}
-                  className="w-full h-full object-cover rounded-[14px]"
-                />
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden p-0.5 bg-gradient-to-tr from-secondary via-primary to-primary-container shadow-2xl flex items-center justify-center">
+                {displayAvatar ? (
+                  <img
+                    src={displayAvatar}
+                    alt={displayName}
+                    className="w-full h-full object-cover rounded-[14px]"
+                  />
+                ) : (
+                  <div className="w-full h-full rounded-[14px] bg-[#272932] flex items-center justify-center font-display font-bold text-2xl text-primary">
+                    {(displayName || 'G').slice(0, 2).toUpperCase()}
+                  </div>
+                )}
               </div>
               <span className="absolute -bottom-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-surface-container-lowest">
                 <span className="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-secondary opacity-75" />
@@ -444,7 +450,7 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
 
               <div className="flex items-center gap-3 text-xs font-mono text-on-surface-variant flex-wrap pt-1">
                 <span className="text-on-surface font-semibold flex items-center gap-1">
-                  📍 {currentUser.location}
+                  <MapPin className="w-3.5 h-3.5 text-secondary inline mr-1" />{currentUser.location}
                 </span>
                 <span>•</span>
                 <span className="text-secondary font-bold">
@@ -494,7 +500,7 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
             onClick={() => setProfileModalOpen(true)}
             className="text-xs font-mono text-primary font-bold hover:underline shrink-0"
           >
-            Update IGNs &amp; Clips →
+            Update IGNs &amp; Clips
           </button>
         </div>
       </section>
@@ -537,7 +543,7 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
                       <span className={`font-mono text-xs font-bold px-2 py-0.5 rounded ${
                         isRegistered ? 'bg-secondary/15 text-secondary border border-secondary/30' : 'bg-amber-500/15 text-amber-300 border border-amber-500/30'
                       }`}>
-                        {isRegistered ? '✓ REGISTERED' : 'DRAFT (Needs 4+)'}
+                        {isRegistered ? 'REGISTERED' : 'DRAFT (Needs 4+)'}
                       </span>
                     </div>
 
@@ -562,7 +568,7 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
                             key={m.id}
                             className="px-2 py-0.5 rounded text-[11px] font-mono bg-surface-container border border-card-border text-on-surface flex items-center gap-1"
                           >
-                            {m.isCaptain && <span className="text-tertiary">★</span>}
+                            {m.isCaptain && <Crown className="w-3 h-3 text-tertiary shrink-0" />}
                             {m.name?.split(' ')[0]} ({m.role?.split(' ')[0]})
                           </span>
                         ))}
@@ -574,7 +580,7 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
                       <div className="p-2.5 rounded-xl bg-primary/10 border border-primary/20">
                         <div className="flex items-center justify-between">
                           <span className="font-mono text-[11px] text-primary font-bold">
-                            🎯 {team.openRoles.length} Open Recruitment Role(s)
+                            {team.openRoles.length} Open Recruitment Role(s)
                           </span>
                         </div>
                         <p className="font-body text-[11px] text-on-surface-variant mt-0.5">
@@ -634,7 +640,7 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
               onClick={() => onSelectTab('applications')}
               className="text-xs font-mono text-secondary hover:underline"
             >
-              View Full Pipeline →
+              View Full Pipeline
             </button>
           </div>
 
@@ -670,7 +676,7 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
                           : 'bg-primary/15 text-primary border border-primary/30'
                       }`}
                     >
-                      {app.status === 'shortlisted' ? '⭐ Shortlisted' : app.status === 'accepted' ? '✓ Signed' : '● In Review'}
+                      {app.status === 'shortlisted' ? 'Shortlisted' : app.status === 'accepted' ? 'Signed' : 'In Review'}
                     </span>
                     <span className="font-mono text-[10px] text-on-surface-variant">
                       Applied {app.appliedAt}
@@ -747,7 +753,7 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
               <h3 className="font-display font-bold text-base text-on-surface">Pro Gamers to Connect With</h3>
             </div>
             <button onClick={() => onSelectTab('feed')} className="text-xs font-mono text-primary hover:underline">
-              Feed →
+              Feed
             </button>
           </div>
 
@@ -760,7 +766,13 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
                   className="flex items-center justify-between p-3 rounded-xl bg-surface-container border border-card-border gap-3"
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <img src={p.avatar} alt={p.name} className="w-10 h-10 rounded-xl object-cover shrink-0" />
+                    {p.avatar ? (
+                      <img src={p.avatar} alt={p.name} className="w-10 h-10 rounded-xl object-cover shrink-0" />
+                    ) : (
+                      <div className="w-10 h-10 rounded-xl bg-surface-container-high border border-card-border flex items-center justify-center font-display font-bold text-xs text-primary shrink-0">
+                        {(p.name || 'P').slice(0, 2).toUpperCase()}
+                      </div>
+                    )}
                     <div className="min-w-0">
                       <div className="flex items-center gap-1.5">
                         <span className="font-display font-bold text-xs text-on-surface truncate">{p.name}</span>
@@ -793,7 +805,7 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
               <h3 className="font-display font-bold text-base text-on-surface">Esports Organizations to Follow</h3>
             </div>
             <button onClick={() => onSelectTab('discovery')} className="text-xs font-mono text-secondary hover:underline">
-              Explore →
+              Explore
             </button>
           </div>
 
@@ -806,7 +818,13 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
                   className="flex items-center justify-between p-3 rounded-xl bg-surface-container border border-card-border gap-3"
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <img src={org.logo} alt={org.name} className="w-10 h-10 rounded-xl object-cover shrink-0" />
+                    {org.logo ? (
+                      <img src={org.logo} alt={org.name} className="w-10 h-10 rounded-xl object-cover shrink-0" />
+                    ) : (
+                      <div className="w-10 h-10 rounded-xl bg-surface-container-high border border-card-border flex items-center justify-center font-display font-bold text-xs text-secondary shrink-0">
+                        {(org.tag || org.name || 'OG').slice(0, 2).toUpperCase()}
+                      </div>
+                    )}
                     <div className="min-w-0">
                       <div className="flex items-center gap-1.5">
                         <span className="font-display font-bold text-xs text-on-surface truncate">{org.name}</span>

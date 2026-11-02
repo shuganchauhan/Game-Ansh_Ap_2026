@@ -8,6 +8,15 @@ import useApi from '../../hooks/useApi';
 /* ═══════════════════════════════════════════════════════
    DUMMY DATA
 ═══════════════════════════════════════════════════════ */
+const GAME_ICONS = {
+  valorant: Zap,
+  bgmi: Crosshair,
+  freefire: Flame,
+  coc: Shield,
+  cr: Crown,
+  cod: Target,
+};
+
 const GAMES = [
   {
     id: 'valorant',
@@ -18,13 +27,12 @@ const GAMES = [
     activeTeams: 312,
     activeTournaments: 14,
     prizePools: '₹32L+',
-    color: '#ff4655',
-    gradient: 'from-[#ff4655]/30 via-[#ff4655]/5 to-transparent',
-    border: 'border-[#ff4655]/30 hover:border-[#ff4655]/70',
-    badge: 'bg-[#ff4655]/15 text-[#ff4655]',
+    color: '#37ebf3',
+    gradient: 'from-[#37ebf3]/25 via-[#37ebf3]/5 to-transparent',
+    border: 'border-[#37ebf3]/30 hover:border-[#37ebf3]/80',
+    badge: 'bg-[#37ebf3]/15 text-[#37ebf3]',
     description: "Precision 5v5 character-based tactical shooter with abilities. India's fastest growing FPS esport.",
-    logo: '⚡',
-    tag: 'HOT',
+    tag: 'TIER-1 FPS',
   },
   {
     id: 'bgmi',
@@ -35,13 +43,12 @@ const GAMES = [
     activeTeams: 540,
     activeTournaments: 22,
     prizePools: '₹58L+',
-    color: '#f5a623',
-    gradient: 'from-[#f5a623]/30 via-[#f5a623]/5 to-transparent',
-    border: 'border-[#f5a623]/30 hover:border-[#f5a623]/70',
-    badge: 'bg-[#f5a623]/15 text-[#f5a623]',
-    description: 'Battlegrounds Mobile India — the most popular competitive mobile battle royale in India.',
-    logo: '🔫',
-    tag: '#1 IN INDIA',
+    color: '#fdf500',
+    gradient: 'from-[#fdf500]/25 via-[#fdf500]/5 to-transparent',
+    border: 'border-[#fdf500]/30 hover:border-[#fdf500]/80',
+    badge: 'bg-[#fdf500]/15 text-[#fdf500]',
+    description: 'Battlegrounds Mobile India — the premier competitive mobile battle royale in India.',
+    tag: 'PREMIER BR',
   },
   {
     id: 'freefire',
@@ -52,30 +59,28 @@ const GAMES = [
     activeTeams: 410,
     activeTournaments: 18,
     prizePools: '₹24L+',
-    color: '#ff6b00',
-    gradient: 'from-[#ff6b00]/30 via-[#ff6b00]/5 to-transparent',
-    border: 'border-[#ff6b00]/30 hover:border-[#ff6b00]/70',
-    badge: 'bg-[#ff6b00]/15 text-[#ff6b00]',
-    description: 'Fast-paced survival shooter designed for mobile — massive player base across tier 2 & 3 Indian cities.',
-    logo: '🔥',
-    tag: 'RISING',
+    color: '#e455ae',
+    gradient: 'from-[#e455ae]/25 via-[#e455ae]/5 to-transparent',
+    border: 'border-[#e455ae]/30 hover:border-[#e455ae]/80',
+    badge: 'bg-[#e455ae]/15 text-[#e455ae]',
+    description: 'High-octane 50-player battle royale with clash squad competitive circuits.',
+    tag: 'PRO LEAGUE',
   },
   {
     id: 'coc',
     name: 'Clash of Clans',
     publisher: 'Supercell',
-    genre: 'Strategy',
+    genre: 'Strategy / Clan War',
     activePlayers: '6,100+',
     activeTeams: 280,
-    activeTournaments: 12,
+    activeTournaments: 8,
     prizePools: '₹18L+',
-    color: '#4db6ac',
-    gradient: 'from-[#4db6ac]/30 via-[#4db6ac]/5 to-transparent',
-    border: 'border-[#4db6ac]/30 hover:border-[#4db6ac]/70',
-    badge: 'bg-[#4db6ac]/15 text-[#4db6ac]',
-    description: 'Clan Wars, Trophy Pushing, and Legend League — the original mobile strategy esport.',
-    logo: '🏰',
-    tag: 'LEGENDS',
+    color: '#1ac5b0',
+    gradient: 'from-[#1ac5b0]/25 via-[#1ac5b0]/5 to-transparent',
+    border: 'border-[#1ac5b0]/30 hover:border-[#1ac5b0]/80',
+    badge: 'bg-[#1ac5b0]/15 text-[#1ac5b0]',
+    description: 'Clan Wars, Trophy Pushing, and Legend League — strategic clan battle operations.',
+    tag: 'CWL LEAGUE',
   },
   {
     id: 'cr',
@@ -86,12 +91,11 @@ const GAMES = [
     activeTeams: 195,
     activeTournaments: 9,
     prizePools: '₹14L+',
-    color: '#7e57c2',
-    gradient: 'from-[#7e57c2]/30 via-[#7e57c2]/5 to-transparent',
-    border: 'border-[#7e57c2]/30 hover:border-[#7e57c2]/70',
-    badge: 'bg-[#7e57c2]/15 text-[#7e57c2]',
-    description: 'Real-time deck-building card battles — Crown Championships and 1v1 ladder glory.',
-    logo: '👑',
+    color: '#9381ff',
+    gradient: 'from-[#9381ff]/25 via-[#9381ff]/5 to-transparent',
+    border: 'border-[#9381ff]/30 hover:border-[#9381ff]/80',
+    badge: 'bg-[#9381ff]/15 text-[#9381ff]',
+    description: 'Real-time deck-building card duels — Crown Championship 1v1 ladder circuit.',
     tag: 'CROWN CUP',
   },
   {
@@ -103,12 +107,11 @@ const GAMES = [
     activeTeams: 224,
     activeTournaments: 11,
     prizePools: '₹22L+',
-    color: '#4caf50',
-    gradient: 'from-[#4caf50]/30 via-[#4caf50]/5 to-transparent',
-    border: 'border-[#4caf50]/30 hover:border-[#4caf50]/70',
-    badge: 'bg-[#4caf50]/15 text-[#4caf50]',
-    description: 'COD Mobile + Warzone — 5v5 Multiplayer and Battle Royale on mobile & PC.',
-    logo: '💀',
+    color: '#cb1dcd',
+    gradient: 'from-[#cb1dcd]/25 via-[#cb1dcd]/5 to-transparent',
+    border: 'border-[#cb1dcd]/30 hover:border-[#cb1dcd]/80',
+    badge: 'bg-[#cb1dcd]/15 text-[#cb1dcd]',
+    description: 'COD Mobile + Warzone — 5v5 Hardpoint, S&D and Battle Royale operations.',
     tag: 'WARZONE',
   },
 ];
@@ -203,13 +206,17 @@ function GameCard({ game, onSelect }) {
 
       <div className="relative z-10 flex items-start justify-between gap-4">
         <div className="flex items-start gap-4">
-          {/* Game logo */}
-          <div
-            className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl shrink-0 border border-card-border"
-            style={{ backgroundColor: `${game.color}18` }}
-          >
-            {game.logo}
-          </div>
+          {(() => {
+            const IconComp = GAME_ICONS[game.id] || Zap;
+            return (
+              <div
+                className="w-14 h-14 rounded-xl flex items-center justify-center shrink-0 border border-card-border shadow-sm"
+                style={{ backgroundColor: `${game.color}18`, color: game.color }}
+              >
+                <IconComp className="w-7 h-7" />
+              </div>
+            );
+          })()}
 
           <div className="space-y-1">
             <div className="flex items-center gap-2 flex-wrap">
@@ -323,7 +330,7 @@ function TeamCard({ team, gameColor, onApply }) {
           </button>
         ) : (
           <button className="w-full py-2.5 rounded-xl bg-surface-container border border-card-border font-display font-bold text-xs uppercase tracking-wider text-on-surface-variant flex items-center justify-center gap-2 active:scale-95 transition-all">
-            View Team →
+            View Team
           </button>
         )}
       </div>
@@ -383,7 +390,7 @@ function TournamentCard({ tourney, gameColor, onRegister }) {
         </div>
 
         <div className="font-mono text-xs text-on-surface-variant">
-          📅 {new Date(tourney.startDate + 'T00:00:00').toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' })}
+          {new Date(tourney.startDate + 'T00:00:00').toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' })}
         </div>
       </div>
 
@@ -395,7 +402,7 @@ function TournamentCard({ tourney, gameColor, onRegister }) {
           className="w-full py-2.5 rounded-xl font-display font-bold text-xs uppercase tracking-wider text-white flex items-center justify-center gap-2 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           style={{ backgroundColor: fillPct >= 100 ? 'var(--color-surface-container-high)' : (gameColor || 'var(--color-secondary-container)') }}
         >
-          {fillPct >= 100 ? 'Registration Closed' : 'Register Team →'}
+          {fillPct >= 100 ? 'Registration Closed' : 'Register Team'}
         </button>
       </div>
     </div>
@@ -627,12 +634,17 @@ export default function DiscoveryPage({ onSelectTab, onOpenAuth }) {
             </button>
 
             <div className="flex items-center gap-4">
-              <div
-                className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl border border-card-border"
-                style={{ backgroundColor: `${selectedGame.color}20` }}
-              >
-                {selectedGame.logo}
-              </div>
+              {(() => {
+                const IconComp = GAME_ICONS[selectedGame.id] || Zap;
+                return (
+                  <div
+                    className="w-16 h-16 rounded-2xl flex items-center justify-center border border-card-border shadow-md"
+                    style={{ backgroundColor: `${selectedGame.color}20`, color: selectedGame.color }}
+                  >
+                    <IconComp className="w-8 h-8" />
+                  </div>
+                );
+              })()}
               <div>
                 <h1 className="font-display font-bold text-3xl sm:text-4xl text-on-surface">{selectedGame.name}</h1>
                 <div className="flex items-center gap-2 mt-1 flex-wrap">

@@ -28,14 +28,14 @@ export default function useHeroThreeJS(canvasRef, isDark) {
     const sizes = new Float32Array(particleCount);
 
     const primaryColor = isDark
-      ? new THREE.Color('#c4c0ff')
-      : new THREE.Color('#7000ff');
+      ? new THREE.Color('#9381ff')
+      : new THREE.Color('#9381ff');
     const secondaryColor = isDark
-      ? new THREE.Color('#41eec2')
-      : new THREE.Color('#00b4d8');
+      ? new THREE.Color('#37ebf3')
+      : new THREE.Color('#1ac5b0');
     const accentColor = isDark
-      ? new THREE.Color('#ffba45')
-      : new THREE.Color('#d49e1e');
+      ? new THREE.Color('#fdf500')
+      : new THREE.Color('#e455ae');
 
     for (let i = 0; i < particleCount; i++) {
       positions[i * 3]     = (Math.random() - 0.5) * 12;
@@ -72,7 +72,7 @@ export default function useHeroThreeJS(canvasRef, isDark) {
     // ─── Energy grid (torus wireframe) ───────────────────────────
     const torusGeo = new THREE.TorusGeometry(2.2, 0.003, 16, 100);
     const torusMat = new THREE.MeshBasicMaterial({
-      color: isDark ? '#464555' : '#e2e6ef',
+      color: isDark ? '#31343f' : '#272932',
       transparent: true,
       opacity: 0.3,
     });
@@ -86,12 +86,12 @@ export default function useHeroThreeJS(canvasRef, isDark) {
     // ─── Two floating orbs ───────────────────────────────────────
     const orbGeo = new THREE.SphereGeometry(0.12, 32, 32);
     const orb1 = new THREE.Mesh(orbGeo, new THREE.MeshBasicMaterial({
-      color: isDark ? '#8781ff' : '#7000ff',
+      color: isDark ? '#9381ff' : '#cb1dcd',
       transparent: true,
       opacity: isDark ? 0.7 : 0.5,
     }));
     const orb2 = new THREE.Mesh(orbGeo.clone(), new THREE.MeshBasicMaterial({
-      color: isDark ? '#41eec2' : '#00b4d8',
+      color: isDark ? '#37ebf3' : '#1ac5b0',
       transparent: true,
       opacity: isDark ? 0.7 : 0.5,
     }));

@@ -244,7 +244,7 @@ export default function TeamsPage({ onOpenTeamCreator, onSelectTab, onOpenAuth }
                       <span className="font-display font-bold text-sm text-on-surface truncate">
                         {member.name}
                       </span>
-                      {member.isCaptain && <span className="text-tertiary text-xs" title="Captain">★</span>}
+                      {member.isCaptain && <Crown className="w-3.5 h-3.5 text-tertiary shrink-0" title="Captain" />}
                     </div>
                     <p className="font-mono text-xs text-secondary font-semibold">{member.role}</p>
                     <span className="font-mono text-[10px] text-on-surface-variant">IGN: {member.ign}</span>
@@ -341,7 +341,7 @@ export default function TeamsPage({ onOpenTeamCreator, onSelectTab, onOpenAuth }
                     <h3 className="font-display font-bold text-base text-on-surface">{role.roleName}</h3>
                     <p className="font-body text-xs text-on-surface-variant">{role.description}</p>
                     <div className="p-2 rounded-xl bg-surface-container text-[11px] font-mono text-tertiary">
-                      📋 Reqs: {role.requirements}
+                      <FileText className="w-3.5 h-3.5 text-tertiary inline mr-1" /> Reqs: {role.requirements}
                     </div>
                   </div>
 
@@ -778,7 +778,7 @@ export default function TeamsPage({ onOpenTeamCreator, onSelectTab, onOpenAuth }
                         key={i}
                         className="px-2 py-0.5 rounded bg-primary/10 text-primary text-[11px] font-mono font-semibold"
                       >
-                        🎯 {r.roleName} Open
+                        <Target className="w-3.5 h-3.5 text-secondary inline mr-1" /> {r.roleName} Open
                       </span>
                     ))}
                   </div>
