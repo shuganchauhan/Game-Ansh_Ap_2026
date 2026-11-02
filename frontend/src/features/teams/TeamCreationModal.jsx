@@ -403,9 +403,9 @@ export default function TeamCreationModal({ isOpen, onClose, onTeamCreated }) {
               </button>
               <button
                 type="submit"
-                className="px-8 py-3 rounded-xl bg-primary text-white dark:text-black font-display font-bold text-xs uppercase tracking-wider shadow-lg shadow-primary/20 active:scale-95 transition-all flex items-center gap-2"
+                className="px-8 py-3 rounded-xl bg-primary text-white font-display font-bold text-xs uppercase tracking-wider shadow-lg shadow-primary/20 active:scale-95 transition-all flex items-center gap-2"
               >
-                <Zap className="w-4 h-4 text-white dark:text-black" />
+                <Zap className="w-4 h-4 text-white" />
                 Confirm & Form Squad
               </button>
             </div>

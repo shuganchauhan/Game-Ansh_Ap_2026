@@ -243,7 +243,7 @@ export default function ScrimLobbyPage({ scrimId, onBack, onSelectTab }) {
               </span>
               <span className={`px-2.5 py-1 rounded-full text-[10px] font-mono font-bold border transition-all flex items-center gap-1.5 ${
                 realtimePulse
-                  ? 'bg-primary text-white dark:text-black border-primary scale-105'
+                  ? 'bg-primary text-white border-primary scale-105'
                   : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
               }`}>
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
@@ -379,7 +379,7 @@ export default function ScrimLobbyPage({ scrimId, onBack, onSelectTab }) {
               <button
                 type="submit"
                 disabled={actionLoading}
-                className="px-6 py-2 rounded-xl bg-primary text-white dark:text-black font-bold text-sm shadow-lg shadow-primary/20"
+                className="px-6 py-2 rounded-xl bg-primary text-white font-bold text-sm shadow-lg shadow-primary/20"
               >
                 Save Lobby Credentials
               </button>
@@ -417,7 +417,7 @@ export default function ScrimLobbyPage({ scrimId, onBack, onSelectTab }) {
             <button
               type="submit"
               disabled={!selectedTeamToReg || actionLoading}
-              className="px-5 py-2.5 rounded-xl bg-secondary text-white dark:text-black font-bold text-xs shadow-lg shadow-secondary/20 transition disabled:opacity-50"
+              className="px-5 py-2.5 rounded-xl bg-secondary text-white font-bold text-xs shadow-lg shadow-secondary/20 transition disabled:opacity-50"
             >
               Register Squad
             </button>

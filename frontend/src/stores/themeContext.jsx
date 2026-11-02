@@ -6,7 +6,8 @@ export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => {
     const saved = localStorage.getItem('gamersg_theme');
     if (saved) return saved;
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    // Default to dark for esports aesthetic
+    return 'dark';
   });
 
   useEffect(() => {

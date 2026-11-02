@@ -2,15 +2,16 @@ import React, { useRef, useState, useEffect } from 'react';
 import useHeroThreeJS from '../../hooks/useHeroThreeJS';
 import { useGSAPReveal, useCounterGSAP, useMarqueeTicker } from '../../hooks/useGSAP';
 import { useTheme } from '../../stores/themeContext';
+import useApi from '../../hooks/useApi';
 import {
   Gamepad2, Shield, Trophy, Radio, ChevronRight, ShieldCheck, Zap,
   Swords, Users, Star, MessageSquare, TrendingUp, Play, ArrowRight,
   Cpu, Target, Globe2, CheckCircle2, ChevronDown, ChevronUp, Lock,
   Award, Sparkles, Flame, Eye, Calendar, Clock, Crosshair, HelpCircle,
-  User
+  User, Loader2
 } from 'lucide-react';
 
-/* ── Live Match Ticker Data ── */
+/* ── Live Match Ticker Data (static — no live match endpoint yet) ── */
 const TICKER_ITEMS = [
   { label: 'LIVE', team1: 'Team Soul', team2: 'GodLike Esports', score: '12:9', game: 'BGMI' },
   { label: 'LIVE', team1: 'Global Esports', team2: 'Velocity Gaming', score: '2:1', game: 'VALORANT' },
@@ -377,6 +378,51 @@ const FAQ_ITEMS = [
   },
 ];
 
+
+/* ── Showcase card skeletons ── */
+function ShowcaseSkeleton() {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {[0, 1, 2].map((i) => (
+        <div key={i} className="rounded-3xl bg-surface-container-low border border-card-border p-6 space-y-4 animate-pulse">
+          <div className="flex items-center justify-between">
+            <div className="h-5 w-16 rounded-lg bg-surface-container" />
+            <div className="h-5 w-24 rounded-lg bg-surface-container" />
+          </div>
+          <div className="h-6 w-3/4 rounded-lg bg-surface-container" />
+          <div className="space-y-2 pt-2">
+            <div className="h-4 w-full rounded bg-surface-container" />
+            <div className="h-4 w-5/6 rounded bg-surface-container" />
+            <div className="h-4 w-4/6 rounded bg-surface-container" />
+          </div>
+          <div className="h-10 w-full rounded-xl bg-surface-container mt-4" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ── Empty showcase state ── */
+function ShowcaseEmpty({ label, onSelectTab, tabTarget }) {
+  return (
+    <div className="flex flex-col items-center justify-center py-20 space-y-4 text-center">
+      <div className="w-16 h-16 rounded-2xl bg-surface-container border border-card-border flex items-center justify-center text-on-surface-variant">
+        <Trophy className="w-7 h-7" />
+      </div>
+      <p className="font-display font-bold text-lg text-on-surface">No {label} Yet</p>
+      <p className="font-body text-xs text-on-surface-variant max-w-xs">
+        Be among the first to create a {label.toLowerCase()} on the platform.
+      </p>
+      <button
+        onClick={() => onSelectTab?.(tabTarget)}
+        className="mt-2 px-6 py-3 rounded-xl bg-primary text-white font-display font-bold text-xs uppercase tracking-wider hover:opacity-90 transition-all"
+      >
+        Explore {label}
+      </button>
+    </div>
+  );
+}
+
 export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -394,6 +440,14 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
   const [statsVisible, setStatsVisible] = useState(false);
   const [activeShowcaseTab, setActiveShowcaseTab] = useState('tournaments');
   const [openFaq, setOpenFaq] = useState(0);
+
+  // Real API data
+  const { data: tournamentsData, loading: tournamentsLoading } = useApi('/discovery/tournaments', { fallback: [] });
+  const { data: teamsData, loading: teamsLoading } = useApi('/discovery/teams', { fallback: [] });
+
+  // Normalize API response (backend returns array or { tournaments: [] } etc.)
+  const liveTournaments = Array.isArray(tournamentsData) ? tournamentsData.slice(0, 3) : (tournamentsData?.tournaments ?? []).slice(0, 3);
+  const liveTeams = Array.isArray(teamsData) ? teamsData.slice(0, 3) : (teamsData?.teams ?? []).slice(0, 3);
 
   // Initialize Canvas
   useHeroThreeJS(canvasRef, isDark);
@@ -466,11 +520,11 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
             <button
               onClick={() => onOpenAuthWithRole?.('player', 'signup')}
-              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-primary to-secondary text-white dark:text-black font-display font-bold text-sm uppercase tracking-wider shadow-lg shadow-primary/25 hover:opacity-95 active:scale-95 transition-all flex items-center justify-center gap-2.5 group"
+              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-primary to-secondary text-white font-display font-bold text-sm uppercase tracking-wider shadow-lg shadow-primary/25 hover:opacity-95 active:scale-95 transition-all flex items-center justify-center gap-2.5 group"
             >
-              <Gamepad2 className="w-5 h-5 text-white dark:text-black" />
+              <Gamepad2 className="w-5 h-5 text-white" />
               <span>Create Free Account</span>
-              <ArrowRight className="w-4 h-4 text-white dark:text-black group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-1 transition-transform" />
             </button>
 
             <button
@@ -716,7 +770,7 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
                     onClick={() => setActiveShowcaseTab(tab.id)}
                     className={`flex items-center gap-2 px-3.5 py-2 rounded-xl font-display text-xs font-semibold transition-all ${
                       active
-                        ? 'bg-gradient-to-r from-primary to-secondary text-white dark:text-black font-bold shadow-md'
+                        ? 'bg-gradient-to-r from-primary to-secondary text-white font-bold shadow-md'
                         : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high'
                     }`}
                   >
@@ -730,58 +784,85 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
 
           {/* Tab Content Display */}
           <div className="animate-in fade-in duration-300">
-            {/* TAB 1: Tournaments */}
+            {/* TAB 1: Tournaments — Real API data */}
             {activeShowcaseTab === 'tournaments' && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {SAMPLE_TOURNAMENTS.map((t) => (
-                  <div
-                    key={t.id}
-                    className="rounded-3xl bg-surface-container-low border border-card-border p-6 flex flex-col justify-between space-y-5 hover:border-secondary/40 transition-all group"
-                  >
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className="font-mono text-[10px] font-bold px-2.5 py-1 rounded-lg bg-primary/10 text-primary border border-primary/20">
-                          {t.game}
-                        </span>
-                        <span className={`font-mono text-[10px] font-bold px-2 py-0.5 rounded border ${t.statusColor}`}>
-                          {t.status}
-                        </span>
-                      </div>
-
-                      <h4 className="font-display font-bold text-lg text-on-surface group-hover:text-secondary transition-colors">
-                        {t.title}
-                      </h4>
-
-                      <div className="text-xs text-on-surface-variant space-y-1.5 font-mono">
-                        <div className="flex items-center justify-between">
-                          <span>Format:</span>
-                          <span className="text-on-surface font-semibold">{t.format}</span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span>Prize Pool:</span>
-                          <span className="text-emerald-600 dark:text-emerald-400 font-bold">{t.prize}</span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span>Registered:</span>
-                          <span className="text-on-surface">{t.teams}</span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span>Schedule:</span>
-                          <span className="text-amber-600 dark:text-amber-300 font-medium">{t.startsIn}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={() => onSelectTab?.('tournaments')}
-                      className="w-full py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high border border-card-border text-on-surface font-display font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5"
+              tournamentsLoading ? <ShowcaseSkeleton /> :
+              liveTournaments.length === 0 ? (
+                <ShowcaseEmpty label="Tournaments" onSelectTab={onSelectTab} tabTarget="tournaments" />
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {liveTournaments.map((t) => (
+                    <div
+                      key={t.id}
+                      className="rounded-3xl bg-surface-container-low border border-card-border p-6 flex flex-col justify-between space-y-5 hover:border-secondary/40 transition-all group"
                     >
-                      <span>View Tournament Details</span>
-                      <ChevronRight className="w-4 h-4 text-secondary" />
-                    </button>
-                  </div>
-                ))}
-              </div>
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <span className="font-mono text-[10px] font-bold px-2.5 py-1 rounded-lg bg-primary/10 text-primary border border-primary/20">
+                            {t.game || 'OPEN'}
+                          </span>
+                          <span className={`font-mono text-[10px] font-bold px-2 py-0.5 rounded border ${
+                            t.status === 'live' || t.status === 'ongoing'
+                              ? 'bg-red-500/15 text-red-500 border-red-500/30'
+                              : t.status === 'registration_open' || t.status === 'open'
+                              ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 border-emerald-500/30'
+                              : 'bg-amber-500/15 text-amber-600 dark:text-amber-300 border-amber-500/30'
+                          }`}>
+                            {(t.status || 'UPCOMING').replace(/_/g, ' ').toUpperCase()}
+                          </span>
+                        </div>
+
+                        <h4 className="font-display font-bold text-lg text-on-surface group-hover:text-secondary transition-colors">
+                          {t.name || t.title || 'Untitled Tournament'}
+                        </h4>
+
+                        <div className="text-xs text-on-surface-variant space-y-1.5 font-mono">
+                          {(t.format || t.tournament_format) && (
+                            <div className="flex items-center justify-between">
+                              <span>Format:</span>
+                              <span className="text-on-surface font-semibold">{t.format || t.tournament_format}</span>
+                            </div>
+                          )}
+                          {(t.prize_pool || t.prizePool) && (
+                            <div className="flex items-center justify-between">
+                              <span>Prize Pool:</span>
+                              <span className="text-emerald-600 dark:text-emerald-400 font-bold">
+                                {typeof (t.prize_pool || t.prizePool) === 'number'
+                                  ? `$${(t.prize_pool || t.prizePool).toLocaleString()}`
+                                  : (t.prize_pool || t.prizePool)}
+                              </span>
+                            </div>
+                          )}
+                          {(t.max_teams || t.maxTeams || t.team_count !== undefined) && (
+                            <div className="flex items-center justify-between">
+                              <span>Slots:</span>
+                              <span className="text-on-surface">
+                                {t.team_count ?? t.registered_count ?? '?'} / {t.max_teams || t.maxTeams || '?'} Teams
+                              </span>
+                            </div>
+                          )}
+                          {t.start_date && (
+                            <div className="flex items-center justify-between">
+                              <span>Starts:</span>
+                              <span className="text-amber-600 dark:text-amber-300 font-medium">
+                                {new Date(t.start_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={() => onSelectTab?.('tournaments')}
+                        className="w-full py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high border border-card-border text-on-surface font-display font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5"
+                      >
+                        <span>View Tournament Details</span>
+                        <ChevronRight className="w-4 h-4 text-secondary" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )
             )}
 
             {/* TAB 2: Scrims */}
@@ -834,57 +915,69 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
               </div>
             )}
 
-            {/* TAB 3: Teams */}
+            {/* TAB 3: Teams — Real API data */}
             {activeShowcaseTab === 'teams' && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {SAMPLE_TEAMS.map((tm, idx) => (
-                  <div
-                    key={idx}
-                    className="rounded-3xl bg-surface-container-low border border-card-border p-6 flex flex-col justify-between space-y-5 hover:border-secondary/40 transition-all group"
-                  >
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className="font-mono text-[10px] font-bold px-2 py-1 rounded bg-surface-container text-on-surface-variant border border-card-border">
-                          TAG: [{tm.tag}]
-                        </span>
-                        <span className="font-mono text-[10px] font-bold text-secondary">
-                          {tm.game}
-                        </span>
-                      </div>
-
-                      <div>
-                        <h4 className="font-display font-bold text-xl text-on-surface group-hover:text-secondary transition-colors">
-                          {tm.name}
-                        </h4>
-                        <span className="font-mono text-xs text-on-surface-variant">{tm.tier}</span>
-                      </div>
-
-                      <div className="text-xs text-on-surface-variant space-y-1.5 font-mono pt-2 border-t border-card-border">
-                        <div className="flex items-center justify-between">
-                          <span>Competitive Win Rate:</span>
-                          <span className="text-emerald-600 dark:text-emerald-400 font-bold">{tm.winRate}</span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span>Active Roster Size:</span>
-                          <span className="text-on-surface">{tm.members} Athletes</span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span>Recruitment Status:</span>
-                          <span className="text-amber-600 dark:text-amber-300 font-medium">{tm.status}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={() => onSelectTab?.('teams')}
-                      className="w-full py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high border border-card-border text-on-surface font-display font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5"
+              teamsLoading ? <ShowcaseSkeleton /> :
+              liveTeams.length === 0 ? (
+                <ShowcaseEmpty label="Teams" onSelectTab={onSelectTab} tabTarget="teams" />
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {liveTeams.map((tm, idx) => (
+                    <div
+                      key={tm.id || idx}
+                      className="rounded-3xl bg-surface-container-low border border-card-border p-6 flex flex-col justify-between space-y-5 hover:border-secondary/40 transition-all group"
                     >
-                      <span>View Team Dossier</span>
-                      <ArrowRight className="w-4 h-4 text-secondary" />
-                    </button>
-                  </div>
-                ))}
-              </div>
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <span className="font-mono text-[10px] font-bold px-2 py-1 rounded bg-surface-container text-on-surface-variant border border-card-border">
+                            TAG: [{tm.tag || (tm.name || '?').slice(0, 4).toUpperCase()}]
+                          </span>
+                          <span className="font-mono text-[10px] font-bold text-secondary">
+                            {tm.game || 'MULTI-GAME'}
+                          </span>
+                        </div>
+
+                        <div>
+                          <h4 className="font-display font-bold text-xl text-on-surface group-hover:text-secondary transition-colors">
+                            {tm.name}
+                          </h4>
+                          <span className="font-mono text-xs text-on-surface-variant">
+                            {tm.tier || (tm.is_recruiting ? 'Recruiting' : 'Active Roster')}
+                          </span>
+                        </div>
+
+                        <div className="text-xs text-on-surface-variant space-y-1.5 font-mono pt-2 border-t border-card-border">
+                          {(tm.member_count !== undefined || tm.members !== undefined) && (
+                            <div className="flex items-center justify-between">
+                              <span>Roster Size:</span>
+                              <span className="text-on-surface">{tm.member_count ?? tm.members ?? '?'} Athletes</span>
+                            </div>
+                          )}
+                          {tm.description && (
+                            <div className="text-on-surface-variant leading-relaxed line-clamp-2 pt-1">
+                              {tm.description}
+                            </div>
+                          )}
+                          <div className="flex items-center justify-between pt-1">
+                            <span>Status:</span>
+                            <span className={tm.is_recruiting ? 'text-emerald-600 dark:text-emerald-400 font-bold' : 'text-amber-600 dark:text-amber-300 font-medium'}>
+                              {tm.is_recruiting ? 'Open Tryouts' : 'Roster Locked'}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={() => onSelectTab?.('teams')}
+                        className="w-full py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high border border-card-border text-on-surface font-display font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5"
+                      >
+                        <span>View Team Dossier</span>
+                        <ArrowRight className="w-4 h-4 text-secondary" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )
             )}
 
             {/* TAB 4: Orgs */}
@@ -1132,11 +1225,11 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
           <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
               onClick={() => onOpenAuthWithRole?.('player', 'signup')}
-              className="w-full sm:w-auto px-10 py-4 rounded-2xl bg-gradient-to-r from-primary to-secondary text-white dark:text-black font-display font-bold text-sm uppercase tracking-wider shadow-lg shadow-primary/25 hover:opacity-95 active:scale-95 transition-all flex items-center justify-center gap-2 group"
+              className="w-full sm:w-auto px-10 py-4 rounded-2xl bg-gradient-to-r from-primary to-secondary text-white font-display font-bold text-sm uppercase tracking-wider shadow-lg shadow-primary/25 hover:opacity-95 active:scale-95 transition-all flex items-center justify-center gap-2 group"
             >
-              <Gamepad2 className="w-5 h-5 text-white dark:text-black" />
+              <Gamepad2 className="w-5 h-5 text-white" />
               <span>Claim Your Gamer Tag</span>
-              <ArrowRight className="w-4 h-4 text-white dark:text-black group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-1 transition-transform" />
             </button>
 
             <button
@@ -1157,7 +1250,7 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
           {/* Brand Info */}
           <div className="md:col-span-2 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white dark:text-black font-display font-extrabold text-xl shadow-md">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-display font-extrabold text-xl shadow-md">
                 G
               </div>
               <span className="font-display font-bold text-xl text-on-surface tracking-wider">

@@ -54,7 +54,7 @@ export default function Navbar({ activeTab, onSelectTab, onOpenAuth, onOpenChat,
           className="flex items-center gap-3 cursor-pointer select-none group"
         >
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-lg shadow-primary/20 group-hover:scale-105 transition-transform">
-            <span className="font-display font-extrabold text-xl text-white dark:text-black">G</span>
+            <span className="font-display font-extrabold text-xl text-white">G</span>
           </div>
           <div className="flex flex-col">
             <span className="font-display font-bold text-lg tracking-wider text-on-surface leading-tight">
@@ -104,9 +104,9 @@ export default function Navbar({ activeTab, onSelectTab, onOpenAuth, onOpenChat,
               </button>
               <button
                 onClick={() => onOpenAuth?.('player', 'signup')}
-                className="px-4 py-2 rounded-xl bg-primary text-white dark:text-black font-display font-bold text-xs uppercase tracking-wider shadow-lg shadow-primary/20 hover:bg-primary-hover active:scale-95 transition-all flex items-center gap-1.5"
+                className="px-4 py-2 rounded-xl bg-primary text-white font-display font-bold text-xs uppercase tracking-wider shadow-lg shadow-primary/20 hover:bg-primary-hover active:scale-95 transition-all flex items-center gap-1.5"
               >
-                <Sparkles className="w-3.5 h-3.5 text-white dark:text-black" />
+                <Sparkles className="w-3.5 h-3.5 text-white" />
                 <span>Register</span>
               </button>
             </div>

@@ -354,7 +354,7 @@ export default function TeamsPage({ onOpenTeamCreator, onSelectTab, onOpenAuth }
                         }
                         setApplyModalRole(role);
                       }}
-                      className="w-full py-2.5 rounded-xl bg-primary text-white dark:text-black font-display font-bold text-xs uppercase tracking-wider shadow-glow active:scale-95 transition-all flex items-center justify-center gap-1.5"
+                      className="w-full py-2.5 rounded-xl bg-primary text-white font-display font-bold text-xs uppercase tracking-wider shadow-glow active:scale-95 transition-all flex items-center justify-center gap-1.5"
                     >
                       <Zap className="w-3.5 h-3.5" />
                       Apply for Tryout
@@ -674,9 +674,9 @@ export default function TeamsPage({ onOpenTeamCreator, onSelectTab, onOpenAuth }
 
         <button
           onClick={onOpenTeamCreator}
-          className="px-6 py-3 rounded-2xl bg-primary text-white dark:text-black font-display font-bold text-xs uppercase tracking-wider shadow-glow hover:shadow-[0_0_40px_var(--glow-primary)] active:scale-95 transition-all flex items-center gap-2 shrink-0"
+          className="px-6 py-3 rounded-2xl bg-primary text-white font-display font-bold text-xs uppercase tracking-wider shadow-glow hover:shadow-[0_0_40px_var(--glow-primary)] active:scale-95 transition-all flex items-center gap-2 shrink-0"
         >
-          <Plus className="w-4 h-4 text-white dark:text-black" />
+          <Plus className="w-4 h-4 text-white" />
           Form a Squad
         </button>
       </div>

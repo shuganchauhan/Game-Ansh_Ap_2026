@@ -127,7 +127,7 @@ export default function AuthModal({
         {/* Brand Header */}
         <div className="text-center space-y-2 pt-1">
           <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center mx-auto shadow-lg shadow-primary/20">
-            <span className="font-display font-extrabold text-2xl text-white dark:text-black">G</span>
+            <span className="font-display font-extrabold text-2xl text-white">G</span>
           </div>
           <div>
             <h2 className="font-display font-bold text-2xl text-on-surface tracking-tight">
@@ -152,7 +152,7 @@ export default function AuthModal({
             }}
             className={`py-2.5 rounded-xl font-display text-xs font-bold uppercase tracking-wider transition-all ${
               mode === 'login'
-                ? 'bg-primary text-white dark:text-black font-extrabold shadow-md'
+                ? 'bg-primary text-white font-extrabold shadow-md'
                 : 'text-on-surface-variant hover:text-on-surface'
             }`}
           >
@@ -167,7 +167,7 @@ export default function AuthModal({
             }}
             className={`py-2.5 rounded-xl font-display text-xs font-bold uppercase tracking-wider transition-all ${
               mode === 'signup'
-                ? 'bg-primary text-white dark:text-black font-extrabold shadow-md'
+                ? 'bg-primary text-white font-extrabold shadow-md'
                 : 'text-on-surface-variant hover:text-on-surface'
             }`}
           >
@@ -316,17 +316,17 @@ export default function AuthModal({
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-primary to-secondary hover:opacity-95 text-white dark:text-black font-display font-bold text-xs uppercase tracking-wider shadow-lg shadow-primary/25 active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+            className="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-primary to-secondary hover:opacity-95 text-white font-display font-bold text-xs uppercase tracking-wider shadow-lg shadow-primary/25 active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
           >
             {loading ? (
               <span className="inline-flex items-center gap-2">
-                <span className="w-4 h-4 border-2 border-white dark:border-black border-t-transparent rounded-full animate-spin" />
+                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 <span>Authenticating...</span>
               </span>
             ) : (
               <>
                 <span>{mode === 'login' ? 'Sign In to Account' : 'Create Account'}</span>
-                <ArrowRight className="w-4 h-4 text-white dark:text-black" />
+                <ArrowRight className="w-4 h-4 text-white" />
               </>
             )}
           </button>

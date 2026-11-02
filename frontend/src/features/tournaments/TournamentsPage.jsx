@@ -106,7 +106,7 @@ export default function TournamentsPage({ onRegisterModal, onOpenScrimLobby, onS
 
             <button
               onClick={() => onRegisterModal && onRegisterModal()}
-              className="w-full py-2.5 px-5 rounded-xl bg-primary text-white dark:text-black font-display font-bold text-xs uppercase tracking-wider shadow-lg shadow-primary/20 active:scale-95 transition-all"
+              className="w-full py-2.5 px-5 rounded-xl bg-primary text-white font-display font-bold text-xs uppercase tracking-wider shadow-lg shadow-primary/20 active:scale-95 transition-all"
             >
               Register Qualified Squad
             </button>
@@ -138,7 +138,7 @@ export default function TournamentsPage({ onRegisterModal, onOpenScrimLobby, onS
                 onClick={() => setSelectedGameFilter(tab.id)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold whitespace-nowrap transition-all ${
                   selectedGameFilter === tab.id
-                    ? 'bg-primary text-white dark:text-black shadow-sm'
+                    ? 'bg-primary text-white shadow-sm'
                     : 'text-on-surface-variant hover:text-on-surface'
                 }`}
               >
@@ -215,7 +215,7 @@ export default function TournamentsPage({ onRegisterModal, onOpenScrimLobby, onS
               onClick={() => setSelectedRound('semi')}
               className={`px-3 py-1.5 rounded-lg font-mono text-xs font-semibold transition-all ${
                 selectedRound === 'semi'
-                  ? 'bg-primary text-white dark:text-black font-bold shadow-sm'
+                  ? 'bg-primary text-white font-bold shadow-sm'
                   : 'bg-surface-container text-on-surface-variant border border-card-border'
               }`}
             >
@@ -225,7 +225,7 @@ export default function TournamentsPage({ onRegisterModal, onOpenScrimLobby, onS
               onClick={() => setSelectedRound('finals')}
               className={`px-3 py-1.5 rounded-lg font-mono text-xs font-semibold transition-all ${
                 selectedRound === 'finals'
-                  ? 'bg-primary text-white dark:text-black font-bold shadow-sm'
+                  ? 'bg-primary text-white font-bold shadow-sm'
                   : 'bg-surface-container text-on-surface-variant border border-card-border'
               }`}
             >

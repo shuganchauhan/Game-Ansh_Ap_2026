@@ -47,9 +47,9 @@ function ProtectedGate({ title, message, requiredRole = null, currentRole = null
         <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
           <button
             onClick={() => onOpenAuth('player', 'login')}
-            className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-primary to-secondary hover:opacity-95 text-white dark:text-black font-display font-bold text-xs uppercase tracking-wider shadow-lg shadow-primary/20 transition-all flex items-center justify-center gap-2"
+            className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-primary to-secondary hover:opacity-95 text-white font-display font-bold text-xs uppercase tracking-wider shadow-lg shadow-primary/20 transition-all flex items-center justify-center gap-2"
           >
-            <LogIn className="w-4 h-4 text-white dark:text-black" />
+            <LogIn className="w-4 h-4 text-white" />
             <span>Sign In to Continue</span>
           </button>
         </div>

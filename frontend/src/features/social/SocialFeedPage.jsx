@@ -143,9 +143,9 @@ export default function SocialFeedPage({ onSelectTab, onOpenAuth }) {
               </div>
               <button
                 onClick={() => onOpenAuth?.('player', 'login')}
-                className="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-primary to-secondary text-white dark:text-black font-display font-bold text-xs uppercase tracking-wider shrink-0 hover:opacity-95 shadow-md flex items-center justify-center gap-2 transition-all"
+                className="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-display font-bold text-xs uppercase tracking-wider shrink-0 hover:opacity-95 shadow-md flex items-center justify-center gap-2 transition-all"
               >
-                <LogIn className="w-4 h-4 text-white dark:text-black" />
+                <LogIn className="w-4 h-4 text-white" />
                 <span>Sign In to Post</span>
               </button>
             </section>
@@ -211,9 +211,9 @@ export default function SocialFeedPage({ onSelectTab, onOpenAuth }) {
                   <button
                     type="submit"
                     disabled={!newContent.trim()}
-                    className="px-6 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white dark:text-black font-display font-bold text-xs uppercase tracking-wider shadow-lg shadow-primary/20 active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                    className="px-6 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white font-display font-bold text-xs uppercase tracking-wider shadow-lg shadow-primary/20 active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
                   >
-                    <Send className="w-3.5 h-3.5 text-white dark:text-black" />
+                    <Send className="w-3.5 h-3.5 text-white" />
                     <span>Publish Post</span>
                   </button>
                 </div>
@@ -234,7 +234,7 @@ export default function SocialFeedPage({ onSelectTab, onOpenAuth }) {
                 onClick={() => setFeedFilter(f.id)}
                 className={`px-3.5 py-1.5 rounded-xl font-mono text-xs font-bold whitespace-nowrap transition-all ${
                   feedFilter === f.id
-                    ? 'bg-primary text-white dark:text-black shadow-sm'
+                    ? 'bg-primary text-white shadow-sm'
                     : 'bg-surface-container hover:bg-surface-container-high text-on-surface-variant'
                 }`}
               >
@@ -352,7 +352,7 @@ export default function SocialFeedPage({ onSelectTab, onOpenAuth }) {
                       />
                       <button
                         type="submit"
-                        className="px-4 py-2.5 rounded-xl bg-primary text-white dark:text-black font-display font-bold text-xs uppercase shadow-sm"
+                        className="px-4 py-2.5 rounded-xl bg-primary text-white font-display font-bold text-xs uppercase shadow-sm"
                       >
                         Send
                       </button>
@@ -426,7 +426,7 @@ export default function SocialFeedPage({ onSelectTab, onOpenAuth }) {
                       className={`px-3 py-1.5 rounded-lg font-mono text-[11px] font-bold shrink-0 transition-all ${
                         isConnected
                           ? 'bg-surface-container-high text-on-surface-variant'
-                          : 'bg-primary text-white dark:text-black shadow-sm'
+                          : 'bg-primary text-white shadow-sm'
                       }`}
                     >
                       {isConnected ? 'Connected' : '+ Connect'}
