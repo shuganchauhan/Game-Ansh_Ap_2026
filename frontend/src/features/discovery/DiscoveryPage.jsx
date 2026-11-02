@@ -1,5 +1,7 @@
 import React, { useState, useRef } from 'react';
-import { Search, Users, Trophy, CheckCircle2, ChevronRight, Sparkles, ArrowLeft, Shield, Zap } from 'lucide-react';
+import {
+  ArrowLeft, CheckCircle2, ChevronRight, Crosshair, Crown, Flame, Search, Shield, Sparkles, Target, Trophy, Users, Zap
+} from 'lucide-react';
 import { useAuth } from '../../stores/authContext';
 import { useGameStore } from '../../stores/gameStore';
 import { useGSAPReveal } from '../../hooks/useGSAP';

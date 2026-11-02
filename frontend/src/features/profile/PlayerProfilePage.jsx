@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Shield, CheckCircle2, Trophy, Swords, Share2, Edit3, MessageSquare, Play,
-  ExternalLink, Award, Sparkles, Check, Globe, Zap, ArrowLeft, Plus, Star
+  ArrowLeft, Award, Check, CheckCircle2, Clock, Crosshair, Crown, Edit3, ExternalLink, Flame, Globe, MapPin, MessageSquare, Play, Plus, Share2, Shield, Sparkles, Star, Swords, Target, Trophy, Zap
 } from 'lucide-react';
 import { useGameStore } from '../../stores/gameStore';
 

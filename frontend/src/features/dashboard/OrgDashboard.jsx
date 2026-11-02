@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Shield, CheckCircle2, AlertTriangle, FileText, Plus, Users, Trophy, ExternalLink,
-  ChevronRight, Send, Sparkles, Building, Globe, Twitter, Mail, Check, X, Clock, HelpCircle
+  AlertTriangle, Building, Check, CheckCircle2, ChevronRight, Clock, Crown, ExternalLink, FileText, Globe, HelpCircle, Mail, MapPin, Plus, Send, Shield, Sparkles, Target, Trophy, Twitter, Users, X
 } from 'lucide-react';
 import { useGameStore } from '../../stores/gameStore';
 

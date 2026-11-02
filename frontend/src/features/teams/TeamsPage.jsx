@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Shield, Users, Plus, CheckCircle2, Trophy, Swords, Zap, Search,
-  ChevronRight, Sparkles, X, ArrowLeft, ExternalLink, Check, Trash2, Edit3
+  ArrowLeft, Check, CheckCircle2, ChevronRight, Crown, Edit3, ExternalLink, FileText, Plus, Search, Shield, Sparkles, Swords, Target, Trash2, Trophy, Users, X, Zap
 } from 'lucide-react';
 import { useAuth } from '../../stores/authContext';
 import { useGameStore } from '../../stores/gameStore';

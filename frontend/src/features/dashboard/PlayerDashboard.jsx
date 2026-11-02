@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Shield, Trophy, Swords, Users, MessageSquare, Briefcase, Plus, CheckCircle2,
-  ExternalLink, Timer, ChevronRight, Sparkles, AlertCircle, Share2, Edit3, ArrowRight,
-  Flame, Gamepad2, Award, Zap, Building2, Clock, X, Send, Check, FileText
+  AlertCircle, ArrowRight, Award, Briefcase, Building2, Check, CheckCircle2, ChevronRight, Clock, Crown, Edit3, ExternalLink, FileText, Flame, Gamepad2, MapPin, MessageSquare, Plus, Send, Share2, Shield, Sparkles, Swords, Target, Timer, Trophy, Users, X, Zap
 } from 'lucide-react';
 import { useAuth } from '../../stores/authContext';
 import { useGameStore } from '../../stores/gameStore';
