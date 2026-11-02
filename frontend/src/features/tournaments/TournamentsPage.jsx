@@ -4,7 +4,7 @@ import {
   Clock, ArrowRight, Lock, ChevronRight, Plus
 } from 'lucide-react';
 import { useAuth } from '../../stores/authContext';
-import { scrimService } from '../../services';
+import { scrimService, discoveryService } from '../../services';
 
 const GAME_TABS = [
   { id: 'all', label: 'All Titles' },
@@ -22,19 +22,35 @@ export default function TournamentsPage({ onRegisterModal, onOpenScrimLobby, onS
   const [selectedGameFilter, setSelectedGameFilter] = useState('all');
   const [scrims, setScrims] = useState([]);
   const [loadingScrims, setLoadingScrims] = useState(true);
+  const [tournaments, setTournaments] = useState([]);
+  const [loadingTournaments, setLoadingTournaments] = useState(true);
 
   useEffect(() => {
-    const fetchScrims = async () => {
+    let mounted = true;
+    const fetchData = async () => {
       try {
-        const data = await scrimService.listScrims();
-        setScrims(data || []);
+        const [scrimsData, tourneysData] = await Promise.allSettled([
+          scrimService.listScrims(),
+          discoveryService.getTournaments(),
+        ]);
+        if (mounted && scrimsData.status === 'fulfilled') {
+          setScrims(scrimsData.value || []);
+        }
+        if (mounted && tourneysData.status === 'fulfilled') {
+          const list = Array.isArray(tourneysData.value) ? tourneysData.value : (tourneysData.value?.data || []);
+          setTournaments(list);
+        }
       } catch (err) {
-        console.error('Failed to load scrims:', err);
+        console.error('Failed to load tournaments/scrims:', err);
       } finally {
-        setLoadingScrims(false);
+        if (mounted) {
+          setLoadingScrims(false);
+          setLoadingTournaments(false);
+        }
       }
     };
-    fetchScrims();
+    fetchData();
+    return () => { mounted = false; };
   }, []);
 
   const bracketData = {
@@ -114,6 +130,70 @@ export default function TournamentsPage({ onRegisterModal, onOpenScrimLobby, onS
         </div>
       </div>
 
+      {/* ── Active Championship Tournaments ── */}
+      {tournaments.length > 0 && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="inline-flex items-center gap-1.5 text-xs font-mono text-primary font-bold uppercase tracking-wider">
+                <Trophy className="w-3.5 h-3.5" />
+                Official Circuit Cups
+              </div>
+              <h2 className="font-display font-bold text-2xl text-on-surface">
+                Featured Championships
+              </h2>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {tournaments.map((t) => (
+              <div
+                key={t.id}
+                className="p-5 rounded-2xl bg-surface-container border border-card-border hover:border-primary/40 transition flex flex-col justify-between space-y-4 group"
+              >
+                <div className="space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <span className="px-2.5 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-primary font-mono text-[10px] uppercase font-bold">
+                      {t.game || 'OPEN'}
+                    </span>
+                    <span className="px-2.5 py-0.5 rounded-full bg-secondary/15 text-secondary border border-secondary/30 font-mono text-[10px] uppercase font-bold">
+                      {(t.status || 'UPCOMING').toUpperCase()}
+                    </span>
+                  </div>
+
+                  <h3 className="font-display font-bold text-base text-on-surface group-hover:text-primary transition line-clamp-1">
+                    {t.name}
+                  </h3>
+
+                  <div className="space-y-1 text-xs text-on-surface-variant font-mono">
+                    <div className="flex items-center justify-between">
+                      <span>Organizer:</span>
+                      <span className="text-on-surface font-semibold">{t.organizer_name || 'Gamers\'G'}</span>
+                    </div>
+                    {t.start_date && (
+                      <div className="flex items-center justify-between">
+                        <span>Drop Date:</span>
+                        <span className="text-secondary font-medium">
+                          {new Date(t.start_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => onRegisterModal && onRegisterModal()}
+                  className="w-full py-2.5 px-4 rounded-xl bg-primary text-white font-display font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 hover:opacity-95 transition"
+                >
+                  <span>Register Roster</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* ── Daily Scrims & Dedicated Match Lobbies ── */}
       <div className="space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -191,7 +271,7 @@ export default function TournamentsPage({ onRegisterModal, onOpenScrimLobby, onS
 
                 <button
                   onClick={() => onOpenScrimLobby?.(scrim.id)}
-                  className="w-full py-2.5 px-4 rounded-xl bg-surface-container-high group-hover:bg-primary group-hover:text-white dark:group-hover:text-black font-display font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition"
+                  className="w-full py-2.5 px-4 rounded-xl bg-surface-container-high group-hover:bg-primary group-hover:text-white font-display font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition"
                 >
                   Enter Scrim Match Room
                   <ArrowRight className="w-3.5 h-3.5" />

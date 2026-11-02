@@ -1,7 +1,9 @@
 import React, { useState, useRef } from 'react';
 import { Search, Users, Trophy, CheckCircle2, ChevronRight, Sparkles, ArrowLeft, Shield, Zap } from 'lucide-react';
 import { useAuth } from '../../stores/authContext';
+import { useGameStore } from '../../stores/gameStore';
 import { useGSAPReveal } from '../../hooks/useGSAP';
+import useApi from '../../hooks/useApi';
 
 /* ═══════════════════════════════════════════════════════
    DUMMY DATA
@@ -403,8 +405,37 @@ function TournamentCard({ tourney, gameColor, onRegister }) {
 /* ═══════════════════════════════════════════════════════
    MAIN DISCOVERY PAGE
 ═══════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════
+   DISCOVERY SKELETON
+═══════════════════════════════════════════════════════ */
+function DiscoverySkeleton() {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {[1, 2, 3, 4, 5, 6].map((i) => (
+        <div key={i} className="p-5 rounded-2xl bg-surface-container-low border border-card-border space-y-4 animate-pulse">
+          <div className="flex items-center justify-between">
+            <div className="h-5 w-20 rounded-full bg-surface-container" />
+            <div className="h-4 w-4 rounded-full bg-surface-container" />
+          </div>
+          <div className="space-y-2">
+            <div className="h-6 w-3/4 rounded-lg bg-surface-container" />
+            <div className="h-4 w-1/2 rounded bg-surface-container" />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="h-12 rounded-xl bg-surface-container" />
+            <div className="h-12 rounded-xl bg-surface-container" />
+          </div>
+          <div className="h-10 w-full rounded-xl bg-surface-container pt-2" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function DiscoveryPage({ onSelectTab, onOpenAuth }) {
   const { isAuthenticated } = useAuth();
+  const { submitApplication } = useGameStore();
   const [selectedGame, setSelectedGame] = useState(null);
   const [activeSection, setActiveSection] = useState('teams');
   const [search, setSearch] = useState('');
@@ -417,8 +448,53 @@ export default function DiscoveryPage({ onSelectTab, onOpenAuth }) {
   useGSAPReveal(gamesRef, 0);
   useGSAPReveal(contentRef, 0.05);
 
-  const teams = selectedGame ? (TEAMS_BY_GAME[selectedGame.id] || []) : [];
-  const tournaments = selectedGame ? (TOURNAMENTS_BY_GAME[selectedGame.id] || []) : [];
+  // Live backend data hooks
+  const { data: apiTeamsData, loading: loadingTeams } = useApi(
+    selectedGame ? '/discovery/teams' : null,
+    { params: { game: selectedGame?.name }, enabled: Boolean(selectedGame) }
+  );
+
+  const { data: apiTourneysData, loading: loadingTourneys } = useApi(
+    selectedGame ? '/discovery/tournaments' : null,
+    { params: { game: selectedGame?.name }, enabled: Boolean(selectedGame) }
+  );
+
+  const backendTeams = Array.isArray(apiTeamsData) ? apiTeamsData : (apiTeamsData?.data || []);
+  const backendTourneys = Array.isArray(apiTourneysData) ? apiTourneysData : (apiTourneysData?.data || []);
+
+  const fallbackTeams = selectedGame ? (TEAMS_BY_GAME[selectedGame.id] || []) : [];
+  const fallbackTourneys = selectedGame ? (TOURNAMENTS_BY_GAME[selectedGame.id] || []) : [];
+
+  const rawTeams = backendTeams.length > 0
+    ? backendTeams.map((bt) => ({
+        id: bt.id,
+        name: bt.name,
+        org: bt.org_name || (bt.org_id ? 'Esports Org' : 'Independent Squad'),
+        verified: Boolean(bt.verified),
+        status: bt.status || 'active',
+        division: bt.division || 'Competitive Division',
+        roster: bt.members_count || 4,
+        winrate: '68%',
+        openRoles: (bt.open_postings || []).map((p) => p.role).filter(Boolean),
+        openPostings: bt.open_postings || [],
+      }))
+    : fallbackTeams;
+
+  const rawTournaments = backendTourneys.length > 0
+    ? backendTourneys.map((tr) => ({
+        id: tr.id,
+        name: tr.name,
+        status: tr.status || 'upcoming',
+        prize: tr.prize_pool ? `₹${Number(tr.prize_pool).toLocaleString('en-IN')}` : '₹5,00,000',
+        maxTeams: 16,
+        registered: 8,
+        startDate: tr.start_date || '2026-11-20',
+        format: 'Single Elimination',
+      }))
+    : fallbackTourneys;
+
+  const teams = rawTeams;
+  const tournaments = rawTournaments;
 
   const filteredTeams = teams.filter(t =>
     search === '' ||
@@ -443,7 +519,7 @@ export default function DiscoveryPage({ onSelectTab, onOpenAuth }) {
     setApplyTarget(null);
   };
 
-  const handleSubmitApply = (e) => {
+  const handleSubmitApply = async (e) => {
     e.preventDefault();
     if (!isAuthenticated) {
       setApplyTarget(null);
@@ -451,6 +527,20 @@ export default function DiscoveryPage({ onSelectTab, onOpenAuth }) {
       return;
     }
     setApplySubmitted(true);
+
+    if (applyTarget?.openPostings?.[0]?.id && submitApplication) {
+      try {
+        await submitApplication({
+          postingId: applyTarget.openPostings[0].id,
+          teamId: applyTarget.id,
+          roleName: applyTarget.openPostings[0].role || 'Roster',
+          pitch,
+        });
+      } catch (err) {
+        console.warn('Backend recruitment application warning:', err.message);
+      }
+    }
+
     setTimeout(() => {
       setApplyTarget(null);
       setPitch('');
@@ -624,7 +714,9 @@ export default function DiscoveryPage({ onSelectTab, onOpenAuth }) {
       {/* Content Grid */}
       <div ref={contentRef}>
         {activeSection === 'teams' ? (
-          filteredTeams.length > 0 ? (
+          loadingTeams ? (
+            <DiscoverySkeleton />
+          ) : filteredTeams.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {filteredTeams.map((team) => (
                 <div key={team.id} data-reveal>
@@ -650,7 +742,9 @@ export default function DiscoveryPage({ onSelectTab, onOpenAuth }) {
             </div>
           )
         ) : (
-          filteredTournaments.length > 0 ? (
+          loadingTourneys ? (
+            <DiscoverySkeleton />
+          ) : filteredTournaments.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {filteredTournaments.map((tr) => (
                 <div key={tr.id} data-reveal>

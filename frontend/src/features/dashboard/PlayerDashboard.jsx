@@ -140,7 +140,7 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
     };
     updateCurrentUserProfile(updates);
 
-    if (currentUser.id && !currentUser.id.startsWith('player-me')) {
+    if (currentUser.id && !String(currentUser.id).startsWith('player-me')) {
       try {
         await playerService.updateProfile(currentUser.id, {
           tagline: profileForm.tagline,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Shield, CheckCircle2, Trophy, Swords, Share2, Edit3, MessageSquare, Play,
   ExternalLink, Award, Sparkles, Check, Globe, Zap, ArrowLeft, Plus, Star
@@ -32,7 +32,24 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
   const [formCrId, setFormCrId] = useState(currentUser.gameAccounts?.cr || '');
   const [formCodId, setFormCodId] = useState(currentUser.gameAccounts?.cod || '');
 
-  const handleSaveProfile = (e) => {
+  useEffect(() => {
+    if (!currentUser) return;
+    setFormName(currentUser.name || '');
+    setFormTagline(currentUser.tagline || '');
+    setFormBio(currentUser.bio || '');
+    setFormLocation(currentUser.location || '');
+    setFormLft(currentUser.lftStatus || '');
+    setFormScrimHours(currentUser.scrimAvailability || '');
+    setFormDiscord(currentUser.discord || '');
+    setFormValId(currentUser.gameAccounts?.valorant || '');
+    setFormBgmiId(currentUser.gameAccounts?.bgmi || '');
+    setFormFfId(currentUser.gameAccounts?.freefire || '');
+    setFormCocId(currentUser.gameAccounts?.coc || '');
+    setFormCrId(currentUser.gameAccounts?.cr || '');
+    setFormCodId(currentUser.gameAccounts?.cod || '');
+  }, [currentUser]);
+
+  const handleSaveProfile = async (e) => {
     e.preventDefault();
     updateCurrentUserProfile({
       name: formName,

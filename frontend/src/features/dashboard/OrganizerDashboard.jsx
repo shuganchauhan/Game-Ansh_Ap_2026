@@ -246,7 +246,7 @@ export default function OrganizerDashboard({ onSelectTab, onOpenScrimLobby }) {
 
                   <button
                     onClick={() => onOpenScrimLobby?.(scrim.id)}
-                    className="w-full py-2.5 rounded-xl bg-surface-container-high group-hover:bg-primary group-hover:text-white dark:group-hover:text-black font-bold text-xs flex items-center justify-center gap-2 transition"
+                    className="w-full py-2.5 rounded-xl bg-surface-container-high group-hover:bg-primary group-hover:text-white font-bold text-xs flex items-center justify-center gap-2 transition"
                   >
                     Enter Dedicated Lobby
                     <ChevronRight className="w-4 h-4" />

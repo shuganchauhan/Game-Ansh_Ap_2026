@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { discoveryService, teamService, socialService, recruitmentService } from '../services';
+import { discoveryService, teamService, socialService, recruitmentService, playerService } from '../services';
 
 const GameStoreContext = createContext();
 
@@ -603,6 +603,34 @@ export function GameStoreProvider({ children }) {
           })),
         })))
         .catch(() => {});
+
+      if (user.id && typeof user.id === 'number') {
+        playerService.getPlayer(user.id)
+          .then((dbPlayer) => {
+            if (!dbPlayer) return;
+            setStoreState((prev) => ({
+              ...prev,
+              currentUser: {
+                ...prev.currentUser,
+                name: dbPlayer.username || prev.currentUser.name,
+                username: dbPlayer.username || prev.currentUser.username,
+                tagline: dbPlayer.tagline || prev.currentUser.tagline,
+                bio: dbPlayer.bio || prev.currentUser.bio,
+                location: dbPlayer.location || prev.currentUser.location,
+                primaryGame: dbPlayer.primary_game || prev.currentUser.primaryGame,
+                discord: dbPlayer.discord || prev.currentUser.discord,
+                lftStatus: dbPlayer.lft_status || prev.currentUser.lftStatus,
+                scrimAvailability: dbPlayer.scrim_availability || prev.currentUser.scrimAvailability,
+                gameAccounts: dbPlayer.game_accounts || prev.currentUser.gameAccounts,
+                stats: dbPlayer.stats || prev.currentUser.stats,
+                careerMilestones: dbPlayer.career_milestones || prev.currentUser.careerMilestones,
+                avatar: dbPlayer.avatar_url || prev.currentUser.avatar,
+                banner: dbPlayer.banner_url || prev.currentUser.banner,
+              },
+            }));
+          })
+          .catch(() => {});
+      }
     }
     if (['player', 'org', 'admin'].includes(user.role)) {
       recruitmentService.getApplications()
@@ -612,7 +640,7 @@ export function GameStoreProvider({ children }) {
   };
 
   /* ── LinkedIn-Style Profile Update ── */
-  const updateCurrentUserProfile = (updates) => {
+  const updateCurrentUserProfile = async (updates) => {
     setStoreState((prev) => {
       const updatedUser = { ...prev.currentUser, ...updates };
       const updatedPlayers = prev.players.map((p) =>
@@ -624,6 +652,26 @@ export function GameStoreProvider({ children }) {
         players: updatedPlayers,
       };
     });
+
+    const currentId = storeState.currentUser?.id;
+    if (currentId && typeof currentId === 'number') {
+      try {
+        await playerService.updateProfile(currentId, {
+          username: updates.username || updates.name,
+          tagline: updates.tagline,
+          bio: updates.bio,
+          location: updates.location,
+          lft_status: updates.lftStatus,
+          scrim_availability: updates.scrimAvailability,
+          discord: updates.discord,
+          game_accounts: updates.gameAccounts,
+          stats: updates.stats,
+          career_milestones: updates.careerMilestones,
+        });
+      } catch (err) {
+        console.warn('Backend player profile sync skipped/failed:', err?.message);
+      }
+    }
   };
 
   /* ── Team Formation (NO SEPARATE LOGIN! Any player or org creates teams) ── */
