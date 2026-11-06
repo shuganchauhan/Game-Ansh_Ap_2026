@@ -3,6 +3,7 @@ const { createAdapter } = require('@socket.io/redis-adapter');
 const redis = require('../redis');
 const { verifyToken } = require('../auth/jwt');
 const { query } = require('../db');
+const { isAllowedOrigin } = require('../cors');
 
 let io;
 
@@ -10,9 +11,10 @@ function initSocket(httpServer) {
   io = new SocketServer(httpServer, {
     cors: {
       origin: process.env.NODE_ENV === 'production'
-        ? (process.env.CORS_ORIGINS || '').split(',').map((origin) => origin.trim()).filter(Boolean)
+        ? (origin, callback) => callback(null, isAllowedOrigin(origin))
         : true,
       methods: ['GET', 'POST', 'PATCH', 'PUT'],
+      credentials: true,
     },
   });
 
