@@ -27,7 +27,7 @@ services:
       - key: JWT_EXPIRES_IN
         value: 7d
       - key: CORS_ORIGINS
-        value: http://localhost:5173
+        value: https://game-ansh-ap-2026.vercel.app,http://localhost:5173
       - key: RATE_LIMIT_WINDOW_MS
         value: 900000
       - key: RATE_LIMIT_MAX
