@@ -542,12 +542,25 @@ export function GameStoreProvider({ children }) {
                 openRoles: [],
                 membersCount: bt.members_count || 0,
               }));
-            return { ...prev, teams: import.meta.env.PROD ? newTeams : [...newTeams, ...prev.teams] };
+            const teamMap = new Map();
+            [...newTeams, ...prev.teams].forEach((t) => {
+              if (t && t.id && !teamMap.has(t.id)) teamMap.set(t.id, t);
+            });
+            return { ...prev, teams: Array.from(teamMap.values()) };
           });
         }
         if (feedResult.status === 'fulfilled') {
-          const posts = Array.isArray(feedResult.value) ? feedResult.value.map(fromApiPost) : [];
-          setStoreState((prev) => ({ ...prev, posts: import.meta.env.PROD ? posts : [...posts, ...prev.posts] }));
+          const remotePosts = Array.isArray(feedResult.value) ? feedResult.value.map(fromApiPost) : [];
+          setStoreState((prev) => {
+            const postMap = new Map();
+            remotePosts.forEach((p) => {
+              if (p && p.id) postMap.set(p.id, p);
+            });
+            (prev.posts || []).forEach((p) => {
+              if (p && p.id && !postMap.has(p.id)) postMap.set(p.id, p);
+            });
+            return { ...prev, posts: Array.from(postMap.values()) };
+          });
         }
       } catch (err) {
         // Backend offline; local store functions smoothly

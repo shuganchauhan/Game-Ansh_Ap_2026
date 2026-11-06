@@ -8,7 +8,7 @@ import {
   Swords, Users, Star, MessageSquare, TrendingUp, Play, ArrowRight,
   Cpu, Target, Globe2, CheckCircle2, ChevronDown, ChevronUp, Lock,
   Award, Sparkles, Flame, Eye, Calendar, Clock, Crosshair, HelpCircle,
-  User, Loader2
+  User, Loader2, Activity
 } from 'lucide-react';
 
 /* ── Live Match Ticker Data (static — no live match endpoint yet) ── */
@@ -19,6 +19,149 @@ const TICKER_ITEMS = [
   { label: 'UPCOMING', team1: 'Revenant Esports', team2: 'Entity Gaming', score: 'vs', game: 'BGMI' },
   { label: 'LIVE', team1: 'True Rippers', team2: 'Medal Esports', score: '11:10', game: 'CS2' },
   { label: 'UPCOMING', team1: 'SynerGY Esports', team2: 'Team IND CoD', score: 'vs', game: 'COD MOBILE' },
+];
+
+/* ── Broad Marquee Showcase Data: Tournaments ── */
+const MARQUEE_TOURNAMENTS = [
+  {
+    id: 't-1',
+    title: 'VCT South Asia Pro Series',
+    game: 'VALORANT',
+    badge: 'VCT SANCTIONED',
+    badgeColor: 'bg-primary/10 text-primary border-primary/20',
+    status: 'REGISTRATIONS OPEN',
+    statusType: 'open',
+    prizePool: '₹10,00,000',
+    slots: '58/64 Squads',
+    format: '5v5 Single Elimination',
+    time: 'Starts Saturday · 16:00 IST',
+    ctaText: 'Register Roster',
+  },
+  {
+    id: 't-2',
+    title: 'BMPS Pro Masters Championship',
+    game: 'BGMI',
+    badge: 'OFFICIAL MAJOR',
+    badgeColor: 'bg-tertiary/10 text-tertiary border-tertiary/20',
+    status: 'GRAND FINALS LIVE',
+    statusType: 'live',
+    prizePool: '₹15,00,000',
+    slots: '32/32 Teams Locked',
+    format: 'Battle Royale 6 Matches',
+    time: 'Map 4 in Progress',
+    ctaText: 'Watch Live Stream',
+  },
+  {
+    id: 't-3',
+    title: 'CS2 South Asia Open Cup',
+    game: 'CS2',
+    badge: 'VALVE PROTOCOL',
+    badgeColor: 'bg-secondary/10 text-secondary border-secondary/20',
+    status: 'REGISTRATIONS OPEN',
+    statusType: 'open',
+    prizePool: '₹5,00,000',
+    slots: '28/32 Teams',
+    format: 'MR12 Double Elim',
+    time: 'Friday · 18:00 IST',
+    ctaText: 'Enter Bracket',
+  },
+  {
+    id: 't-4',
+    title: 'Free Fire Winter Clash 2026',
+    game: 'FREE FIRE',
+    badge: 'PRO GUILD CUP',
+    badgeColor: 'bg-[#EC4899]/10 text-[#EC4899] border-[#EC4899]/20',
+    status: 'CHECK-IN OPEN',
+    statusType: 'open',
+    prizePool: '₹2,50,000',
+    slots: '44/48 Squads',
+    format: 'Bermuda + Purgatory',
+    time: 'Sunday · 15:00 IST',
+    ctaText: 'Register Guild',
+  },
+  {
+    id: 't-5',
+    title: 'CoD Mobile National Invitational',
+    game: 'COD MOBILE',
+    badge: 'ACTIVISION TIER-1',
+    badgeColor: 'bg-primary/10 text-primary border-primary/20',
+    status: 'SEEDS LOCKED',
+    statusType: 'upcoming',
+    prizePool: '₹3,00,000',
+    slots: '16/16 Roster Pass',
+    format: 'Hardpoint & S&D',
+    time: 'Tonight · 20:00 IST',
+    ctaText: 'View Bracket',
+  },
+];
+
+/* ── Broad Marquee Showcase Data: Daily Scrims ── */
+const MARQUEE_SCRIMS = [
+  {
+    id: 's-1',
+    title: 'BMPS Tier-1 Erangel Practice #412',
+    game: 'BGMI',
+    badge: 'PRO SCRIM ROOM',
+    badgeColor: 'bg-amber-500/10 text-amber-500 border-amber-500/20',
+    status: 'PIN IN 04:32',
+    statusType: 'scrim',
+    slots: '18/20 Squads Locked',
+    server: 'Asia-South1 · 12ms',
+    format: 'Esports Standard Points',
+    ctaText: 'Book Team Slot',
+  },
+  {
+    id: 's-2',
+    title: 'Ascent & Haven 5v5 High-ELO Customs',
+    game: 'VALORANT',
+    badge: 'IMMORTAL+ LOBBY',
+    badgeColor: 'bg-secondary/10 text-secondary border-secondary/20',
+    status: 'LOBBY READY',
+    statusType: 'live',
+    slots: '10/10 Athletes Checked In',
+    server: 'Mumbai AWS · 14ms',
+    format: 'Standard Competitive Rules',
+    ctaText: 'View Lobby',
+  },
+  {
+    id: 's-3',
+    title: 'Miramar Evening Clan Scrims #08',
+    game: 'BGMI',
+    badge: 'VERIFIED TEAMS',
+    badgeColor: 'bg-primary/10 text-primary border-primary/20',
+    status: 'PIN RELEASING 19:50',
+    statusType: 'scrim',
+    slots: '16/20 Squads',
+    server: 'Asia-South1 · 12ms',
+    format: '4 Squad Slots Open',
+    ctaText: 'Reserve Slot',
+  },
+  {
+    id: 's-4',
+    title: 'Dust II / Mirage 5v5 Premier Scrim',
+    game: 'CS2',
+    badge: '128-TICK MATCH',
+    badgeColor: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20',
+    status: 'SERVER OPEN',
+    statusType: 'open',
+    slots: '8/10 Ready',
+    server: 'Direct Connect Console',
+    format: 'Knife Round for Sides',
+    ctaText: 'Join Match',
+  },
+  {
+    id: 's-5',
+    title: 'Bermuda Fast Cup 4v4 Clash Squad',
+    game: 'FREE FIRE',
+    badge: 'CUSTOM ROOM ID',
+    badgeColor: 'bg-[#EC4899]/10 text-[#EC4899] border-[#EC4899]/20',
+    status: 'DROPS IN 15 MIN',
+    statusType: 'scrim',
+    slots: '11/12 Squads',
+    server: 'India Regional Mesh',
+    format: 'Best of 7 Rounds',
+    ctaText: 'Enter Room',
+  },
 ];
 
 /* ── Core Platform Pillars ── */
@@ -477,99 +620,243 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
   return (
     <div className="w-full bg-surface text-on-surface transition-colors duration-200 overflow-x-hidden selection:bg-primary/30">
       {/* ══════════════════════════════════════════════════════════
-          1. HERO SECTION — Spacious, Confident & Dual-Themed
+          1. HERO SECTION — Cinematic Esports Arena Command Center
       ══════════════════════════════════════════════════════════ */}
-      <section className="relative min-h-[92vh] flex flex-col items-center justify-center pt-24 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
+      <section className="relative min-h-[92vh] flex flex-col items-center justify-center pt-24 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
         {/* Three.js Canvas Backdrop */}
-        <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none opacity-40 dark:opacity-45" />
+        <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none opacity-40 dark:opacity-60" />
 
-        {/* Ambient Glows */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] rounded-full bg-gradient-to-b from-primary/10 via-secondary/10 to-transparent blur-[140px] pointer-events-none" />
-        <div className="absolute bottom-10 left-10 w-96 h-96 rounded-full bg-primary/5 blur-[120px] pointer-events-none" />
+        {/* Ambient Volumetric Glows */}
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[850px] h-[550px] rounded-full bg-gradient-to-b from-primary/20 via-secondary/15 to-transparent blur-[160px] pointer-events-none" />
+        <div className="absolute bottom-10 left-10 w-96 h-96 rounded-full bg-[#EC4899]/10 blur-[140px] pointer-events-none" />
+        <div className="absolute bottom-10 right-10 w-96 h-96 rounded-full bg-secondary/10 blur-[140px] pointer-events-none" />
 
-        {/* Hero Body */}
-        <div className="relative z-10 max-w-5xl mx-auto text-center space-y-8">
-          {/* Status Chip */}
-          <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-surface-container/80 dark:bg-white/5 border border-card-border backdrop-blur-md shadow-sm">
-            <span className="relative flex h-2.5 w-2.5">
+        {/* Center Container */}
+        <div className="relative z-10 max-w-6xl mx-auto w-full text-center space-y-8">
+          
+          {/* Telemetry Status Capsule */}
+          <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-surface-container-high/70 dark:bg-white/5 border border-card-border backdrop-blur-xl shadow-sm">
+            <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75" />
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-secondary" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-secondary" />
             </span>
-            <span className="font-mono text-xs uppercase tracking-widest text-secondary font-bold">
+            <span className="font-mono text-xs uppercase tracking-wider text-on-surface font-bold">
               2026 Competitive Season Active
             </span>
-            <span className="text-on-surface-variant/40">·</span>
-            <span className="font-mono text-xs text-on-surface-variant font-medium">Next-Gen Esports Protocol</span>
+            <span className="text-on-surface-variant/40">|</span>
+            <span className="font-mono text-xs text-secondary font-semibold flex items-center gap-1">
+              <Activity className="w-3.5 h-3.5" /> Asia-South1 Mesh (12ms)
+            </span>
+            <span className="text-on-surface-variant/40 hidden sm:inline">|</span>
+            <span className="font-mono text-xs text-on-surface-variant hidden sm:inline-flex items-center gap-1">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" /> 99.8% FairPlay HWID
+            </span>
           </div>
 
-          {/* Majestic Headline */}
-          <div className="space-y-4">
-            <h1 className="font-display font-extrabold text-4xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight leading-[1.08] uppercase text-on-surface">
-              The Premier Arena for{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-primary">
+          {/* Master Headline */}
+          <div className="space-y-4 max-w-4xl mx-auto">
+            <h1 className="font-display font-extrabold text-4xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight leading-[1.04] uppercase text-on-surface">
+              The Premier Arena for <br className="hidden sm:inline" />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-[#06B6D4] to-[#EC4899]">
                 Competitive Esports
               </span>
             </h1>
-            <p className="font-body text-base sm:text-lg md:text-xl text-on-surface-variant max-w-3xl mx-auto leading-relaxed">
-              Book daily automated scrim lobbies, compete in verified prize-pool tournaments,
-              manage your competitive roster, and connect directly with Tier-1 esports organizations.
+            <p className="font-body text-base sm:text-lg md:text-xl text-on-surface-variant max-w-2xl mx-auto leading-relaxed">
+              Automate daily scrim lobbies, compete in escrow-guaranteed championships,
+              build verified player dossiers, and get scouted by Tier-1 esports organizations.
             </p>
           </div>
 
-          {/* Action CTAs */}
+          {/* Primary Action Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
             <button
               onClick={() => onOpenAuthWithRole?.('player', 'signup')}
-              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-primary to-secondary text-white font-display font-bold text-sm uppercase tracking-wider shadow-lg shadow-primary/25 hover:opacity-95 active:scale-95 transition-all flex items-center justify-center gap-2.5 group"
+              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-primary via-[#7C3AED] to-secondary text-white font-display font-extrabold text-xs uppercase tracking-wider shadow-lg shadow-primary/25 hover:shadow-primary/45 hover:opacity-95 active:scale-95 transition-all flex items-center justify-center gap-2.5 group"
             >
-              <Gamepad2 className="w-5 h-5 text-white" />
-              <span>Create Free Account</span>
-              <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-1 transition-transform" />
+              <Gamepad2 className="w-4 h-4 text-white" />
+              <span>Enter Pro Circuit</span>
+              <ChevronRight className="w-4 h-4 text-white group-hover:translate-x-1.5 transition-transform" />
             </button>
 
             <button
               onClick={() => onSelectTab?.('tournaments')}
-              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-surface-container hover:bg-surface-container-high border border-card-border text-on-surface font-display font-bold text-sm uppercase tracking-wider backdrop-blur-md active:scale-95 transition-all flex items-center justify-center gap-2.5"
+              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-surface-container/80 hover:bg-surface-container-high border border-card-border text-on-surface font-display font-bold text-xs uppercase tracking-wider backdrop-blur-xl active:scale-95 transition-all flex items-center justify-center gap-2.5"
             >
-              <Trophy className="w-5 h-5 text-primary" />
+              <Trophy className="w-4 h-4 text-secondary" />
               <span>Explore Tournaments & Scrims</span>
             </button>
           </div>
 
-          {/* Trust Guarantees */}
-          <div className="flex flex-wrap items-center justify-center gap-6 text-xs font-mono text-on-surface-variant pt-4">
-            <div className="flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-secondary" />
-              <span>Verified Organizations</span>
-            </div>
-            <span className="text-card-border hidden sm:inline">·</span>
-            <div className="flex items-center gap-2">
-              <Zap className="w-4 h-4 text-primary" />
-              <span>Sub-150ms Match Events</span>
-            </div>
-            <span className="text-card-border hidden sm:inline">·</span>
-            <div className="flex items-center gap-2">
-              <Lock className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
-              <span>Escrow Protected Prizes</span>
-            </div>
-            <span className="text-card-border hidden sm:inline">·</span>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-amber-500 dark:text-amber-400" />
-              <span>Anti-Cheat Fair Play</span>
-            </div>
+          {/* Sanctioned Games Badges */}
+          <div className="pt-2 flex flex-wrap items-center justify-center gap-2">
+            {[
+              { name: 'VALORANT', tag: 'PC VCT' },
+              { name: 'BGMI', tag: 'MOBILE' },
+              { name: 'CS2', tag: 'VALVE' },
+              { name: 'FREE FIRE', tag: 'PRO' },
+              { name: 'COD MOBILE', tag: 'PRO' },
+              { name: 'CLASH ROYALE', tag: 'SUPERCELL' },
+            ].map((game) => (
+              <div
+                key={game.name}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container/60 border border-card-border text-xs font-display font-semibold text-on-surface hover:border-primary/40 transition-colors shadow-sm"
+              >
+                <Crosshair className="w-3 h-3 text-secondary" />
+                <span>{game.name}</span>
+                <span className="font-mono text-[9px] text-on-surface-variant/70 font-normal">[{game.tag}]</span>
+              </div>
+            ))}
           </div>
+
+          {/* ── Broad Marquee Showcase Strip for Scrims & Tournaments ── */}
+          <div className="pt-6 w-full max-w-7xl mx-auto space-y-4">
+            
+            {/* Telemetry Header */}
+            <div className="flex items-center justify-between px-2 text-xs font-mono">
+              <div className="flex items-center gap-2">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-secondary" />
+                </span>
+                <span className="font-bold uppercase tracking-wider text-on-surface">
+                  Live Match Circuit & Daily Scrims
+                </span>
+                <span className="text-on-surface-variant/50 hidden sm:inline">|</span>
+                <span className="text-on-surface-variant/80 hidden sm:inline">
+                  Hover to pause · Direct registration
+                </span>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-tertiary font-bold hidden sm:inline-flex items-center gap-1">
+                  <Lock className="w-3.5 h-3.5" /> ₹35,50,000 Active Escrow
+                </span>
+                <span className="text-secondary font-semibold flex items-center gap-1">
+                  <Activity className="w-3.5 h-3.5" /> 12ms Match Dispatch
+                </span>
+              </div>
+            </div>
+
+            {/* Marquee Track 1: Active & Upcoming Tournaments */}
+            <div className="overflow-hidden relative [mask-image:linear-gradient(to_right,transparent,black_4%,black_96%,transparent)]">
+              <div className="animate-marquee-smooth flex items-center gap-4 py-2">
+                {[...MARQUEE_TOURNAMENTS, ...MARQUEE_TOURNAMENTS].map((t, idx) => (
+                  <div
+                    key={`${t.id}-${idx}`}
+                    onClick={() => onSelectTab?.(t.tab || 'tournaments')}
+                    className="w-[320px] sm:w-[360px] h-[155px] shrink-0 p-4 rounded-2xl bg-surface-container-low/85 hover:bg-surface-container-high border border-card-border hover:border-primary/50 backdrop-blur-xl transition-all duration-300 flex flex-col justify-between group cursor-pointer shadow-lg hover:shadow-primary/20 text-left select-none"
+                  >
+                    {/* Top Row: Game + Status Pill */}
+                    <div className="flex items-center justify-between">
+                      <span className={`px-2.5 py-0.5 rounded-lg text-[10px] font-mono font-bold uppercase border ${t.badgeColor}`}>
+                        {t.game} · {t.badge}
+                      </span>
+                      <span className={`px-2 py-0.5 rounded text-[9px] font-mono font-bold uppercase flex items-center gap-1 border ${
+                        t.statusType === 'live'
+                          ? 'bg-error/15 text-error border-error/30 animate-pulse'
+                          : 'bg-emerald-500/15 text-emerald-500 border-emerald-500/30'
+                      }`}>
+                        <span className="inline-block w-1.5 h-1.5 rounded-full bg-current" />
+                        {t.status}
+                      </span>
+                    </div>
+
+                    {/* Middle Row: Title & Prize Pool */}
+                    <div className="space-y-1">
+                      <h4 className="font-display font-bold text-sm sm:text-base text-on-surface group-hover:text-primary transition-colors truncate">
+                        {t.title}
+                      </h4>
+                      <div className="flex items-center justify-between text-xs font-mono">
+                        <span className="text-tertiary font-extrabold flex items-center gap-1">
+                          <Lock className="w-3 h-3" /> {t.prizePool} Escrow Vault
+                        </span>
+                        <span className="text-on-surface-variant font-medium">
+                          {t.slots}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Bottom Row: Format & Action */}
+                    <div className="pt-2 border-t border-card-border flex items-center justify-between text-xs font-mono">
+                      <span className="text-[11px] text-on-surface-variant truncate max-w-[200px]">
+                        {t.time}
+                      </span>
+                      <span className="text-primary font-bold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                        <span>{t.ctaText}</span>
+                        <ChevronRight className="w-3.5 h-3.5" />
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Marquee Track 2 (Reverse): Daily Automated Scrim Lobbies */}
+            <div className="overflow-hidden relative [mask-image:linear-gradient(to_right,transparent,black_4%,black_96%,transparent)]">
+              <div className="animate-marquee-smooth-reverse flex items-center gap-4 py-2">
+                {[...MARQUEE_SCRIMS, ...MARQUEE_SCRIMS].map((s, idx) => (
+                  <div
+                    key={`${s.id}-${idx}`}
+                    onClick={() => onSelectTab?.(s.tab || 'tournaments')}
+                    className="w-[320px] sm:w-[360px] h-[155px] shrink-0 p-4 rounded-2xl bg-surface-container-low/85 hover:bg-surface-container-high border border-card-border hover:border-secondary/50 backdrop-blur-xl transition-all duration-300 flex flex-col justify-between group cursor-pointer shadow-lg hover:shadow-secondary/20 text-left select-none"
+                  >
+                    {/* Top Row: Game + Status Pill */}
+                    <div className="flex items-center justify-between">
+                      <span className={`px-2.5 py-0.5 rounded-lg text-[10px] font-mono font-bold uppercase border ${s.badgeColor}`}>
+                        {s.game} · {s.badge}
+                      </span>
+                      <span className="px-2 py-0.5 rounded text-[9px] font-mono font-bold uppercase flex items-center gap-1 bg-secondary/15 text-secondary border border-secondary/30">
+                        <Flame className="w-2.5 h-2.5" />
+                        {s.status}
+                      </span>
+                    </div>
+
+                    {/* Middle Row: Title & Server Telemetry */}
+                    <div className="space-y-1">
+                      <h4 className="font-display font-bold text-sm sm:text-base text-on-surface group-hover:text-secondary transition-colors truncate">
+                        {s.title}
+                      </h4>
+                      <div className="flex items-center justify-between text-xs font-mono">
+                        <span className="text-secondary font-bold flex items-center gap-1">
+                          <Activity className="w-3 h-3" /> {s.server}
+                        </span>
+                        <span className="text-on-surface-variant font-medium">
+                          {s.slots}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Bottom Row: Format & Action */}
+                    <div className="pt-2 border-t border-card-border flex items-center justify-between text-xs font-mono">
+                      <span className="text-[11px] text-on-surface-variant truncate max-w-[200px]">
+                        {s.format}
+                      </span>
+                      <span className="text-secondary font-bold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                        <span>{s.ctaText}</span>
+                        <ChevronRight className="w-3.5 h-3.5" />
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+          </div>
+
         </div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════
-          2. LIVE MATCH TICKER STRIP
+          2. LIVE MATCH TICKER STRIP — Broadcast Feeds
       ══════════════════════════════════════════════════════════ */}
-      <div className="border-y border-card-border py-3.5 bg-surface-container-lowest/80 backdrop-blur-md overflow-hidden relative z-20">
+      <div className="border-y border-card-border py-3 bg-surface-container-lowest/80 backdrop-blur-xl overflow-hidden relative z-20 [mask-image:linear-gradient(to_right,transparent,black_4%,black_96%,transparent)]">
         <div className="max-w-7xl mx-auto px-4 flex items-center gap-4">
           <div className="shrink-0 flex items-center gap-2 pr-4 border-r border-card-border">
-            <span className="inline-block w-2 h-2 rounded-full bg-error animate-pulse" />
-            <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-error">
-              Match Circuit
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-error opacity-75" />
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-error" />
+            </span>
+            <span className="font-mono text-[11px] font-extrabold uppercase tracking-wider text-error">
+              BROADCAST CIRCUIT
             </span>
           </div>
 
@@ -579,7 +866,7 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
                 <span
                   className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase ${
                     item.label === 'LIVE'
-                      ? 'bg-error/15 text-error border border-error/30'
+                      ? 'bg-error/15 text-error border border-error/30 animate-pulse'
                       : item.label === 'FINAL'
                       ? 'bg-surface-container-high text-on-surface-variant'
                       : 'bg-secondary/15 text-secondary border border-secondary/30'
@@ -587,10 +874,10 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
                 >
                   {item.label}
                 </span>
-                <span className="font-display text-xs font-semibold text-on-surface">{item.team1}</span>
-                <span className="font-mono text-xs font-bold text-secondary">{item.score}</span>
-                <span className="font-display text-xs font-semibold text-on-surface">{item.team2}</span>
-                <span className="font-mono text-[10px] text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">
+                <span className="font-display text-xs font-bold text-on-surface">{item.team1}</span>
+                <span className="font-mono text-xs font-extrabold text-secondary px-2 py-0.5 rounded bg-surface-container">{item.score}</span>
+                <span className="font-display text-xs font-bold text-on-surface">{item.team2}</span>
+                <span className="font-mono text-[10px] text-on-surface-variant bg-surface-container-low px-2 py-0.5 rounded border border-card-border">
                   {item.game}
                 </span>
                 <span className="text-card-border pl-4">/</span>
@@ -601,142 +888,379 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
       </div>
 
       {/* ══════════════════════════════════════════════════════════
-          3. REAL-TIME STATS COUNTER BAR
+          3. REAL-TIME TELEMETRY BENTO BAR
       ══════════════════════════════════════════════════════════ */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 border-b border-card-border bg-surface-container-low" ref={stepsRef}>
-        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
-          <div className="text-center space-y-1">
-            <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto text-primary mb-2">
-              <Gamepad2 className="w-5 h-5" />
+      <section className="py-14 px-4 sm:px-6 lg:px-8 border-b border-card-border bg-surface-container-lowest/50 backdrop-blur-xl relative" ref={stepsRef}>
+        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+          
+          <div className="p-5 rounded-2xl bg-surface-container-low/70 border border-card-border hover:border-primary/40 transition-all space-y-2 group">
+            <div className="flex items-center justify-between">
+              <span className="font-mono text-[10px] uppercase tracking-wider text-on-surface-variant font-bold">Athletes</span>
+              <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                <Gamepad2 className="w-4 h-4" />
+              </div>
             </div>
             <div ref={stat1} className="font-display font-extrabold text-3xl sm:text-4xl text-on-surface">0</div>
-            <div className="font-mono text-xs uppercase tracking-wider text-on-surface-variant">Verified Athletes</div>
+            <p className="font-mono text-[11px] text-on-surface-variant">Verified Pro Players</p>
           </div>
 
-          <div className="text-center space-y-1">
-            <div className="w-10 h-10 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center mx-auto text-secondary mb-2">
-              <Users className="w-5 h-5" />
+          <div className="p-5 rounded-2xl bg-surface-container-low/70 border border-card-border hover:border-secondary/40 transition-all space-y-2 group">
+            <div className="flex items-center justify-between">
+              <span className="font-mono text-[10px] uppercase tracking-wider text-on-surface-variant font-bold">Rosters</span>
+              <div className="w-8 h-8 rounded-lg bg-secondary/10 border border-secondary/20 flex items-center justify-center text-secondary group-hover:scale-110 transition-transform">
+                <Users className="w-4 h-4" />
+              </div>
             </div>
             <div ref={stat2} className="font-display font-extrabold text-3xl sm:text-4xl text-secondary">0</div>
-            <div className="font-mono text-xs uppercase tracking-wider text-on-surface-variant">Active Team Rosters</div>
+            <p className="font-mono text-[11px] text-on-surface-variant">Active Team Clans</p>
           </div>
 
-          <div className="text-center space-y-1">
-            <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mx-auto text-amber-500 dark:text-amber-400 mb-2">
-              <Flame className="w-5 h-5" />
+          <div className="p-5 rounded-2xl bg-surface-container-low/70 border border-card-border hover:border-amber-500/40 transition-all space-y-2 group">
+            <div className="flex items-center justify-between">
+              <span className="font-mono text-[10px] uppercase tracking-wider text-on-surface-variant font-bold">Matches</span>
+              <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-500 group-hover:scale-110 transition-transform">
+                <Flame className="w-4 h-4" />
+              </div>
             </div>
             <div ref={stat3} className="font-display font-extrabold text-3xl sm:text-4xl text-amber-500 dark:text-amber-400">0</div>
-            <div className="font-mono text-xs uppercase tracking-wider text-on-surface-variant">Daily Scrim Lobbies</div>
+            <p className="font-mono text-[11px] text-on-surface-variant">Daily Scrim Rooms</p>
           </div>
 
-          <div className="text-center space-y-1">
-            <div className="w-10 h-10 rounded-xl bg-tertiary/10 border border-tertiary/20 flex items-center justify-center mx-auto text-tertiary mb-2">
-              <Trophy className="w-5 h-5" />
+          <div className="p-5 rounded-2xl bg-surface-container-low/70 border border-card-border hover:border-emerald-500/40 transition-all space-y-2 group">
+            <div className="flex items-center justify-between">
+              <span className="font-mono text-[10px] uppercase tracking-wider text-on-surface-variant font-bold">Prize Vault</span>
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-500 group-hover:scale-110 transition-transform">
+                <Trophy className="w-4 h-4" />
+              </div>
             </div>
-            <div className="flex items-center justify-center font-display font-extrabold text-3xl sm:text-4xl text-tertiary">
-              <span>$</span>
+            <div className="flex items-center font-display font-extrabold text-3xl sm:text-4xl text-emerald-500 dark:text-emerald-400">
+              <span>₹</span>
               <span ref={stat4}>0</span>
             </div>
-            <div className="font-mono text-xs uppercase tracking-wider text-on-surface-variant">Prizes Distributed</div>
+            <p className="font-mono text-[11px] text-on-surface-variant">Escrow Protected Payouts</p>
           </div>
+
         </div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════
-          4. CORE PLATFORM PILLARS (EVERYTHING WE OFFER)
+          4. CORE PLATFORM BENTO GRID — Next-Gen Esports Architecture
       ══════════════════════════════════════════════════════════ */}
       <section ref={featureRef} className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-16">
+        
         {/* Section Heading */}
         <div className="text-center space-y-3 max-w-3xl mx-auto">
-          <span className="font-mono text-xs uppercase tracking-widest text-primary font-bold">
-            Complete Ecosystem Architecture
-          </span>
-          <h2 className="font-display font-extrabold text-3xl sm:text-5xl text-on-surface tracking-tight">
-            Engineered For The Full Lifecycle of Esports
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary font-mono text-[11px] font-bold uppercase tracking-widest">
+            <Sparkles className="w-3.5 h-3.5" /> High-Performance Infrastructure
+          </div>
+          <h2 className="font-display font-extrabold text-3xl sm:text-5xl md:text-6xl text-on-surface tracking-tight uppercase">
+            Engineered For The Pro Circuit
           </h2>
           <p className="font-body text-sm sm:text-base text-on-surface-variant leading-relaxed">
-            Gamers'G provides end-to-end tooling for grassroots players, competitive clans,
+            Gamers'G provides tournament-grade tooling for competitive athletes, clans,
             elite tournament organizers, and multi-game esports organizations.
           </p>
         </div>
 
-        {/* 6 Structured Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {PLATFORM_PILLARS.map((pillar) => {
-            const Icon = pillar.icon;
-            return (
-              <div
-                key={pillar.id}
-                data-reveal
-                className="rounded-3xl bg-surface-container-low border border-card-border p-6 sm:p-8 flex flex-col justify-between hover:border-secondary/50 hover:shadow-xl transition-all duration-300 group"
-              >
-                <div className="space-y-5">
-                  {/* Top Row: Icon & Tag */}
-                  <div className="flex items-center justify-between">
-                    <div className={`w-12 h-12 rounded-2xl bg-surface-container border border-card-border flex items-center justify-center ${pillar.iconColor} group-hover:scale-110 transition-transform`}>
-                      <Icon className="w-6 h-6" />
-                    </div>
-                    <span className="font-mono text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant border border-card-border">
-                      {pillar.badge}
-                    </span>
-                  </div>
+        {/* Asymmetric Bento Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8">
+          
+          {/* BENTO 1: Automated Daily Scrims Engine (Large 7 Cols) */}
+          <div
+            data-reveal
+            className="lg:col-span-7 rounded-3xl bg-surface-container-low border border-card-border p-6 sm:p-8 flex flex-col justify-between hover:border-primary/50 transition-all duration-300 relative overflow-hidden group shadow-xl"
+          >
+            {/* Ambient Corner Glow */}
+            <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full bg-primary/15 blur-3xl pointer-events-none group-hover:bg-primary/25 transition-all" />
 
-                  {/* Title & Tagline */}
-                  <div>
-                    <span className="font-mono text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">
-                      {pillar.tagline}
-                    </span>
-                    <h3 className="font-display font-bold text-xl text-on-surface mt-1 group-hover:text-secondary transition-colors">
-                      {pillar.title}
-                    </h3>
-                  </div>
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/30 flex items-center justify-center text-primary group-hover:scale-105 transition-transform">
+                  <Flame className="w-6 h-6" />
+                </div>
+                <span className="font-mono text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
+                  Sub-15ms Match Engine
+                </span>
+              </div>
 
-                  {/* Description */}
-                  <p className="font-body text-xs sm:text-sm text-on-surface-variant leading-relaxed">
-                    {pillar.description}
-                  </p>
+              <div>
+                <span className="font-mono text-xs uppercase tracking-widest text-primary font-bold">
+                  24/7 AUTOMATED PRACTICE
+                </span>
+                <h3 className="font-display font-extrabold text-2xl sm:text-3xl text-on-surface mt-1">
+                  Automated Daily Scrims Engine
+                </h3>
+                <p className="font-body text-xs sm:text-sm text-on-surface-variant mt-2 leading-relaxed max-w-xl">
+                  Compete in daily high-ELO practice lobbies with zero manual overhead. Room ID and confidential password are automatically dispatched directly to verified team captains prior to match drop.
+                </p>
+              </div>
 
-                  {/* Feature Checklist */}
-                  <div className="space-y-2 pt-2 border-t border-card-border">
-                    {pillar.features.map((feat, i) => (
-                      <div key={i} className="flex items-start gap-2 text-xs text-on-surface">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-secondary shrink-0 mt-0.5" />
-                        <span>{feat}</span>
-                      </div>
-                    ))}
+              {/* Interactive Mini Scrim Lobby Preview Widget */}
+              <div className="p-4 rounded-2xl bg-surface-container-lowest/90 border border-card-border space-y-3 font-mono">
+                <div className="flex items-center justify-between text-xs border-b border-card-border pb-2.5">
+                  <div className="flex items-center gap-2">
+                    <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="font-bold text-on-surface">BMPS Pro Practice #412 · Erangel</span>
                   </div>
+                  <span className="text-secondary font-bold text-[11px] bg-secondary/10 px-2 py-0.5 rounded border border-secondary/20">
+                    PIN Dispatches: 04:32
+                  </span>
                 </div>
 
-                {/* Card Bottom: Metric & Action Link */}
-                <div className="pt-6 mt-6 border-t border-card-border flex items-center justify-between">
-                  <div>
-                    <span className="font-display font-extrabold text-xl text-on-surface block">
-                      {pillar.metric}
-                    </span>
-                    <span className="font-mono text-[10px] text-on-surface-variant uppercase tracking-wider">
-                      {pillar.metricLabel}
-                    </span>
-                  </div>
+                {/* Team Slots Matrix */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px]">
+                  {[
+                    { slot: 'Slot 01', team: 'Team Soul', status: 'Locked' },
+                    { slot: 'Slot 02', team: 'GodLike', status: 'Locked' },
+                    { slot: 'Slot 03', team: 'Velocity', status: 'Locked' },
+                    { slot: 'Slot 04', team: 'Global Esports', status: 'Locked' },
+                  ].map((s) => (
+                    <div key={s.slot} className="p-2 rounded-lg bg-surface-container border border-card-border flex flex-col">
+                      <span className="text-[9px] text-on-surface-variant font-semibold">{s.slot}</span>
+                      <span className="font-display font-bold text-on-surface truncate">{s.team}</span>
+                      <span className="text-[9px] text-emerald-500 font-bold mt-0.5">● {s.status}</span>
+                    </div>
+                  ))}
+                </div>
 
-                  <button
-                    onClick={() => {
-                      if (pillar.id === 'tournaments' || pillar.id === 'scrims') {
-                        onSelectTab?.('tournaments');
-                      } else if (pillar.id === 'teams') {
-                        onSelectTab?.('teams');
-                      } else {
-                        onSelectTab?.('discovery');
-                      }
-                    }}
-                    className="font-display text-xs font-bold text-secondary hover:underline flex items-center gap-1 group-hover:translate-x-1 transition-all"
-                  >
-                    <span>Explore</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
+                <div className="flex items-center justify-between text-[11px] text-on-surface-variant pt-1">
+                  <span>Slot Matrix: <strong>18/20 Teams Checked In</strong></span>
+                  <span className="text-primary font-bold">12ms Asia-South1 Server</span>
                 </div>
               </div>
-            );
-          })}
+
+              {/* Checklist */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                <div className="flex items-center gap-2 text-on-surface">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-secondary shrink-0" />
+                  <span>Instant slot reservation for rosters</span>
+                </div>
+                <div className="flex items-center gap-2 text-on-surface">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-secondary shrink-0" />
+                  <span>Confidential Room PIN delivery</span>
+                </div>
+                <div className="flex items-center gap-2 text-on-surface">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-secondary shrink-0" />
+                  <span>Automated screenshot proof verification</span>
+                </div>
+                <div className="flex items-center gap-2 text-on-surface">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-secondary shrink-0" />
+                  <span>Live dispute escalation with admins</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-6 mt-6 border-t border-card-border flex items-center justify-between">
+              <div>
+                <span className="font-display font-extrabold text-2xl text-on-surface block">120+</span>
+                <span className="font-mono text-[10px] text-on-surface-variant uppercase tracking-wider">Daily Match Rooms</span>
+              </div>
+              <button
+                onClick={() => onSelectTab?.('tournaments')}
+                className="px-5 py-2.5 rounded-xl bg-primary text-white font-display font-bold text-xs uppercase tracking-wider hover:opacity-95 flex items-center gap-1.5 transition-all shadow-md shadow-primary/20"
+              >
+                <span>Enter Scrim Lobbies</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+
+          {/* BENTO 2: Smart Escrow Prize Vault (5 Cols) */}
+          <div
+            data-reveal
+            className="lg:col-span-5 rounded-3xl bg-surface-container-low border border-card-border p-6 sm:p-8 flex flex-col justify-between hover:border-tertiary/50 transition-all duration-300 relative overflow-hidden group shadow-xl"
+          >
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div className="w-12 h-12 rounded-2xl bg-tertiary/10 border border-tertiary/30 flex items-center justify-center text-tertiary group-hover:scale-105 transition-transform">
+                  <Lock className="w-6 h-6" />
+                </div>
+                <span className="font-mono text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-tertiary/10 text-tertiary border border-tertiary/20">
+                  Escrow Audited
+                </span>
+              </div>
+
+              <div>
+                <span className="font-mono text-xs uppercase tracking-widest text-tertiary font-bold">
+                  GUARANTEED PAYOUTS
+                </span>
+                <h3 className="font-display font-extrabold text-2xl text-on-surface mt-1">
+                  Verified Prize Escrow Vault
+                </h3>
+                <p className="font-body text-xs sm:text-sm text-on-surface-variant mt-2 leading-relaxed">
+                  Never chase organizers for tournament winnings. All prize pools are legally deposited into escrow vaults prior to tournament kick-off, with instant payout distribution to winner bank accounts and UPI.
+                </p>
+              </div>
+
+              {/* Escrow Visualization Card */}
+              <div className="p-4 rounded-2xl bg-surface-container-lowest/90 border border-card-border space-y-3 font-mono text-xs">
+                <div className="flex items-center justify-between pb-2 border-b border-card-border">
+                  <span className="text-on-surface-variant">Active Escrow Vault</span>
+                  <span className="text-emerald-500 font-bold flex items-center gap-1">
+                    <ShieldCheck className="w-3.5 h-3.5" /> 100% Secured
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-on-surface-variant">Protected Pool</span>
+                  <span className="text-tertiary font-extrabold text-base">₹15,00,000 INR</span>
+                </div>
+                <div className="flex items-center justify-between text-[11px] text-on-surface-variant">
+                  <span>Payout Execution:</span>
+                  <span className="text-on-surface font-semibold">Automated Post-Grand Finals</span>
+                </div>
+              </div>
+
+              {/* Checklist */}
+              <div className="space-y-2 text-xs">
+                <div className="flex items-center gap-2 text-on-surface">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-tertiary shrink-0" />
+                  <span>Legally protected prize contracts</span>
+                </div>
+                <div className="flex items-center gap-2 text-on-surface">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-tertiary shrink-0" />
+                  <span>Instant automated bank & UPI distribution</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-6 mt-6 border-t border-card-border flex items-center justify-between">
+              <div>
+                <span className="font-display font-extrabold text-2xl text-on-surface block">₹2.5 Cr+</span>
+                <span className="font-mono text-[10px] text-on-surface-variant uppercase tracking-wider">Total Escrow Dispatched</span>
+              </div>
+              <button
+                onClick={() => onSelectTab?.('tournaments')}
+                className="font-display text-xs font-bold text-tertiary hover:underline flex items-center gap-1 group-hover:translate-x-1 transition-all"
+              >
+                <span>Tournaments</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+
+          {/* BENTO 3: Verified Athlete Passports (5 Cols) */}
+          <div
+            data-reveal
+            className="lg:col-span-5 rounded-3xl bg-surface-container-low border border-card-border p-6 sm:p-8 flex flex-col justify-between hover:border-secondary/50 transition-all duration-300 relative overflow-hidden group shadow-xl"
+          >
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div className="w-12 h-12 rounded-2xl bg-secondary/10 border border-secondary/30 flex items-center justify-center text-secondary group-hover:scale-105 transition-transform">
+                  <ShieldCheck className="w-6 h-6" />
+                </div>
+                <span className="font-mono text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-secondary/10 text-secondary border border-secondary/20">
+                  Anti-Cheat HWID Seal
+                </span>
+              </div>
+
+              <div>
+                <span className="font-mono text-xs uppercase tracking-widest text-secondary font-bold">
+                  LINKEDIN FOR GAMERS
+                </span>
+                <h3 className="font-display font-extrabold text-2xl text-on-surface mt-1">
+                  Universal Athlete Passport
+                </h3>
+                <p className="font-body text-xs sm:text-sm text-on-surface-variant mt-2 leading-relaxed">
+                  Your immutable esports resume. Synchronize your Steam, Riot Games, and BGMI game UIDs. Showcase verified tournament finishes, career win rates, and your hardware-verified FairPlay integrity trust score.
+                </p>
+              </div>
+
+              {/* Passport Preview Snippet */}
+              <div className="p-4 rounded-2xl bg-surface-container-lowest/90 border border-card-border space-y-2.5 font-mono text-xs">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center font-display font-black text-white text-[11px]">
+                      VX
+                    </div>
+                    <div>
+                      <p className="font-display font-bold text-on-surface leading-none text-xs">Alex "Vortex" C.</p>
+                      <p className="text-[10px] text-secondary">Duelist · Immortal 3</p>
+                    </div>
+                  </div>
+                  <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 font-bold">
+                    99.9% HWID Trust
+                  </span>
+                </div>
+                <div className="pt-2 border-t border-card-border flex items-center justify-between text-[11px] text-on-surface-variant">
+                  <span>Looking For Team (LFT):</span>
+                  <span className="text-secondary font-semibold">Tier-1 VCT Circuit</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-6 mt-6 border-t border-card-border flex items-center justify-between">
+              <div>
+                <span className="font-display font-extrabold text-2xl text-on-surface block">14.2K+</span>
+                <span className="font-mono text-[10px] text-on-surface-variant uppercase tracking-wider">Passports Issued</span>
+              </div>
+              <button
+                onClick={() => onSelectTab?.('discovery')}
+                className="font-display text-xs font-bold text-secondary hover:underline flex items-center gap-1 group-hover:translate-x-1 transition-all"
+              >
+                <span>Browse Talent</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+
+          {/* BENTO 4: Clan Roster Lock & Org Recruitment (7 Cols) */}
+          <div
+            data-reveal
+            className="lg:col-span-7 rounded-3xl bg-surface-container-low border border-card-border p-6 sm:p-8 flex flex-col justify-between hover:border-primary/50 transition-all duration-300 relative overflow-hidden group shadow-xl"
+          >
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/30 flex items-center justify-center text-primary group-hover:scale-105 transition-transform">
+                  <Users className="w-6 h-6" />
+                </div>
+                <span className="font-mono text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
+                  Roster Management
+                </span>
+              </div>
+
+              <div>
+                <span className="font-mono text-xs uppercase tracking-widest text-primary font-bold">
+                  TEAMS & ORGANIZATIONS
+                </span>
+                <h3 className="font-display font-extrabold text-2xl sm:text-3xl text-on-surface mt-1">
+                  Clan Rosters & Org Scouting Pipeline
+                </h3>
+                <p className="font-body text-xs sm:text-sm text-on-surface-variant mt-2 leading-relaxed max-w-xl">
+                  Build multi-title teams, lock official rosters before competition, and scout high-ELO free agents with verified tryout applications and contract management.
+                </p>
+              </div>
+
+              {/* Tryout Pipeline Visualization */}
+              <div className="p-4 rounded-2xl bg-surface-container-lowest/90 border border-card-border space-y-3 font-mono text-xs">
+                <div className="flex items-center justify-between text-on-surface-variant pb-2 border-b border-card-border text-[11px]">
+                  <span>Recruitment State Machine</span>
+                  <span className="text-primary font-bold">Open Role: Main Duelist</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="px-2.5 py-1 rounded-lg bg-surface-container text-on-surface font-semibold text-[10px]">1. Application</span>
+                  <ChevronRight className="w-3.5 h-3.5 text-on-surface-variant" />
+                  <span className="px-2.5 py-1 rounded-lg bg-primary/20 text-primary font-bold text-[10px] border border-primary/30">2. Scrim Tryout</span>
+                  <ChevronRight className="w-3.5 h-3.5 text-on-surface-variant" />
+                  <span className="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-500 font-bold text-[10px] border border-emerald-500/30">3. Roster Signed</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-6 mt-6 border-t border-card-border flex items-center justify-between">
+              <div>
+                <span className="font-display font-extrabold text-2xl text-on-surface block">840+</span>
+                <span className="font-mono text-[10px] text-on-surface-variant uppercase tracking-wider">Active Rosters</span>
+              </div>
+              <button
+                onClick={() => onSelectTab?.('teams')}
+                className="px-5 py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high border border-card-border text-on-surface font-display font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition-all"
+              >
+                <span>Explore Teams</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+
         </div>
       </section>
 

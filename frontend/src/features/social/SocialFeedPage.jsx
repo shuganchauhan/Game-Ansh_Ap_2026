@@ -98,11 +98,14 @@ export default function SocialFeedPage({ onSelectTab, onOpenAuth }) {
     setTimeout(() => setCopiedPostId(null), 2000);
   };
 
+  const seenPostIds = new Set();
   const filteredPosts = posts.filter((p) => {
+    if (!p || !p.id || seenPostIds.has(p.id)) return false;
+    seenPostIds.add(p.id);
     if (feedFilter === 'all') return true;
-    if (feedFilter === 'lft') return p.category.includes('LFT') || p.category.includes('Recruitment');
-    if (feedFilter === 'org') return p.isOrg;
-    if (feedFilter === 'matches') return p.category.includes('Match');
+    if (feedFilter === 'lft') return p.category?.includes('LFT') || p.category?.includes('Recruitment');
+    if (feedFilter === 'org') return Boolean(p.isOrg);
+    if (feedFilter === 'matches') return p.category?.includes('Match');
     return true;
   });
 

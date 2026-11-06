@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import {
   Swords, Trophy, Briefcase, MessageSquare, Bell, LogIn, User, Sparkles,
-  LayoutDashboard, UserCheck, Building, CheckCircle2, RefreshCw, Lock, LogOut, Users
+  LayoutDashboard, UserCheck, Building, CheckCircle2, RefreshCw, Lock, LogOut, Users,
+  Gamepad2
 } from 'lucide-react';
 import ThemeToggle from '../ui/ThemeToggle';
 import { useAuth } from '../../stores/authContext';
@@ -199,6 +200,17 @@ export default function Navbar({ activeTab, onSelectTab, onOpenAuth, onOpenChat,
                   >
                     <UserCheck className="w-4 h-4 text-secondary" />
                     <span>LinkedIn Gamer Profile</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setProfileDropdownOpen(false);
+                      onSelectTab('onboarding');
+                    }}
+                    className="w-full text-left px-4 py-2.5 text-xs font-display font-semibold text-on-surface hover:bg-surface-container transition-colors flex items-center gap-2"
+                  >
+                    <Gamepad2 className="w-4 h-4 text-[#37ebf3]" />
+                    <span>Setup Identity / Roles</span>
                   </button>
 
                   <div className="border-t border-card-border my-1" />

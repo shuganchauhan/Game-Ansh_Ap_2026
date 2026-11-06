@@ -16,6 +16,7 @@ import OrgDashboard from '../features/dashboard/OrgDashboard';
 import OrganizerDashboard from '../features/dashboard/OrganizerDashboard';
 import AdminPortalPage from '../features/admin/AdminPortalPage';
 import PlayerProfilePage from '../features/profile/PlayerProfilePage';
+import OnboardingPage from '../features/onboarding/OnboardingPage';
 import TeamCreationModal from '../features/teams/TeamCreationModal';
 import AuthModal from '../features/auth/AuthModal';
 import ChatDrawer from '../features/chat/ChatDrawer';
@@ -86,9 +87,21 @@ function AppContent() {
 
   const handleLandingNavigation = (tab) => setActiveTab(tab);
 
-  const handleAuthSuccess = (loggedUser) => {
+  const handleAuthSuccess = (loggedUser, isNewSignup = false) => {
     if (loggedUser?.role === 'admin') {
       setActiveTab('admin');
+      return;
+    }
+
+    // Check if user has completed profile setup (primary_game and game_ign)
+    const hasCompletedProfile =
+      loggedUser?.primary_game &&
+      loggedUser?.game_ign &&
+      loggedUser?.game_ign !== 'gamer' &&
+      !loggedUser?.game_ign?.startsWith('gamer_');
+
+    if (isNewSignup || !hasCompletedProfile) {
+      setActiveTab('onboarding');
     } else if (loggedUser?.role === 'organizer') {
       setActiveTab('organizer');
     } else {
@@ -280,6 +293,21 @@ function AppContent() {
             <PlayerProfilePage
               onSelectTab={setActiveTab}
               onBack={() => setActiveTab('dashboard')}
+            />
+          )
+        )}
+
+        {/* Protected Route: Identity Setup & Onboarding */}
+        {activeTab === 'onboarding' && (
+          !isAuthenticated ? (
+            <ProtectedGate
+              title="Identity Setup Required"
+              message="Sign in or create an account to configure your competitive gaming identity or apply as an organizer."
+              onOpenAuth={handleOpenAuthWithRole}
+            />
+          ) : (
+            <OnboardingPage
+              onSelectTab={setActiveTab}
             />
           )
         )}

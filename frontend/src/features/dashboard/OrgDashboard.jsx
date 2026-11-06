@@ -97,7 +97,7 @@ export default function OrgDashboard({ onSelectTab, onOpenTeamCreator, onSelectT
                   className="w-full h-full object-cover rounded-[14px]"
                 />
               ) : (
-                <div className="w-full h-full rounded-[14px] bg-[#272932] flex items-center justify-center font-display font-extrabold text-2xl text-secondary">
+                <div className="w-full h-full rounded-[14px] bg-surface-container flex items-center justify-center font-display font-extrabold text-2xl text-secondary">
                   {(currentOrg.tag || currentOrg.name || 'OG').slice(0, 3).toUpperCase()}
                 </div>
               )}

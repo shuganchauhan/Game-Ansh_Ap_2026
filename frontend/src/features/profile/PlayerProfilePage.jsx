@@ -137,7 +137,7 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
                     className="w-full h-full object-cover rounded-[14px]"
                   />
                 ) : (
-                  <div className="w-full h-full rounded-[14px] bg-[#272932] flex items-center justify-center font-display font-extrabold text-3xl text-primary">
+                  <div className="w-full h-full rounded-[14px] bg-surface-container flex items-center justify-center font-display font-extrabold text-3xl text-primary">
                     {(currentUser.name || 'G').slice(0, 2).toUpperCase()}
                   </div>
                 )}
@@ -155,6 +155,13 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
               >
                 <Edit3 className="w-3.5 h-3.5" />
                 Edit Profile
+              </button>
+              <button
+                onClick={() => onSelectTab?.('onboarding')}
+                className="px-4 py-2 rounded-xl bg-surface-container-high hover:bg-surface-container-highest border border-card-border font-display font-bold text-xs uppercase tracking-wider text-on-surface flex items-center gap-1.5 transition-all"
+              >
+                <Trophy className="w-3.5 h-3.5 text-[#C48200]" />
+                Switch / Setup Role
               </button>
               <button
                 onClick={() => toggleConnectPlayer('player-2')}
@@ -326,9 +333,9 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
               </div>
 
               {/* BGMI */}
-              <div className="p-4 rounded-2xl bg-surface-container-low border border-[#fdf500]/30 space-y-2">
+              <div className="p-4 rounded-2xl bg-surface-container-low border border-[#C48200]/30 space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="font-display font-bold text-sm text-[#fdf500] flex items-center gap-1.5"><Crosshair className="w-4 h-4" /> BGMI</span>
+                  <span className="font-display font-bold text-sm text-[#C48200] flex items-center gap-1.5"><Crosshair className="w-4 h-4" /> BGMI</span>
                   <CheckCircle2 className="w-4 h-4 text-secondary" />
                 </div>
                 <div className="font-mono text-xs text-on-surface font-semibold">
@@ -336,7 +343,7 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
                 </div>
                 <div className="flex items-center justify-between text-xs font-mono text-on-surface-variant pt-1 border-t border-card-border">
                   <span>Conqueror (6400 pts)</span>
-                  <span className="text-[#fdf500] font-bold">5.20 KD</span>
+                  <span className="text-[#C48200] font-bold">5.20 KD</span>
                 </div>
               </div>
 

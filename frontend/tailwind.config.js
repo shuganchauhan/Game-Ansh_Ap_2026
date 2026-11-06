@@ -12,7 +12,7 @@ export default {
         brand: {
           charcoal: '#272932',
           crimson: '#710000',
-          yellow: '#fdf500',
+          yellow: '#C48200',
           teal: '#1ac5b0',
           aqua: '#37ebf3',
           violet: '#9381ff',
@@ -64,8 +64,8 @@ export default {
         warning: "var(--color-warning)",
       },
       fontFamily: {
-        display: ["Space Grotesk", "sans-serif"],
-        body: ["Inter", "Hanken Grotesk", "sans-serif"],
+        display: ["Outfit", "Plus Jakarta Sans", "Space Grotesk", "sans-serif"],
+        body: ["Plus Jakarta Sans", "Inter", "sans-serif"],
         mono: ["JetBrains Mono", "monospace"],
       },
       boxShadow: {

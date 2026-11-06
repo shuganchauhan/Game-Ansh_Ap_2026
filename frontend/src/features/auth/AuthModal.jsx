@@ -78,20 +78,17 @@ export default function AuthModal({
         resultUser = await login(cleanEmail, password);
       } else {
         const accountName = username.trim();
-        if (role !== 'player' && accountName.length < 2) {
-          setError('Please enter an organization or organizer name (at least 2 characters).');
-          setLoading(false);
-          return;
-        }
-        resultUser = await signup(role, role === 'player'
-          ? { email: cleanEmail, password, username: accountName || undefined }
-          : { email: cleanEmail, password, name: accountName });
+        resultUser = await signup({
+          email: cleanEmail,
+          password,
+          username: accountName || undefined,
+        });
       }
 
-      const role = resultUser.role || 'player';
-      setActiveRole(role);
+      const assignedRole = resultUser.role || 'player';
+      setActiveRole(assignedRole);
       setCurrentUser?.(resultUser);
-      onSuccess?.(resultUser);
+      onSuccess?.(resultUser, mode === 'signup');
       onClose();
     } catch (err) {
       const message =
@@ -114,7 +111,7 @@ export default function AuthModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 dark:bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="w-full max-w-md rounded-3xl bg-surface-container-lowest dark:bg-[#14141a] border border-card-border p-6 sm:p-8 space-y-6 shadow-2xl relative text-on-surface">
+      <div className="w-full max-w-md rounded-3xl bg-surface-container-lowest  border border-card-border p-6 sm:p-8 space-y-6 shadow-2xl relative text-on-surface">
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -175,15 +172,6 @@ export default function AuthModal({
           </button>
         </div>
 
-        {mode === 'signup' && <label className="block">
-          <span className="block font-mono text-[11px] uppercase tracking-wider text-on-surface-variant mb-1.5 font-bold">Account type</span>
-          <select value={role} onChange={(e) => setRole(e.target.value)} className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-card-border text-on-surface text-sm focus:outline-none focus:border-primary" aria-label="Account type">
-            <option value="player">Player</option>
-            <option value="org">Organization</option>
-            <option value="organizer">Tournament organizer</option>
-          </select>
-        </label>}
-
         {/* Feedback Alerts */}
         {error && (
           <div className="flex items-start gap-2.5 p-3.5 rounded-2xl bg-error/15 border border-error/30 text-error text-xs font-body animate-in fade-in">
@@ -194,16 +182,16 @@ export default function AuthModal({
 
         {/* Main Authentication Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Sign Up: Gamer Tag or organization name */}
+          {/* Sign Up: Username / Gamer Tag */}
           {mode === 'signup' && (
             <div>
               <label className="block font-mono text-[11px] uppercase tracking-wider text-on-surface-variant mb-1.5 flex items-center gap-1.5 font-bold">
                 <User className="w-3.5 h-3.5 text-secondary" />
-                {role === 'player' ? 'Gamer Tag / Display Name' : role === 'org' ? 'Organization Name' : 'Organizer Name'}
+                Username / Gamer Tag
               </label>
               <input
                 type="text"
-                placeholder={role === 'player' ? 'e.g. Vortex_99' : role === 'org' ? 'e.g. Northern Esports' : 'e.g. Campus Gaming League'}
+                placeholder="e.g. Vortex_99"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 className="w-full px-4 py-3 rounded-xl bg-surface-container-low dark:bg-white/5 border border-card-border text-on-surface placeholder:text-on-surface-variant/50 text-sm focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary font-body transition-all"

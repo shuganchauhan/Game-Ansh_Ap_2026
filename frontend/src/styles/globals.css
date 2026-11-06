@@ -3,101 +3,108 @@
 @tailwind utilities;
 
 @layer base {
-  /* ─── Gamers'G Brand Design Tokens — Custom Esports Palette ─── */
-  :root {
-    /* Backgrounds — #272932 Charcoal Slate Base */
-    --color-surface: #1e2027;
-    --color-surface-dim: #18191f;
-    --color-surface-bright: #272932;
-    --color-surface-container-lowest: #131418;
-    --color-surface-container-low: #1f2128;
-    --color-surface-container: #272932;
-    --color-surface-container-high: #31343f;
-    --color-surface-container-highest: #3b3f4d;
+  /* ─── Gamers'G Brand Design Tokens — Light Mode (Clean Studio Aesthetic) ─── */
+  :root, .light {
+    /* Backgrounds */
+    --color-surface: #F8FAFC;
+    --color-surface-dim: #F1F5F9;
+    --color-surface-bright: #FFFFFF;
+    --color-surface-container-lowest: #FFFFFF;
+    --color-surface-container-low: #F8FAFC;
+    --color-surface-container: #F1F5F9;
+    --color-surface-container-high: #E2E8F0;
+    --color-surface-container-highest: #CBD5E1;
 
-    /* Text & Accents — #d1c5c0 Platinum Mist */
-    --color-on-surface: #FFFFFF;
-    --color-on-surface-variant: #d1c5c0;
-    --color-outline: #5c6070;
-    --color-outline-variant: #3a3d4a;
-    --color-card-border: rgba(209, 197, 192, 0.16);
+    /* Text & Accents — Rich Obsidian Ink */
+    --color-on-surface: #0F172A;
+    --color-on-surface-variant: #475569;
+    --color-outline: #64748B;
+    --color-outline-variant: #CBD5E1;
+    --color-card-border: rgba(15, 23, 42, 0.08);
 
-    /* Brand — #9381ff Soft Slate Violet & #cb1dcd Royal Orchid */
-    --color-primary: #9381ff;
+    /* Brand — Royal Electric Violet */
+    --color-primary: #7C3AED;
     --color-on-primary: #FFFFFF;
-    --color-primary-container: #cb1dcd;
+    --color-primary-container: #8B5CF6;
     --color-on-primary-container: #FFFFFF;
-    --color-primary-hover: #826df5;
+    --color-primary-hover: #6D28D9;
 
-    /* Accent — #37ebf3 Electric Aqua & #1ac5b0 Jade Teal */
-    --color-secondary: #37ebf3;
-    --color-on-secondary: #131418;
-    --color-secondary-container: #1ac5b0;
-    --color-on-secondary-container: #131418;
+    /* Accent — Cyber Cyan */
+    --color-secondary: #0891B2;
+    --color-on-secondary: #FFFFFF;
+    --color-secondary-container: #06B6D4;
+    --color-on-secondary-container: #0F172A;
 
-    /* Highlight / Attention — #fdf500 Canary Yellow & #e455ae Vivid Fuchsia */
-    --color-tertiary: #fdf500;
-    --color-on-tertiary: #131418;
-    --color-tertiary-container: #e455ae;
+    /* Highlight / Attention — Amber Gold */
+    --color-tertiary: #D97706;
+    --color-on-tertiary: #FFFFFF;
+    --color-tertiary-container: #F59E0B;
 
-    /* Semantic — #e455ae / #710000 Deep Crimson & #1ac5b0 Jade Teal */
-    --color-error: #e455ae;
+    /* Semantic */
+    --color-error: #E11D48;
     --color-on-error: #FFFFFF;
-    --color-error-container: #710000;
-    --color-success: #1ac5b0;
-    --color-warning: #fdf500;
+    --color-error-container: #FFE4E6;
+    --color-success: #059669;
+    --color-warning: #D97706;
 
     /* Glow effects */
-    --glow-primary: rgba(147, 129, 255, 0.32);
-    --glow-secondary: rgba(55, 235, 243, 0.3);
-    --glow-accent: rgba(228, 85, 174, 0.3);
-    --glow-yellow: rgba(253, 245, 0, 0.28);
-    --glow-crimson: rgba(113, 0, 0, 0.4);
+    --glow-primary: rgba(124, 58, 237, 0.2);
+    --glow-secondary: rgba(8, 145, 178, 0.2);
+    --glow-accent: rgba(225, 29, 72, 0.15);
+    --glow-yellow: rgba(217, 119, 6, 0.18);
+    --glow-crimson: rgba(225, 29, 72, 0.2);
   }
 
+  /* ─── Gamers'G Brand Design Tokens — Dark Mode (Deep Obsidian Neo-Esports) ─── */
   .dark {
-    /* Same refined high-contrast palette in dark mode */
-    --color-surface: #1e2027;
-    --color-surface-dim: #18191f;
-    --color-surface-bright: #272932;
-    --color-surface-container-lowest: #131418;
-    --color-surface-container-low: #1f2128;
-    --color-surface-container: #272932;
-    --color-surface-container-high: #31343f;
-    --color-surface-container-highest: #3b3f4d;
+    /* Backgrounds — Deep Obsidian */
+    --color-surface: #07080D;
+    --color-surface-dim: #050508;
+    --color-surface-bright: #121522;
+    --color-surface-container-lowest: #0A0C13;
+    --color-surface-container-low: #0F121C;
+    --color-surface-container: #141724;
+    --color-surface-container-high: #1C2032;
+    --color-surface-container-highest: #262B42;
 
-    --color-on-surface: #FFFFFF;
-    --color-on-surface-variant: #d1c5c0;
-    --color-outline: #5c6070;
-    --color-outline-variant: #3a3d4a;
-    --color-card-border: rgba(209, 197, 192, 0.16);
+    /* Text & Accents — Crisp High Contrast White & Platinum */
+    --color-on-surface: #F8FAFC;
+    --color-on-surface-variant: #94A3B8;
+    --color-outline: #64748B;
+    --color-outline-variant: #334155;
+    --color-card-border: rgba(255, 255, 255, 0.08);
 
-    --color-primary: #9381ff;
+    /* Brand — Electric Violet */
+    --color-primary: #8B5CF6;
     --color-on-primary: #FFFFFF;
-    --color-primary-container: #cb1dcd;
+    --color-primary-container: #7C3AED;
     --color-on-primary-container: #FFFFFF;
-    --color-primary-hover: #826df5;
+    --color-primary-hover: #9333EA;
 
-    --color-secondary: #37ebf3;
-    --color-on-secondary: #131418;
-    --color-secondary-container: #1ac5b0;
-    --color-on-secondary-container: #131418;
+    /* Accent — Cyber Aqua & Cyan */
+    --color-secondary: #06B6D4;
+    --color-on-secondary: #07080D;
+    --color-secondary-container: #0891B2;
+    --color-on-secondary-container: #FFFFFF;
 
-    --color-tertiary: #fdf500;
-    --color-on-tertiary: #131418;
-    --color-tertiary-container: #e455ae;
+    /* Highlight / Attention — Championship Gold */
+    --color-tertiary: #F59E0B;
+    --color-on-tertiary: #07080D;
+    --color-tertiary-container: #D97706;
 
-    --color-error: #e455ae;
+    /* Semantic */
+    --color-error: #F43F5E;
     --color-on-error: #FFFFFF;
-    --color-error-container: #710000;
-    --color-success: #1ac5b0;
-    --color-warning: #fdf500;
+    --color-error-container: #881337;
+    --color-success: #10B981;
+    --color-warning: #F59E0B;
 
-    --glow-primary: rgba(147, 129, 255, 0.35);
-    --glow-secondary: rgba(55, 235, 243, 0.35);
-    --glow-accent: rgba(228, 85, 174, 0.32);
-    --glow-yellow: rgba(253, 245, 0, 0.3);
-    --glow-crimson: rgba(113, 0, 0, 0.45);
+    /* Glow effects */
+    --glow-primary: rgba(139, 92, 246, 0.45);
+    --glow-secondary: rgba(6, 182, 212, 0.45);
+    --glow-accent: rgba(236, 72, 153, 0.4);
+    --glow-yellow: rgba(245, 158, 11, 0.35);
+    --glow-crimson: rgba(244, 63, 94, 0.4);
   }
 
   * {
@@ -112,7 +119,7 @@
     background-color: var(--color-surface);
     color: var(--color-on-surface);
     font-family: 'Inter', 'Hanken Grotesk', sans-serif;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    transition: background-color 0.25s ease, color 0.25s ease;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -120,25 +127,27 @@
 }
 
 .glass-panel {
-  background: rgba(var(--glass-bg, 27, 27, 32), 0.72);
+  background: rgba(33, 35, 43, 0.85);
   backdrop-filter: blur(20px) saturate(1.4);
   -webkit-backdrop-filter: blur(20px) saturate(1.4);
   border: 1px solid var(--color-card-border);
 }
 
-.light .glass-panel {
-  background: rgba(255, 255, 255, 0.75);
+.light .glass-panel, :root:not(.dark) .glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(39, 41, 50, 0.12);
 }
 
 .glass-modal {
-  background: rgba(var(--glass-bg, 31, 31, 36), 0.9);
+  background: rgba(33, 35, 43, 0.92);
   backdrop-filter: blur(28px) saturate(1.6);
   -webkit-backdrop-filter: blur(28px) saturate(1.6);
   border: 1px solid var(--color-card-border);
 }
 
-.light .glass-modal {
-  background: rgba(255, 255, 255, 0.94);
+.light .glass-modal, :root:not(.dark) .glass-modal {
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(39, 41, 50, 0.15);
 }
 
 /* ─── Hero Canvas ─── */
@@ -274,3 +283,36 @@
   50% { opacity: 0; }
 }
 .cursor-blink { animation: blink 1s step-end infinite; }
+
+/* ─── Smooth Broad Marquee for Tournaments & Scrims ─── */
+@keyframes marquee-smooth {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes marquee-smooth-reverse {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0%); }
+}
+
+.animate-marquee-smooth {
+  display: flex;
+  width: max-content;
+  animation: marquee-smooth 42s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-smooth:hover {
+  animation-play-state: paused;
+}
+
+.animate-marquee-smooth-reverse {
+  display: flex;
+  width: max-content;
+  animation: marquee-smooth-reverse 48s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-smooth-reverse:hover {
+  animation-play-state: paused;
+}

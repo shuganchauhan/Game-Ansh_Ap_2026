@@ -28,14 +28,14 @@ export default function useHeroThreeJS(canvasRef, isDark) {
     const sizes = new Float32Array(particleCount);
 
     const primaryColor = isDark
-      ? new THREE.Color('#9381ff')
-      : new THREE.Color('#9381ff');
+      ? new THREE.Color('#8B5CF6')
+      : new THREE.Color('#7C3AED');
     const secondaryColor = isDark
-      ? new THREE.Color('#37ebf3')
-      : new THREE.Color('#1ac5b0');
+      ? new THREE.Color('#06B6D4')
+      : new THREE.Color('#0891B2');
     const accentColor = isDark
-      ? new THREE.Color('#fdf500')
-      : new THREE.Color('#e455ae');
+      ? new THREE.Color('#EC4899')
+      : new THREE.Color('#F59E0B');
 
     for (let i = 0; i < particleCount; i++) {
       positions[i * 3]     = (Math.random() - 0.5) * 12;
@@ -57,12 +57,12 @@ export default function useHeroThreeJS(canvasRef, isDark) {
     pGeo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
 
     const pMat = new THREE.PointsMaterial({
-      size: 0.022,
+      size: isDark ? 0.022 : 0.012,
       vertexColors: true,
       transparent: true,
-      opacity: isDark ? 0.72 : 0.45,
+      opacity: isDark ? 0.65 : 0.12,
       sizeAttenuation: true,
-      blending: THREE.AdditiveBlending,
+      blending: isDark ? THREE.AdditiveBlending : THREE.NormalBlending,
       depthWrite: false,
     });
 
@@ -72,7 +72,7 @@ export default function useHeroThreeJS(canvasRef, isDark) {
     // ─── Energy grid (torus wireframe) ───────────────────────────
     const torusGeo = new THREE.TorusGeometry(2.2, 0.003, 16, 100);
     const torusMat = new THREE.MeshBasicMaterial({
-      color: isDark ? '#31343f' : '#272932',
+      color: isDark ? '#31343f' : '#d1c5c0',
       transparent: true,
       opacity: 0.3,
     });

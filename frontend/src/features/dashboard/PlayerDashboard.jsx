@@ -417,7 +417,7 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
                     className="w-full h-full object-cover rounded-[14px]"
                   />
                 ) : (
-                  <div className="w-full h-full rounded-[14px] bg-[#272932] flex items-center justify-center font-display font-bold text-2xl text-primary">
+                  <div className="w-full h-full rounded-[14px] bg-surface-container flex items-center justify-center font-display font-bold text-2xl text-primary">
                     {(displayName || 'G').slice(0, 2).toUpperCase()}
                   </div>
                 )}

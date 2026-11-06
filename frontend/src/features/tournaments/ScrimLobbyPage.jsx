@@ -51,7 +51,9 @@ export default function ScrimLobbyPage({ scrimId, onBack, onSelectTab }) {
     fetchLobby();
 
     // Real-Time Socket Connection to Scrim Match Room
-    const socket = io('/', { path: '/socket.io', transports: ['websocket', 'polling'], auth: { token } });
+    const socketBase = import.meta.env.VITE_SOCKET_URL ||
+      (import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace(/\/api\/?$/, '') : '');
+    const socket = io(socketBase || '/', { path: '/socket.io', transports: ['websocket', 'polling'], auth: { token } });
     socket.emit('join_scrim_lobby', scrimId);
 
     socket.on('scrim:credentials_updated', (updated) => {

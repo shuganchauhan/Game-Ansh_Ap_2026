@@ -1,6 +1,8 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
+const BACKEND_TARGET = process.env.VITE_BACKEND_TARGET || 'https://game-ansh-ap-2026.onrender.com';
+
 export default defineConfig({
   plugins: [react()],
   build: {
@@ -21,13 +23,15 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'http://localhost:3000',
+        target: BACKEND_TARGET,
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
+        secure: false,
       },
       '/socket.io': {
-        target: 'http://localhost:3000',
+        target: BACKEND_TARGET,
         ws: true,
+        changeOrigin: true,
+        secure: false,
       },
     },
   },
@@ -35,13 +39,15 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'http://localhost:3000',
+        target: BACKEND_TARGET,
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
+        secure: false,
       },
       '/socket.io': {
-        target: 'http://localhost:3000',
+        target: BACKEND_TARGET,
         ws: true,
+        changeOrigin: true,
+        secure: false,
       },
     },
   },

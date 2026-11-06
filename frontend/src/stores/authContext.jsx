@@ -42,24 +42,47 @@ export function AuthProvider({ children }) {
     return data.user;
   };
 
-  // Clean signup: just email and password (friction-free)
-  const signup = async (emailOrType, payloadOrPassword) => {
+  // Clean signup: just email, password, and optional username (friction-free)
+  const signup = async (arg1, arg2, arg3) => {
+    let route = '/auth/signup';
     let payload;
-    if (typeof payloadOrPassword === 'object') {
-      // Legacy signature signup(type, payload)
-      const route = `/auth/signup/${emailOrType}`;
-      const data = await api.post(route, payloadOrPassword);
-      setToken(data.token);
-      setUser(data.user);
-      return data.user;
+
+    if (typeof arg1 === 'object') {
+      // signup({ email, password, username })
+      payload = {
+        email: arg1.email?.trim(),
+        password: arg1.password,
+        ...(arg1.username ? { username: arg1.username.trim() } : {}),
+      };
+    } else if (typeof arg2 === 'object') {
+      // Legacy signature: signup('player' | 'org' | 'organizer', { email, password, ... })
+      route = `/auth/signup/${arg1}`;
+      payload = arg2;
     } else {
-      // Pure signature signup(email, password)
-      payload = { email: emailOrType.trim(), password: payloadOrPassword };
-      const data = await api.post('/auth/signup', payload);
-      setToken(data.token);
-      setUser(data.user);
-      return data.user;
+      // signup(email, password, username)
+      payload = {
+        email: arg1?.trim(),
+        password: arg2,
+        ...(arg3 ? { username: arg3.trim() } : {}),
+      };
     }
+
+    const data = await api.post(route, payload);
+    setToken(data.token);
+    setUser(data.user);
+    return data.user;
+  };
+
+  const updateUser = (updated) => {
+    setUser((prev) => {
+      const next = { ...prev, ...updated };
+      try {
+        localStorage.setItem('gamersg_user', JSON.stringify(next));
+      } catch {
+        // ignore localStorage quota errors
+      }
+      return next;
+    });
   };
 
   const logout = () => {
@@ -69,7 +92,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, isAuthenticated: !!token, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, token, isAuthenticated: !!token, login, signup, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

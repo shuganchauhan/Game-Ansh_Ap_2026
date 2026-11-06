@@ -13,7 +13,7 @@ const GAME_ICONS = {
 
 const GAME_OPTIONS = [
   { id: 'valorant', name: 'VALORANT', defaultSlots: 5, color: '#37ebf3' },
-  { id: 'bgmi', name: 'BGMI', defaultSlots: 5, color: '#fdf500' },
+  { id: 'bgmi', name: 'BGMI', defaultSlots: 5, color: '#C48200' },
   { id: 'freefire', name: 'Free Fire', defaultSlots: 4, color: '#e455ae' },
   { id: 'coc', name: 'Clash of Clans', defaultSlots: 15, color: '#1ac5b0' },
   { id: 'cr', name: 'Clash Royale', defaultSlots: 3, color: '#9381ff' },
