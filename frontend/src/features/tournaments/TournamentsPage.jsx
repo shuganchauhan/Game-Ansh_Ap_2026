@@ -77,6 +77,22 @@ export default function TournamentsPage({ onRegisterModal, onOpenScrimLobby, onS
     return s.game?.toLowerCase() === selectedGameFilter.toLowerCase();
   });
 
+  const featuredTournament = tournaments[0] || {
+    name: "Gamers'G Championship Masters 2026",
+    prize_pool: '₹15,00,000 INR',
+    first_prize: '1st Place: ₹8,00,000',
+    max_teams: 16,
+    format: 'Best of 5 Format',
+    date: 'Competitive Season 2026',
+    description: 'Top verified teams competing for regional supremacy, circuit points, and the coveted championship trophy.',
+  };
+
+  const prizeDisplay = featuredTournament.prize_pool
+    ? (String(featuredTournament.prize_pool).startsWith('₹') || String(featuredTournament.prize_pool).startsWith('$')
+        ? featuredTournament.prize_pool
+        : `₹${Number(featuredTournament.prize_pool).toLocaleString('en-IN')}`)
+    : '₹15,00,000';
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10 animate-fadeIn">
       {/* Tournament Hub Banner */}
@@ -91,23 +107,23 @@ export default function TournamentsPage({ onRegisterModal, onOpenScrimLobby, onS
               <span>Grand Finals Circuit Live</span>
             </div>
             <h1 className="font-display font-bold text-3xl sm:text-4xl text-on-surface">
-              Gamers'G Championship Masters 2026
+              {featuredTournament.name || featuredTournament.title || "Gamers'G Championship Masters 2026"}
             </h1>
             <p className="font-body text-sm text-on-surface-variant max-w-xl">
-              16 top verified teams competing for regional supremacy, circuit points, and the coveted championship trophy.
+              {featuredTournament.description || 'Top verified teams competing for regional supremacy, circuit points, and the coveted championship trophy.'}
             </p>
             <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-on-surface-variant pt-1">
               <span className="flex items-center gap-1.5">
                 <Calendar className="w-4 h-4 text-secondary" />
-                Oct 19 - Oct 25, 2026
+                {featuredTournament.start_time ? new Date(featuredTournament.start_time).toLocaleDateString() : 'Competitive Season 2026'}
               </span>
               <span className="flex items-center gap-1.5">
                 <Users className="w-4 h-4 text-primary" />
-                16 Registered Squads
+                {featuredTournament.max_teams || 16} Registered Squads
               </span>
               <span className="flex items-center gap-1.5">
                 <Swords className="w-4 h-4 text-accent" />
-                Best of 5 Format
+                {featuredTournament.format || 'Best of 5 Format'}
               </span>
             </div>
           </div>
@@ -116,8 +132,8 @@ export default function TournamentsPage({ onRegisterModal, onOpenScrimLobby, onS
           <div className="flex flex-col items-center md:items-end gap-3 shrink-0">
             <div className="p-4 rounded-2xl bg-surface-container border border-card-border text-center md:text-right min-w-[200px]">
               <span className="font-mono text-xs uppercase tracking-widest text-on-surface-variant">Prize Pool Vault</span>
-              <div className="font-display font-bold text-3xl text-secondary mt-1">₹15,00,000 INR</div>
-              <span className="text-[11px] font-mono text-primary font-bold">1st Place: ₹8,00,000</span>
+              <div className="font-display font-bold text-3xl text-secondary mt-1">{prizeDisplay}</div>
+              <span className="text-[11px] font-mono text-primary font-bold">{featuredTournament.first_prize || 'Guaranteed Escrow'}</span>
             </div>
 
             <button

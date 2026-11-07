@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import useHeroThreeJS from '../../hooks/useHeroThreeJS';
 import { useGSAPReveal, useCounterGSAP, useMarqueeTicker } from '../../hooks/useGSAP';
 import { useTheme } from '../../stores/themeContext';
+import { useAuth } from '../../stores/authContext';
 import useApi from '../../hooks/useApi';
 import {
   Gamepad2, Shield, Trophy, Radio, ChevronRight, ShieldCheck, Zap,
@@ -580,17 +581,88 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
   const stat3 = useRef(null);
   const stat4 = useRef(null);
 
+  const { user } = useAuth();
   const [statsVisible, setStatsVisible] = useState(false);
   const [activeShowcaseTab, setActiveShowcaseTab] = useState('tournaments');
   const [openFaq, setOpenFaq] = useState(0);
 
-  // Real API data
+  // Live Backend Data Hooks (Zero Hardcoded Lock-In)
   const { data: tournamentsData, loading: tournamentsLoading } = useApi('/discovery/tournaments', { fallback: [] });
   const { data: teamsData, loading: teamsLoading } = useApi('/discovery/teams', { fallback: [] });
+  const { data: scrimsData, loading: scrimsLoading } = useApi('/tournaments/scrims', { fallback: [] });
 
-  // Normalize API response (backend returns array or { tournaments: [] } etc.)
-  const liveTournaments = Array.isArray(tournamentsData) ? tournamentsData.slice(0, 3) : (tournamentsData?.tournaments ?? []).slice(0, 3);
-  const liveTeams = Array.isArray(teamsData) ? teamsData.slice(0, 3) : (teamsData?.teams ?? []).slice(0, 3);
+  // Normalize API collections
+  const rawTournaments = Array.isArray(tournamentsData) ? tournamentsData : (tournamentsData?.tournaments ?? tournamentsData?.data ?? []);
+  const rawTeams = Array.isArray(teamsData) ? teamsData : (teamsData?.teams ?? teamsData?.data ?? []);
+  const rawScrims = Array.isArray(scrimsData) ? scrimsData : (scrimsData?.scrims ?? scrimsData?.data ?? []);
+
+  // Dynamic Marquee Lists (Populated from Live Backend with High-Impact Fallbacks)
+  const dynamicMarqueeTournaments = rawTournaments.length > 0
+    ? rawTournaments.map((t, idx) => ({
+        id: t.id || `dyn-t-${idx}`,
+        title: t.title || t.name || 'Competitive Tournament Series',
+        game: (t.game || 'VALORANT').toUpperCase(),
+        badge: t.verified ? 'VCT SANCTIONED' : 'OFFICIAL OPEN',
+        badgeColor: 'bg-primary/10 text-primary border-primary/20',
+        status: t.status === 'live' || t.status === 'ongoing' ? 'GRAND FINALS LIVE' : 'REGISTRATIONS OPEN',
+        statusType: t.status === 'live' || t.status === 'ongoing' ? 'live' : 'open',
+        prizePool: t.prize_pool ? (String(t.prize_pool).startsWith('₹') || String(t.prize_pool).startsWith('$') ? t.prize_pool : `₹${Number(t.prize_pool).toLocaleString('en-IN')}`) : '₹10,00,000',
+        slots: t.max_teams ? `${t.current_teams || Math.floor(t.max_teams * 0.75)}/${t.max_teams} Squads` : 'Slots Open',
+        format: t.format || '5v5 Single Elimination',
+        time: t.start_time ? new Date(t.start_time).toLocaleDateString() : 'Starting Soon',
+        ctaText: 'Register Roster',
+        tab: 'tournaments',
+      }))
+    : MARQUEE_TOURNAMENTS;
+
+  const dynamicMarqueeScrims = rawScrims.length > 0
+    ? rawScrims.map((s, idx) => ({
+        id: s.id || `dyn-s-${idx}`,
+        title: s.title || `${(s.game || 'PRO').toUpperCase()} Daily Practice Lobby`,
+        game: (s.game || 'BGMI').toUpperCase(),
+        badge: s.room_id ? 'ROOM ACTIVE' : 'PRO SCRIM ROOM',
+        badgeColor: 'bg-amber-500/10 text-amber-500 border-amber-500/20',
+        status: s.status === 'ready' ? 'LOBBY READY' : 'SLOTS OPEN',
+        statusType: 'scrim',
+        slots: `${s.registered_teams_count || 16}/${s.max_teams || 20} Squads Locked`,
+        server: s.server_region || 'Asia-South1 · 12ms',
+        format: s.format || 'Standard Esports Rulebook',
+        ctaText: 'Book Team Slot',
+        tab: 'tournaments',
+      }))
+    : MARQUEE_SCRIMS;
+
+  // Dynamic Live Showcase Collections
+  const liveTournaments = rawTournaments.length > 0 ? rawTournaments.slice(0, 3) : SAMPLE_TOURNAMENTS;
+  const liveTeams = rawTeams.length > 0 ? rawTeams.slice(0, 3) : SAMPLE_TEAMS;
+  const liveScrims = rawScrims.length > 0
+    ? rawScrims.slice(0, 3).map((s) => ({
+        id: s.id,
+        title: s.title || `${(s.game || 'PRO').toUpperCase()} Practice Scrim Session`,
+        game: (s.game || 'BGMI').toUpperCase(),
+        map: s.map_name || s.format || 'Standard Competitive Rules',
+        tier: s.tier || 'Verified Captains Required',
+        slots: `${s.registered_teams_count || 12} / ${s.max_teams || 20} Slots`,
+        time: s.scheduled_time ? new Date(s.scheduled_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Tonight, 8:30 PM IST',
+      }))
+    : SAMPLE_SCRIMS;
+
+  const liveOrgs = rawTeams.some((t) => t.org_id || t.org_name)
+    ? rawTeams.filter((t) => t.org_name).slice(0, 3).map((t) => ({
+        name: t.org_name || t.name,
+        tag: t.tag || (t.org_name || t.name).slice(0, 4).toUpperCase(),
+        titles: [t.game ? t.game.toUpperCase() : 'VALORANT'],
+        badge: t.verified ? 'Verified Premier Org' : 'Active Esports Club',
+        openRoles: t.is_recruiting ? 'Open Roster Applications' : 'Roster Active',
+        hq: t.location || 'India',
+      }))
+    : SAMPLE_ORGS;
+
+  // Personalized dynamic passport details
+  const passportName = user?.name || user?.username || 'Verified Pro Athlete';
+  const passportInitials = (passportName.replace(/[^a-zA-Z]/g, '').slice(0, 2) || 'GG').toUpperCase();
+  const passportTagline = user?.tagline || `${(user?.primary_game || 'Valorant').toUpperCase()} Athlete · Verified Profile`;
+  const passportLft = user?.lft_status || 'Available for Tier-1 Roster Tryouts';
 
   // Initialize Canvas
   useHeroThreeJS(canvasRef, isDark);
@@ -739,7 +811,7 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
             {/* Marquee Track 1: Active & Upcoming Tournaments */}
             <div className="overflow-hidden relative [mask-image:linear-gradient(to_right,transparent,black_4%,black_96%,transparent)]">
               <div className="animate-marquee-smooth flex items-center gap-4 py-2">
-                {[...MARQUEE_TOURNAMENTS, ...MARQUEE_TOURNAMENTS].map((t, idx) => (
+                {[...dynamicMarqueeTournaments, ...dynamicMarqueeTournaments].map((t, idx) => (
                   <div
                     key={`${t.id}-${idx}`}
                     onClick={() => onSelectTab?.(t.tab || 'tournaments')}
@@ -793,7 +865,7 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
             {/* Marquee Track 2 (Reverse): Daily Automated Scrim Lobbies */}
             <div className="overflow-hidden relative [mask-image:linear-gradient(to_right,transparent,black_4%,black_96%,transparent)]">
               <div className="animate-marquee-smooth-reverse flex items-center gap-4 py-2">
-                {[...MARQUEE_SCRIMS, ...MARQUEE_SCRIMS].map((s, idx) => (
+                {[...dynamicMarqueeScrims, ...dynamicMarqueeScrims].map((s, idx) => (
                   <div
                     key={`${s.id}-${idx}`}
                     onClick={() => onSelectTab?.(s.tab || 'tournaments')}
@@ -1170,11 +1242,11 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center font-display font-black text-white text-[11px]">
-                      VX
+                      {passportInitials}
                     </div>
                     <div>
-                      <p className="font-display font-bold text-on-surface leading-none text-xs">Alex "Vortex" C.</p>
-                      <p className="text-[10px] text-secondary">Duelist · Immortal 3</p>
+                      <p className="font-display font-bold text-on-surface leading-none text-xs">{passportName}</p>
+                      <p className="text-[10px] text-secondary truncate max-w-[190px]">{passportTagline}</p>
                     </div>
                   </div>
                   <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 font-bold">
@@ -1183,7 +1255,7 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
                 </div>
                 <div className="pt-2 border-t border-card-border flex items-center justify-between text-[11px] text-on-surface-variant">
                   <span>Looking For Team (LFT):</span>
-                  <span className="text-secondary font-semibold">Tier-1 VCT Circuit</span>
+                  <span className="text-secondary font-semibold">{passportLft}</span>
                 </div>
               </div>
             </div>
@@ -1391,52 +1463,57 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
 
             {/* TAB 2: Scrims */}
             {activeShowcaseTab === 'scrims' && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {SAMPLE_SCRIMS.map((s) => (
-                  <div
-                    key={s.id}
-                    className="rounded-3xl bg-surface-container-low border border-card-border p-6 flex flex-col justify-between space-y-5 hover:border-amber-400/40 transition-all group"
-                  >
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className="font-mono text-[10px] font-bold px-2.5 py-1 rounded-lg bg-amber-500/15 text-amber-600 dark:text-amber-300 border border-amber-500/30">
-                          {s.game}
-                        </span>
-                        <span className="font-mono text-[10px] text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">
-                          {s.time}
-                        </span>
-                      </div>
-
-                      <h4 className="font-display font-bold text-lg text-on-surface group-hover:text-amber-500 dark:group-hover:text-amber-300 transition-colors">
-                        {s.title}
-                      </h4>
-
-                      <div className="text-xs text-on-surface-variant space-y-1.5 font-mono">
-                        <div className="flex items-center justify-between">
-                          <span>Map / Ruleset:</span>
-                          <span className="text-on-surface font-semibold">{s.map}</span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span>Requirement:</span>
-                          <span className="text-on-surface">{s.tier}</span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span>Lobby Capacity:</span>
-                          <span className="text-secondary font-bold">{s.slots}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={() => onSelectTab?.('tournaments')}
-                      className="w-full py-2.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-600 dark:text-amber-300 font-display font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5"
+              scrimsLoading ? <ShowcaseSkeleton /> :
+              liveScrims.length === 0 ? (
+                <ShowcaseEmpty label="Scrim Lobbies" onSelectTab={onSelectTab} tabTarget="tournaments" />
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {liveScrims.map((s, idx) => (
+                    <div
+                      key={s.id || idx}
+                      className="rounded-3xl bg-surface-container-low border border-card-border p-6 flex flex-col justify-between space-y-5 hover:border-amber-400/40 transition-all group"
                     >
-                      <Flame className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
-                      <span>Reserve Team Slot</span>
-                    </button>
-                  </div>
-                ))}
-              </div>
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <span className="font-mono text-[10px] font-bold px-2.5 py-1 rounded-lg bg-amber-500/15 text-amber-600 dark:text-amber-300 border border-amber-500/30">
+                            {s.game}
+                          </span>
+                          <span className="font-mono text-[10px] text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">
+                            {s.time}
+                          </span>
+                        </div>
+
+                        <h4 className="font-display font-bold text-lg text-on-surface group-hover:text-amber-500 dark:group-hover:text-amber-300 transition-colors">
+                          {s.title}
+                        </h4>
+
+                        <div className="text-xs text-on-surface-variant space-y-1.5 font-mono">
+                          <div className="flex items-center justify-between">
+                            <span>Map / Ruleset:</span>
+                            <span className="text-on-surface font-semibold">{s.map}</span>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span>Requirement:</span>
+                            <span className="text-on-surface">{s.tier}</span>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span>Lobby Capacity:</span>
+                            <span className="text-secondary font-bold">{s.slots}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={() => onSelectTab?.('tournaments')}
+                        className="w-full py-2.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-600 dark:text-amber-300 font-display font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5"
+                      >
+                        <Flame className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
+                        <span>Reserve Team Slot</span>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )
             )}
 
             {/* TAB 3: Teams — Real API data */}
@@ -1506,58 +1583,63 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
 
             {/* TAB 4: Orgs */}
             {activeShowcaseTab === 'orgs' && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {SAMPLE_ORGS.map((org, idx) => (
-                  <div
-                    key={idx}
-                    className="rounded-3xl bg-surface-container-low border border-card-border p-6 flex flex-col justify-between space-y-5 hover:border-primary/40 transition-all group"
-                  >
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className="font-mono text-[10px] font-bold px-2 py-1 rounded bg-primary/10 text-primary border border-primary/20">
-                          {org.tag}
-                        </span>
-                        <span className="flex items-center gap-1 font-mono text-[10px] font-bold text-secondary">
-                          <ShieldCheck className="w-3.5 h-3.5 text-secondary" />
-                          {org.badge}
-                        </span>
-                      </div>
+              teamsLoading ? <ShowcaseSkeleton /> :
+              liveOrgs.length === 0 ? (
+                <ShowcaseEmpty label="Esports Organizations" onSelectTab={onSelectTab} tabTarget="discovery" />
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {liveOrgs.map((org, idx) => (
+                    <div
+                      key={org.id || idx}
+                      className="rounded-3xl bg-surface-container-low border border-card-border p-6 flex flex-col justify-between space-y-5 hover:border-primary/40 transition-all group"
+                    >
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <span className="font-mono text-[10px] font-bold px-2 py-1 rounded bg-primary/10 text-primary border border-primary/20">
+                            {org.tag}
+                          </span>
+                          <span className="flex items-center gap-1 font-mono text-[10px] font-bold text-secondary">
+                            <ShieldCheck className="w-3.5 h-3.5 text-secondary" />
+                            {org.badge}
+                          </span>
+                        </div>
 
-                      <div>
-                        <h4 className="font-display font-bold text-xl text-on-surface group-hover:text-primary transition-colors">
-                          {org.name}
-                        </h4>
-                        <span className="font-mono text-xs text-on-surface-variant">{org.hq}</span>
-                      </div>
-
-                      <div className="text-xs text-on-surface-variant space-y-2 pt-2 border-t border-card-border">
                         <div>
-                          <span className="block text-[10px] font-mono uppercase text-on-surface-variant/70 mb-1">Rosters In:</span>
-                          <div className="flex flex-wrap gap-1">
-                            {org.titles.map((t, ti) => (
-                              <span key={ti} className="px-2 py-0.5 rounded bg-surface-container text-[10px] font-mono text-on-surface">
-                                {t}
-                              </span>
-                            ))}
+                          <h4 className="font-display font-bold text-xl text-on-surface group-hover:text-primary transition-colors">
+                            {org.name}
+                          </h4>
+                          <span className="font-mono text-xs text-on-surface-variant">{org.hq}</span>
+                        </div>
+
+                        <div className="text-xs text-on-surface-variant space-y-2 pt-2 border-t border-card-border">
+                          <div>
+                            <span className="block text-[10px] font-mono uppercase text-on-surface-variant/70 mb-1">Rosters In:</span>
+                            <div className="flex flex-wrap gap-1">
+                              {org.titles.map((t, ti) => (
+                                <span key={ti} className="px-2 py-0.5 rounded bg-surface-container text-[10px] font-mono text-on-surface">
+                                  {t}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                          <div className="flex items-center justify-between font-mono pt-1 text-[11px]">
+                            <span>Tryout Pipeline:</span>
+                            <span className="text-emerald-600 dark:text-emerald-400 font-bold">{org.openRoles}</span>
                           </div>
                         </div>
-                        <div className="flex items-center justify-between font-mono pt-1 text-[11px]">
-                          <span>Tryout Pipeline:</span>
-                          <span className="text-emerald-600 dark:text-emerald-400 font-bold">{org.openRoles}</span>
-                        </div>
                       </div>
-                    </div>
 
-                    <button
-                      onClick={() => onSelectTab?.('discovery')}
-                      className="w-full py-2.5 rounded-xl bg-primary/10 hover:bg-primary/20 border border-primary/30 text-primary font-display font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5"
-                    >
-                      <span>Submit Player Application</span>
-                      <ArrowRight className="w-4 h-4 text-primary" />
-                    </button>
-                  </div>
-                ))}
-              </div>
+                      <button
+                        onClick={() => onSelectTab?.('discovery')}
+                        className="w-full py-2.5 rounded-xl bg-primary/10 hover:bg-primary/20 border border-primary/30 text-primary font-display font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5"
+                      >
+                        <span>Submit Player Application</span>
+                        <ArrowRight className="w-4 h-4 text-primary" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )
             )}
           </div>
         </div>

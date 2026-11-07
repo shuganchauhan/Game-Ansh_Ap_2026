@@ -1,9 +1,30 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { discoveryService, teamService, socialService, recruitmentService, playerService } from '../services';
+import { useAuth } from './authContext';
 
 const GameStoreContext = createContext();
 
 const STORAGE_KEY = 'gamersg_store_v1';
+
+const GUEST_ATHLETE = {
+  id: '',
+  name: 'Gamer Athlete',
+  username: 'gamer',
+  tagline: 'Competitive Esports Athlete',
+  avatar: '',
+  banner: '',
+  location: 'India',
+  primaryGame: 'valorant',
+  lftStatus: 'Available for Roster',
+  scrimAvailability: 'Daily Evenings IST',
+  discord: '',
+  bio: 'Competitive esports athlete ready for tournament rosters and practice scrims.',
+  stats: {},
+  gameAccounts: {},
+  careerMilestones: [],
+  connectionsCount: 0,
+  isVerified: false,
+};
 
 function fromApiPost(post) {
   return {
@@ -474,35 +495,74 @@ const INITIAL_APPLICATIONS = [
 ];
 
 export function GameStoreProvider({ children }) {
+  const { user: authUser } = useAuth();
+
   // Load or fallback
   const [storeState, setStoreState] = useState(() => {
     if (import.meta.env.PROD) {
       return {
         activeRole: 'player', activeOrgId: null,
-        currentUser: { id: '', name: '', username: '', avatar: '', stats: {}, gameAccounts: {} },
+        currentUser: GUEST_ATHLETE,
         players: [], orgs: [], teams: [], posts: [], applications: [],
         connectedPlayerIds: [], followedOrgIds: [],
       };
     }
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) return JSON.parse(saved);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.currentUser?.id === 'player-me' || !parsed.currentUser?.id) {
+          parsed.currentUser = GUEST_ATHLETE;
+        }
+        return parsed;
+      }
     } catch (e) {
       console.error('Failed to load store from localStorage', e);
     }
     return {
-      activeRole: 'player', // 'player' | 'org' — allows instant testing of both views!
-      activeOrgId: 'org-s8ul',
-      currentUser: INITIAL_PLAYERS[0],
+      activeRole: 'player',
+      activeOrgId: null,
+      currentUser: GUEST_ATHLETE,
       players: INITIAL_PLAYERS,
       orgs: INITIAL_ORGS,
       teams: INITIAL_TEAMS,
       posts: INITIAL_POSTS,
       applications: INITIAL_APPLICATIONS,
-      connectedPlayerIds: ['player-2', 'player-3'],
-      followedOrgIds: ['org-s8ul'],
+      connectedPlayerIds: [],
+      followedOrgIds: [],
     };
   });
+
+  // Sync with auth user on login / logout
+  useEffect(() => {
+    if (authUser) {
+      setStoreState((prev) => ({
+        ...prev,
+        currentUser: {
+          ...prev.currentUser,
+          id: authUser.id || prev.currentUser.id,
+          name: authUser.name || authUser.username || authUser.email?.split('@')[0] || prev.currentUser.name,
+          username: authUser.username || authUser.email?.split('@')[0] || prev.currentUser.username,
+          email: authUser.email || prev.currentUser.email,
+          role: authUser.role || prev.currentUser.role,
+          isVerified: !!authUser.verified,
+          tagline: authUser.tagline || prev.currentUser.tagline,
+          primaryGame: authUser.primary_game || prev.currentUser.primaryGame,
+          bio: authUser.bio || prev.currentUser.bio,
+          avatar: authUser.avatar_url || prev.currentUser.avatar,
+        },
+        activeRole: authUser.role === 'org' ? 'org' : 'player',
+        activeOrgId: authUser.role === 'org' ? authUser.id : null,
+      }));
+    } else {
+      setStoreState((prev) => ({
+        ...prev,
+        currentUser: GUEST_ATHLETE,
+        activeRole: 'player',
+        activeOrgId: null,
+      }));
+    }
+  }, [authUser]);
 
   // Save on state change
   useEffect(() => {
@@ -518,9 +578,10 @@ export function GameStoreProvider({ children }) {
   useEffect(() => {
     async function syncBackendData() {
       try {
-        const [teamsResult, feedResult] = await Promise.allSettled([
+        const [teamsResult, feedResult, tourneysResult] = await Promise.allSettled([
           discoveryService.getTeams(),
           socialService.getFeed(),
+          discoveryService.getTournaments(),
         ]);
         if (teamsResult.status === 'fulfilled') {
           const teamsRes = teamsResult.value;
@@ -561,6 +622,13 @@ export function GameStoreProvider({ children }) {
             });
             return { ...prev, posts: Array.from(postMap.values()) };
           });
+        }
+        if (tourneysResult.status === 'fulfilled') {
+          const tRes = tourneysResult.value;
+          const backendTourneys = Array.isArray(tRes) ? tRes : (tRes?.data || []);
+          if (backendTourneys.length > 0) {
+            setStoreState((prev) => ({ ...prev, tournaments: backendTourneys }));
+          }
         }
       } catch (err) {
         // Backend offline; local store functions smoothly
