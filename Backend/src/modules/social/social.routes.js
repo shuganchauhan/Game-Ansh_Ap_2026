@@ -30,7 +30,7 @@ router.post('/follow', authenticate, authorize('player'), validate(followSchema)
 router.delete('/follow', authenticate, authorize('player'), validate(followSchema), unfollow);
 router.get('/follows', authenticate, authorize('player'), getFollows);
 
-// Player-to-Player Connections (LinkedIn style)
+// Player-to-Player Connections (Competitive Pro Network)
 router.post('/connections/:targetPlayerId', authenticate, authorize('player'), connectPlayers);
 router.get('/connections', authenticate, authorize('player'), getConnections);
 router.get('/players/recommended', authenticate, getRecommendedPlayers);

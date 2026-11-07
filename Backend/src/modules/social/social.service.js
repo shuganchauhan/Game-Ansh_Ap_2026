@@ -75,7 +75,7 @@ async function createPost(user, { content, category = 'General', game = 'valoran
 }
 
 async function getFeed(userId = null) {
-  // Production LinkedIn-style feed query returning all public posts,
+  // Production feed query returning all public posts,
   // enhanced with likes, comments, and author profiles
   const sql = `
     SELECT p.id, p.author_type, p.author_id, p.content, p.category, p.game, p.created_at,
@@ -206,7 +206,7 @@ async function addComment(postId, user, content) {
   return result.rows[0];
 }
 
-// Connections (LinkedIn-style)
+// Pro Player Connections
 async function connectPlayers(requesterId, receiverId) {
   if (requesterId === receiverId) throw new BadRequestError('Cannot connect with yourself');
   const rec = await query('SELECT id FROM player WHERE id = $1', [receiverId]);

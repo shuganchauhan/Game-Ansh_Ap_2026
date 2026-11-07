@@ -23,4 +23,14 @@ const addMemberSchema = z.object({
   player_id: z.string().uuid().optional().nullable(),
 });
 
-module.exports = { createTeamSchema, addMemberSchema };
+const inviteMemberSchema = z.object({
+  player_id: z.string().uuid(),
+  role: z.string().min(1).max(50).optional(),
+  message: z.string().max(500).optional(),
+});
+
+const respondInviteSchema = z.object({
+  action: z.enum(['accept', 'decline']),
+});
+
+module.exports = { createTeamSchema, addMemberSchema, inviteMemberSchema, respondInviteSchema };

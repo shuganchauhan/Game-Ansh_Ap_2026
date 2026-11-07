@@ -33,7 +33,7 @@ export default function SocialFeedPage({ onSelectTab, onOpenAuth }) {
   const [copiedPostId, setCopiedPostId] = useState(null);
   const [actionError, setActionError] = useState('');
 
-  const activeOrg = orgs.find((o) => o.id === activeOrgId);
+  const activeOrg = (orgs || []).find((o) => o && o.id === activeOrgId);
 
   // Authenticated Action Handlers
   const handleCreatePost = async (e) => {
@@ -156,8 +156,8 @@ export default function SocialFeedPage({ onSelectTab, onOpenAuth }) {
             <section className="p-5 rounded-3xl bg-surface-container-low border border-card-border shadow-lg space-y-3">
               <div className="flex items-center gap-3">
                 {(() => {
-                  const avatarSrc = activeRole === 'org' ? activeOrg?.logo : (user?.avatar_url || currentUser.avatar);
-                  const avatarName = user?.name || user?.username || (activeRole === 'org' ? activeOrg?.name : currentUser.name);
+                  const avatarSrc = activeRole === 'org' ? activeOrg?.logo : (user?.avatar_url || currentUser?.avatar);
+                  const avatarName = user?.name || user?.username || (activeRole === 'org' ? activeOrg?.name : currentUser?.name);
                   return avatarSrc ? (
                     <img
                       src={avatarSrc}
@@ -172,7 +172,7 @@ export default function SocialFeedPage({ onSelectTab, onOpenAuth }) {
                 })()}
                 <div className="flex-1 min-w-0">
                   <span className="font-display font-bold text-sm text-on-surface block truncate">
-                    {user?.name || user?.username || (activeRole === 'org' ? activeOrg?.name : currentUser.name)}
+                    {user?.name || user?.username || (activeRole === 'org' ? activeOrg?.name : currentUser?.name)}
                   </span>
                   <span className="font-mono text-[10px] text-secondary font-bold">
                     Posting as {user?.role ? user.role.toUpperCase() : (activeRole === 'org' ? 'Verified Organization' : 'Pro Athlete')}
@@ -421,8 +421,8 @@ export default function SocialFeedPage({ onSelectTab, onOpenAuth }) {
             </div>
 
             <div className="space-y-3">
-              {players.filter(p => p.id !== currentUser.id).slice(0, 3).map((p) => {
-                const isConnected = connectedPlayerIds.includes(p.id);
+              {(players || []).filter(p => p && p.id !== currentUser?.id).slice(0, 3).map((p) => {
+                const isConnected = (connectedPlayerIds || []).includes(p.id);
                 return (
                   <div
                     key={p.id}
@@ -475,8 +475,8 @@ export default function SocialFeedPage({ onSelectTab, onOpenAuth }) {
             </div>
 
             <div className="space-y-3">
-              {orgs.slice(0, 4).map((org) => {
-                const isFollowing = followedOrgIds.includes(org.id);
+              {(orgs || []).slice(0, 4).map((org) => {
+                const isFollowing = (followedOrgIds || []).includes(org.id);
                 return (
                   <div
                     key={org.id}

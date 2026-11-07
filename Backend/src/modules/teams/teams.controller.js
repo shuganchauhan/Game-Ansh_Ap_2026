@@ -54,6 +54,51 @@ async function removeMember(req, res, next) {
   }
 }
 
+async function inviteMember(req, res, next) {
+  try {
+    const data = await teamsService.inviteMember(req.params.id, req.user, req.body);
+    res.status(201).json({ status: 'success', data });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function listTeamInvitations(req, res, next) {
+  try {
+    const data = await teamsService.listTeamInvitations(req.params.id, req.user);
+    res.json({ status: 'success', data });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function cancelInvitation(req, res, next) {
+  try {
+    const data = await teamsService.cancelInvitation(req.params.id, req.params.inviteId, req.user);
+    res.json({ status: 'success', data });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function listMyInvitations(req, res, next) {
+  try {
+    const data = await teamsService.listMyInvitations(req.user);
+    res.json({ status: 'success', data });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function respondInvitation(req, res, next) {
+  try {
+    const data = await teamsService.respondInvitation(req.params.inviteId, req.user, req.body.action);
+    res.json({ status: 'success', data });
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   createTeam,
   getTeam,
@@ -61,4 +106,9 @@ module.exports = {
   updateTeam,
   addMember,
   removeMember,
+  inviteMember,
+  listTeamInvitations,
+  cancelInvitation,
+  listMyInvitations,
+  respondInvitation,
 };

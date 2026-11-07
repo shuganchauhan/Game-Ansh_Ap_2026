@@ -196,7 +196,7 @@ export default function OnboardingPage({ onSelectTab }) {
         </div>
 
         <h1 className="font-display font-extrabold text-3xl sm:text-4xl md:text-5xl uppercase tracking-tight text-on-surface">
-          Choose Your Path in <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-[#37ebf3] to-primary">Gamers'G</span>
+          Choose Your Path in <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-[#37ebf3] to-primary">FLUX</span>
         </h1>
         <p className="font-body text-sm sm:text-base text-on-surface-variant max-w-2xl mx-auto leading-relaxed">
           Create your verified pro gamer dossier to participate in automated scrims, or register as a sanctioned tournament organizer or esports organization.

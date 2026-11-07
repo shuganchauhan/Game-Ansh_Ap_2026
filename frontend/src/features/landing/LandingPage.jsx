@@ -9,7 +9,7 @@ import {
   Swords, Users, Star, MessageSquare, TrendingUp, Play, ArrowRight,
   Cpu, Target, Globe2, CheckCircle2, ChevronDown, ChevronUp, Lock,
   Award, Sparkles, Flame, Eye, Calendar, Clock, Crosshair, HelpCircle,
-  User, Loader2, Activity
+  User, Loader2, Activity, Plus, Crown, Layers, Wifi
 } from 'lucide-react';
 
 /* ── Live Match Ticker Data (static — no live match endpoint yet) ── */
@@ -497,7 +497,7 @@ const JOURNEY_STEPS = [
 /* ── FAQ Items ── */
 const FAQ_ITEMS = [
   {
-    q: 'Is Gamers\'G free for competitive players and squads?',
+    q: 'Is FLUX free for competitive players and squads?',
     a: 'Yes! Creating an account, building your Gamer Passport, forming a team, and participating in open community tournaments and practice scrims is 100% free. Certain sponsored invitationals and high-stakes leagues may have specific ELO thresholds or tournament entry requirements.',
   },
   {
@@ -514,7 +514,7 @@ const FAQ_ITEMS = [
   },
   {
     q: 'What anti-cheat and fair-play mechanisms are enforced?',
-    a: 'Gamers\'G enforces strict anti-cheat policies, including in-game UID verification, match screenshot submission, video proof requirements on disputed rounds, and hardware-level identity binding. Players found cheating face permanent hardware and platform bans across all titles.',
+    a: 'FLUX enforces strict anti-cheat policies, including in-game UID verification, match screenshot submission, video proof requirements on disputed rounds, and hardware-level identity binding. Players found cheating face permanent hardware and platform bans across all titles.',
   },
   {
     q: 'Can community tournament organizers host their own events?',
@@ -567,7 +567,7 @@ function ShowcaseEmpty({ label, onSelectTab, tabTarget }) {
   );
 }
 
-export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
+export default function LandingPage({ onSelectTab, onOpenAuthWithRole, onOpenTeamCreator }) {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
@@ -584,6 +584,7 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
   const { user } = useAuth();
   const [statsVisible, setStatsVisible] = useState(false);
   const [activeShowcaseTab, setActiveShowcaseTab] = useState('tournaments');
+  const [heroTerminalTab, setHeroTerminalTab] = useState('match'); // 'match' | 'scrims' | 'tryouts'
   const [openFaq, setOpenFaq] = useState(0);
 
   // Live Backend Data Hooks (Zero Hardcoded Lock-In)
@@ -703,82 +704,339 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
         <div className="absolute bottom-10 left-10 w-96 h-96 rounded-full bg-[#EC4899]/10 blur-[140px] pointer-events-none" />
         <div className="absolute bottom-10 right-10 w-96 h-96 rounded-full bg-secondary/10 blur-[140px] pointer-events-none" />
 
-        {/* Center Container */}
-        <div className="relative z-10 max-w-6xl mx-auto w-full text-center space-y-8">
+        {/* Command Center 2-Column Grid */}
+        <div className="relative z-10 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
           
-          {/* Telemetry Status Capsule */}
-          <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-surface-container-high/70 dark:bg-white/5 border border-card-border backdrop-blur-xl shadow-sm">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-secondary" />
-            </span>
-            <span className="font-mono text-xs uppercase tracking-wider text-on-surface font-bold">
-              2026 Competitive Season Active
-            </span>
-            <span className="text-on-surface-variant/40">|</span>
-            <span className="font-mono text-xs text-secondary font-semibold flex items-center gap-1">
-              <Activity className="w-3.5 h-3.5" /> Asia-South1 Mesh (12ms)
-            </span>
-            <span className="text-on-surface-variant/40 hidden sm:inline">|</span>
-            <span className="font-mono text-xs text-on-surface-variant hidden sm:inline-flex items-center gap-1">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" /> 99.8% FairPlay HWID
-            </span>
-          </div>
-
-          {/* Master Headline */}
-          <div className="space-y-4 max-w-4xl mx-auto">
-            <h1 className="font-display font-extrabold text-4xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight leading-[1.04] uppercase text-on-surface">
-              The Premier Arena for <br className="hidden sm:inline" />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-[#06B6D4] to-[#EC4899]">
-                Competitive Esports
+          {/* LEFT COLUMN: Narrative, Headlines, CTAs, Telemetry (7 cols) */}
+          <div className="lg:col-span-7 text-left space-y-6 sm:space-y-7">
+            {/* Tactical Status Capsule */}
+            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-surface-container-high/80 dark:bg-white/5 border border-primary/30 backdrop-blur-xl shadow-[0_0_20px_rgba(124,58,237,0.15)]">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-secondary" />
               </span>
-            </h1>
-            <p className="font-body text-base sm:text-lg md:text-xl text-on-surface-variant max-w-2xl mx-auto leading-relaxed">
-              Automate daily scrim lobbies, compete in escrow-guaranteed championships,
-              build verified player dossiers, and get scouted by Tier-1 esports organizations.
-            </p>
-          </div>
+              <span className="font-mono text-[11px] font-black uppercase tracking-widest text-secondary">
+                FLUX ARENA OS // 2026
+              </span>
+              <span className="text-on-surface-variant/40">/</span>
+              <span className="font-mono text-[11px] text-on-surface font-semibold flex items-center gap-1">
+                <Activity className="w-3 h-3 text-secondary" /> 12MS MESH
+              </span>
+              <span className="text-on-surface-variant/40 hidden sm:inline">/</span>
+              <span className="font-mono text-[11px] text-emerald-400 font-bold hidden sm:inline-flex items-center gap-1">
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> HWID FAIRPLAY LOCKED
+              </span>
+            </div>
 
-          {/* Primary Action Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
-            <button
-              onClick={() => onOpenAuthWithRole?.('player', 'signup')}
-              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-primary via-[#7C3AED] to-secondary text-white font-display font-extrabold text-xs uppercase tracking-wider shadow-lg shadow-primary/25 hover:shadow-primary/45 hover:opacity-95 active:scale-95 transition-all flex items-center justify-center gap-2.5 group"
-            >
-              <Gamepad2 className="w-4 h-4 text-white" />
-              <span>Enter Pro Circuit</span>
-              <ChevronRight className="w-4 h-4 text-white group-hover:translate-x-1.5 transition-transform" />
-            </button>
+            {/* Master Headline */}
+            <div className="space-y-4">
+              <h1 className="font-display font-black text-4xl sm:text-6xl md:text-7xl lg:text-7.5xl tracking-tight uppercase leading-[0.95] text-on-surface">
+                <span>COMPETE.</span><br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-[#00f0ff] to-secondary drop-shadow-[0_0_35px_rgba(6,182,212,0.35)]">
+                  DOMINATE.
+                </span><br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-on-surface via-on-surface/90 to-on-surface/60">
+                  GET SCOUTED.
+                </span>
+              </h1>
+              <p className="font-body text-base sm:text-lg text-on-surface-variant max-w-xl leading-relaxed">
+                The unified operating protocol for competitive esports. Automate daily scrims with instant room credentials, compete in escrow-guaranteed championships, and sign with verified franchise clubs.
+              </p>
+            </div>
 
-            <button
-              onClick={() => onSelectTab?.('tournaments')}
-              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-surface-container/80 hover:bg-surface-container-high border border-card-border text-on-surface font-display font-bold text-xs uppercase tracking-wider backdrop-blur-xl active:scale-95 transition-all flex items-center justify-center gap-2.5"
-            >
-              <Trophy className="w-4 h-4 text-secondary" />
-              <span>Explore Tournaments & Scrims</span>
-            </button>
-          </div>
-
-          {/* Sanctioned Games Badges */}
-          <div className="pt-2 flex flex-wrap items-center justify-center gap-2">
-            {[
-              { name: 'VALORANT', tag: 'PC VCT' },
-              { name: 'BGMI', tag: 'MOBILE' },
-              { name: 'CS2', tag: 'VALVE' },
-              { name: 'FREE FIRE', tag: 'PRO' },
-              { name: 'COD MOBILE', tag: 'PRO' },
-              { name: 'CLASH ROYALE', tag: 'SUPERCELL' },
-            ].map((game) => (
-              <div
-                key={game.name}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container/60 border border-card-border text-xs font-display font-semibold text-on-surface hover:border-primary/40 transition-colors shadow-sm"
+            {/* Primary Action Buttons */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 pt-1">
+              <button
+                onClick={() => onSelectTab?.('tournaments')}
+                className="px-8 py-4 rounded-2xl bg-gradient-to-r from-primary via-[#7C3AED] to-secondary text-white font-display font-extrabold text-xs uppercase tracking-wider shadow-[0_0_30px_rgba(124,58,237,0.4)] hover:shadow-[0_0_45px_rgba(6,182,212,0.5)] hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2.5 group cursor-pointer"
               >
-                <Crosshair className="w-3 h-3 text-secondary" />
-                <span>{game.name}</span>
-                <span className="font-mono text-[9px] text-on-surface-variant/70 font-normal">[{game.tag}]</span>
+                <Zap className="w-4 h-4 text-white fill-white" />
+                <span>Enter Scrim Arena</span>
+                <ChevronRight className="w-4 h-4 text-white group-hover:translate-x-1.5 transition-transform" />
+              </button>
+
+              <button
+                onClick={onOpenTeamCreator || (() => onSelectTab?.('teams'))}
+                className="px-7 py-4 rounded-2xl bg-surface-container-high/90 hover:bg-surface-container-highest border border-card-border hover:border-secondary/60 text-on-surface font-display font-bold text-xs uppercase tracking-wider backdrop-blur-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer group"
+              >
+                <Users className="w-4 h-4 text-secondary group-hover:scale-110 transition-transform" />
+                <span>Form a Squad</span>
+                <span className="ml-1 px-1.5 py-0.5 rounded text-[9px] font-mono bg-secondary/15 text-secondary border border-secondary/30">
+                  4-5 Stack
+                </span>
+              </button>
+            </div>
+
+            {/* Quick Sanctioned Games */}
+            <div className="pt-1 flex flex-wrap items-center gap-2">
+              <span className="font-mono text-[10px] uppercase text-on-surface-variant font-bold mr-1">Sanctioned:</span>
+              {[
+                { name: 'VALORANT', tag: 'VCT' },
+                { name: 'BGMI', tag: 'BMPS' },
+                { name: 'FREE FIRE', tag: 'FFPL' },
+                { name: 'CS2', tag: 'MAJOR' },
+                { name: 'COD MOBILE', tag: 'PRO' },
+                { name: 'CLASH ROYALE', tag: 'CRL' },
+              ].map((g) => (
+                <span
+                  key={g.name}
+                  className="px-2.5 py-1 rounded-lg bg-surface-container-high/70 border border-card-border font-mono text-[10px] font-bold text-on-surface flex items-center gap-1.5 hover:border-primary/40 transition-colors"
+                >
+                  <Crosshair className="w-2.5 h-2.5 text-secondary" />
+                  <span>{g.name}</span>
+                  <span className="text-on-surface-variant text-[9px]">[{g.tag}]</span>
+                </span>
+              ))}
+            </div>
+
+            {/* Live Platform Proof Stats */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-card-border/80">
+              <div>
+                <span className="font-display font-black text-2xl text-on-surface block tracking-tight">14.2K+</span>
+                <span className="font-mono text-[10px] uppercase text-on-surface-variant font-bold">Verified Athletes</span>
               </div>
-            ))}
+              <div>
+                <span className="font-display font-black text-2xl text-secondary block tracking-tight">840+</span>
+                <span className="font-mono text-[10px] uppercase text-on-surface-variant font-bold">Roster Squads</span>
+              </div>
+              <div>
+                <span className="font-display font-black text-2xl text-tertiary block tracking-tight">₹35.5L</span>
+                <span className="font-mono text-[10px] uppercase text-on-surface-variant font-bold">Prize Escrow</span>
+              </div>
+              <div>
+                <span className="font-display font-black text-2xl text-emerald-400 block tracking-tight">12ms</span>
+                <span className="font-mono text-[10px] uppercase text-on-surface-variant font-bold">Server Dispatch</span>
+              </div>
+            </div>
           </div>
+
+          {/* RIGHT COLUMN: Interactive Live Matchday Command Terminal (5 cols) */}
+          <div className="lg:col-span-5 w-full">
+            <div className="relative rounded-3xl bg-surface-container-low/90 border border-primary/30 shadow-[0_0_50px_rgba(124,58,237,0.2)] backdrop-blur-2xl p-5 sm:p-6 space-y-4 text-left overflow-hidden group">
+              {/* Corner decorative HUD tech brackets */}
+              <div className="absolute top-2.5 left-2.5 font-mono text-[9px] text-primary/40 select-none">┌ FLUX-OS ┐</div>
+              <div className="absolute top-2.5 right-2.5 font-mono text-[9px] text-secondary/40 select-none">└ LIVE-RADAR ┘</div>
+
+              {/* Terminal Header */}
+              <div className="flex items-center justify-between pt-1">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-lg shadow-primary/30">
+                    <Radio className="w-4 h-4 text-white animate-pulse" />
+                  </div>
+                  <div>
+                    <h3 className="font-display font-bold text-sm text-on-surface leading-tight">
+                      Matchday Radar Terminal
+                    </h3>
+                    <span className="font-mono text-[10px] text-secondary font-bold block">
+                      SECTOR 04 // ASIA-SOUTH MESH
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-500/15 border border-red-500/30 text-red-400 font-mono text-[10px] font-bold uppercase animate-pulse">
+                  <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
+                  <span>48.2K Live</span>
+                </div>
+              </div>
+
+              {/* Interactive Tabs within the Terminal */}
+              <div className="grid grid-cols-3 gap-1.5 p-1 rounded-xl bg-surface-container border border-card-border font-mono text-[11px] font-bold">
+                <button
+                  type="button"
+                  onClick={() => setHeroTerminalTab('match')}
+                  className={`py-1.5 px-2 rounded-lg transition-all text-center cursor-pointer ${
+                    heroTerminalTab === 'match'
+                      ? 'bg-primary text-white shadow-glow'
+                      : 'text-on-surface-variant hover:text-on-surface'
+                  }`}
+                >
+                  Grand Finals
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setHeroTerminalTab('scrims')}
+                  className={`py-1.5 px-2 rounded-lg transition-all text-center cursor-pointer ${
+                    heroTerminalTab === 'scrims'
+                      ? 'bg-secondary text-white shadow-glow'
+                      : 'text-on-surface-variant hover:text-on-surface'
+                  }`}
+                >
+                  Tier-1 Scrims
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setHeroTerminalTab('tryouts')}
+                  className={`py-1.5 px-2 rounded-lg transition-all text-center cursor-pointer ${
+                    heroTerminalTab === 'tryouts'
+                      ? 'bg-tertiary text-white shadow-glow'
+                      : 'text-on-surface-variant hover:text-on-surface'
+                  }`}
+                >
+                  Org Tryouts
+                </button>
+              </div>
+
+              {/* TAB 1: Grand Finals Match Card */}
+              {heroTerminalTab === 'match' && (
+                <div className="space-y-3.5 animate-fadeIn">
+                  {/* Match Banner & Title */}
+                  <div className="p-3 rounded-2xl bg-surface-container border border-card-border/80 flex items-center justify-between">
+                    <div>
+                      <span className="font-mono text-[9px] uppercase tracking-wider text-secondary font-bold">
+                        BMPS 2026 PRO CIRCUIT · MAP 4
+                      </span>
+                      <h4 className="font-display font-extrabold text-sm text-on-surface">
+                        Championship Masters Grand Finals
+                      </h4>
+                    </div>
+                    <span className="px-2 py-0.5 rounded font-mono text-[10px] font-black bg-tertiary/15 text-tertiary border border-tertiary/30">
+                      ₹15,00,000
+                    </span>
+                  </div>
+
+                  {/* Clash Faceoff Grid */}
+                  <div className="grid grid-cols-5 items-center gap-2 p-3.5 rounded-2xl bg-surface-container-lowest/90 border border-card-border">
+                    {/* Team 1 */}
+                    <div className="col-span-2 text-center space-y-1">
+                      <div className="w-12 h-12 mx-auto rounded-xl bg-gradient-to-br from-amber-500/20 to-primary/20 border border-amber-500/40 flex items-center justify-center font-display font-black text-sm text-amber-400 shadow-md">
+                        SOUL
+                      </div>
+                      <div className="font-display font-bold text-xs text-on-surface truncate">Team Soul</div>
+                      <div className="font-mono text-[10px] text-emerald-400 font-bold">14 Pts · Seed #1</div>
+                    </div>
+
+                    {/* VS Badge */}
+                    <div className="col-span-1 text-center">
+                      <span className="w-8 h-8 mx-auto rounded-full bg-surface-container-high border border-primary/40 flex items-center justify-center font-display font-extrabold text-[10px] text-primary shadow-sm">
+                        VS
+                      </span>
+                      <span className="font-mono text-[9px] text-on-surface-variant block mt-1">MAP 4</span>
+                    </div>
+
+                    {/* Team 2 */}
+                    <div className="col-span-2 text-center space-y-1">
+                      <div className="w-12 h-12 mx-auto rounded-xl bg-gradient-to-br from-secondary/20 to-pink-500/20 border border-secondary/40 flex items-center justify-center font-display font-black text-sm text-secondary shadow-md">
+                        GODL
+                      </div>
+                      <div className="font-display font-bold text-xs text-on-surface truncate">GodLike</div>
+                      <div className="font-mono text-[10px] text-secondary font-bold">12 Pts · Seed #2</div>
+                    </div>
+                  </div>
+
+                  {/* Telemetry metadata */}
+                  <div className="grid grid-cols-2 gap-2 font-mono text-[11px]">
+                    <div className="p-2 rounded-xl bg-surface-container border border-card-border flex items-center justify-between">
+                      <span className="text-on-surface-variant">Zone 6 Hard Shift:</span>
+                      <span className="text-secondary font-bold">Erangel</span>
+                    </div>
+                    <div className="p-2 rounded-xl bg-surface-container border border-card-border flex items-center justify-between">
+                      <span className="text-on-surface-variant">Escrow Status:</span>
+                      <span className="text-emerald-400 font-bold flex items-center gap-1">
+                        <Lock className="w-3 h-3" /> Locked
+                      </span>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => onSelectTab?.('tournaments')}
+                    className="w-full py-3 rounded-xl bg-primary hover:bg-primary-hover text-white font-display font-bold text-xs uppercase tracking-wider shadow-glow active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <Play className="w-3.5 h-3.5 fill-white" />
+                    <span>Spectate Match Room Stream</span>
+                  </button>
+                </div>
+              )}
+
+              {/* TAB 2: Tier-1 Scrims Card */}
+              {heroTerminalTab === 'scrims' && (
+                <div className="space-y-3.5 animate-fadeIn">
+                  <div className="p-3 rounded-2xl bg-surface-container border border-card-border flex items-center justify-between">
+                    <div>
+                      <span className="font-mono text-[9px] uppercase tracking-wider text-secondary font-bold">
+                        AUTOMATED ROOM DISPATCH
+                      </span>
+                      <h4 className="font-display font-extrabold text-sm text-on-surface">
+                        Daily Tier-1 Practice Scrim #4
+                      </h4>
+                    </div>
+                    <span className="px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-secondary/15 text-secondary border border-secondary/30">
+                      18/20 SQUADS
+                    </span>
+                  </div>
+
+                  <div className="p-4 rounded-2xl bg-surface-container-lowest/90 border border-card-border space-y-2.5 font-mono text-xs">
+                    <div className="flex items-center justify-between pb-2 border-b border-card-border">
+                      <span className="text-on-surface-variant">Server Region:</span>
+                      <span className="text-secondary font-bold flex items-center gap-1">
+                        <Activity className="w-3.5 h-3.5" /> Asia-South1 (12ms)
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between pb-2 border-b border-card-border">
+                      <span className="text-on-surface-variant">Automated Credentials:</span>
+                      <span className="text-emerald-400 font-bold">Ready at 8:20 PM IST</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-on-surface-variant">Anti-Cheat HWID:</span>
+                      <span className="text-on-surface font-semibold flex items-center gap-1">
+                        <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> Kernel Verified
+                      </span>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => onSelectTab?.('tournaments')}
+                    className="w-full py-3 rounded-xl bg-secondary hover:bg-secondary-container text-white font-display font-bold text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(6,182,212,0.3)] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <Crosshair className="w-3.5 h-3.5" />
+                    <span>Check In Squad Roster</span>
+                  </button>
+                </div>
+              )}
+
+              {/* TAB 3: Org Tryouts Card */}
+              {heroTerminalTab === 'tryouts' && (
+                <div className="space-y-3.5 animate-fadeIn">
+                  <div className="p-3 rounded-2xl bg-surface-container border border-card-border flex items-center justify-between">
+                    <div>
+                      <span className="font-mono text-[9px] uppercase tracking-wider text-tertiary font-bold">
+                        VERIFIED FRANCHISE TRYOUT
+                      </span>
+                      <h4 className="font-display font-extrabold text-sm text-on-surface">
+                        Revenant Esports // VCT Roster
+                      </h4>
+                    </div>
+                    <span className="px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                      CONTRACT OPEN
+                    </span>
+                  </div>
+
+                  <div className="p-4 rounded-2xl bg-surface-container-lowest/90 border border-card-border space-y-2.5 font-mono text-xs">
+                    <div className="flex items-center justify-between pb-2 border-b border-card-border">
+                      <span className="text-on-surface-variant">Target Role:</span>
+                      <span className="text-secondary font-bold">Main Duelist / Entry Fragger</span>
+                    </div>
+                    <div className="flex items-center justify-between pb-2 border-b border-card-border">
+                      <span className="text-on-surface-variant">Benchmark Req:</span>
+                      <span className="text-on-surface font-semibold">Tier-1 Scrims · 1.35+ KD</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-on-surface-variant">Recruiter:</span>
+                      <span className="text-tertiary font-bold">Verified Org General Manager</span>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => onSelectTab?.('discovery')}
+                    className="w-full py-3 rounded-xl bg-tertiary hover:opacity-95 text-white font-display font-bold text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(217,119,6,0.3)] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <User className="w-3.5 h-3.5" />
+                    <span>Apply with Athlete Passport</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
 
           {/* ── Broad Marquee Showcase Strip for Scrims & Tournaments ── */}
           <div className="pt-6 w-full max-w-7xl mx-auto space-y-4">
@@ -913,8 +1171,6 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
             </div>
 
           </div>
-
-        </div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════
@@ -1029,7 +1285,7 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
             Engineered For The Pro Circuit
           </h2>
           <p className="font-body text-sm sm:text-base text-on-surface-variant leading-relaxed">
-            Gamers'G provides tournament-grade tooling for competitive athletes, clans,
+            FLUX provides tournament-grade tooling for competitive athletes, clans,
             elite tournament organizers, and multi-game esports organizations.
           </p>
         </div>
@@ -1227,7 +1483,7 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
 
               <div>
                 <span className="font-mono text-xs uppercase tracking-widest text-secondary font-bold">
-                  LINKEDIN FOR GAMERS
+                  COMPETITIVE ATHLETE NETWORK
                 </span>
                 <h3 className="font-display font-extrabold text-2xl text-on-surface mt-1">
                   Universal Athlete Passport
@@ -1323,13 +1579,22 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
                 <span className="font-display font-extrabold text-2xl text-on-surface block">840+</span>
                 <span className="font-mono text-[10px] text-on-surface-variant uppercase tracking-wider">Active Rosters</span>
               </div>
-              <button
-                onClick={() => onSelectTab?.('teams')}
-                className="px-5 py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high border border-card-border text-on-surface font-display font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition-all"
-              >
-                <span>Explore Teams</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={onOpenTeamCreator || (() => onSelectTab?.('teams'))}
+                  className="px-4 py-2.5 rounded-xl bg-primary text-white font-display font-bold text-xs uppercase tracking-wider shadow-glow hover:bg-primary-hover active:scale-95 transition-all flex items-center gap-1.5"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>Form a Squad</span>
+                </button>
+                <button
+                  onClick={() => onSelectTab?.('teams')}
+                  className="px-4 py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high border border-card-border text-on-surface font-display font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition-all"
+                >
+                  <span>Explore Teams</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
             </div>
           </div>
 
@@ -1748,10 +2013,19 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-card-border">
+                  <div className="pt-4 border-t border-card-border flex items-center justify-between">
                     <span className="font-mono text-[10px] uppercase text-on-surface-variant/70 tracking-wider">
                       Step {idx + 1} of 4
                     </span>
+                    {idx === 2 && (
+                      <button
+                        onClick={onOpenTeamCreator || (() => onSelectTab?.('teams'))}
+                        className="font-display text-[11px] font-bold text-secondary hover:underline flex items-center gap-1 cursor-pointer"
+                      >
+                        <span>Form Squad Now</span>
+                        <ArrowRight className="w-3 h-3" />
+                      </button>
+                    )}
                   </div>
                 </div>
               );
@@ -1857,10 +2131,10 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
           <div className="md:col-span-2 space-y-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-display font-extrabold text-xl shadow-md">
-                G
+                F
               </div>
               <span className="font-display font-bold text-xl text-on-surface tracking-wider">
-                GAMERS<span className="text-secondary">'G</span>
+                FLU<span className="text-secondary">X</span>
               </span>
             </div>
             <p className="font-body text-xs text-on-surface-variant max-w-sm leading-relaxed">
@@ -1909,8 +2183,8 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
             </h4>
             <ul className="space-y-2">
               <li>
-                <button onClick={() => onSelectTab?.('teams')} className="hover:text-on-surface transition-colors">
-                  Create a Squad
+                <button onClick={onOpenTeamCreator || (() => onSelectTab?.('teams'))} className="hover:text-on-surface transition-colors flex items-center gap-1 cursor-pointer">
+                  <span>Create a Squad</span>
                 </button>
               </li>
               <li>
@@ -1961,7 +2235,7 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole }) {
         {/* Bottom copyright row */}
         <div className="max-w-7xl mx-auto pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] font-mono text-on-surface-variant/70">
           <div>
-            © 2026 Gamers'G Arena Inc. All rights reserved.
+            © 2026 FLUX Arena Inc. All rights reserved.
           </div>
           <div className="flex items-center gap-6">
             <span>256-Bit SSL Encryption</span>

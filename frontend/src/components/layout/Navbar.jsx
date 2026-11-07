@@ -13,7 +13,7 @@ export default function Navbar({ activeTab, onSelectTab, onOpenAuth, onOpenChat,
   const { currentUser, orgs, activeOrgId } = useGameStore();
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
 
-  const activeOrg = orgs.find((o) => o.id === activeOrgId) || orgs[0];
+  const activeOrg = (orgs && orgs.find((o) => o.id === activeOrgId)) || orgs?.[0] || null;
   const userRole = user?.role || 'guest';
 
   // Role-based Nav Links
@@ -55,14 +55,14 @@ export default function Navbar({ activeTab, onSelectTab, onOpenAuth, onOpenChat,
           className="flex items-center gap-3 cursor-pointer select-none group"
         >
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-lg shadow-primary/20 group-hover:scale-105 transition-transform">
-            <span className="font-display font-extrabold text-xl text-white">G</span>
+            <span className="font-display font-extrabold text-xl text-white">F</span>
           </div>
           <div className="flex flex-col">
             <span className="font-display font-bold text-lg tracking-wider text-on-surface leading-tight">
-              GAMERS<span className="text-secondary">'G</span>
+              FLU<span className="text-secondary">X</span>
             </span>
             <span className="font-mono text-[9px] uppercase tracking-widest text-secondary font-bold leading-none">
-              Production Arena // 2026
+              Esports Arena // 2026
             </span>
           </div>
         </div>
@@ -194,12 +194,23 @@ export default function Navbar({ activeTab, onSelectTab, onOpenAuth, onOpenChat,
                   <button
                     onClick={() => {
                       setProfileDropdownOpen(false);
+                      onOpenTeamCreator?.();
+                    }}
+                    className="w-full text-left px-4 py-2.5 text-xs font-display font-semibold text-secondary hover:bg-surface-container transition-colors flex items-center gap-2"
+                  >
+                    <Users className="w-4 h-4 text-secondary" />
+                    <span>Form a Squad</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setProfileDropdownOpen(false);
                       onSelectTab('profile');
                     }}
                     className="w-full text-left px-4 py-2.5 text-xs font-display font-semibold text-on-surface hover:bg-surface-container transition-colors flex items-center gap-2"
                   >
                     <UserCheck className="w-4 h-4 text-secondary" />
-                    <span>LinkedIn Gamer Profile</span>
+                    <span>My Gamer Passport</span>
                   </button>
 
                   <button

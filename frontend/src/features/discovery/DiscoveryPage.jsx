@@ -163,32 +163,32 @@ const TEAMS_BY_GAME = {
 
 const TOURNAMENTS_BY_GAME = {
   valorant: [
-    { id: 'tr1', name: "Gamers'G VCT India Open #5", status: 'ongoing', prize: '₹5,00,000', maxTeams: 16, registered: 16, startDate: '2026-10-19', format: 'Double Elimination' },
+    { id: 'tr1', name: "FLUX VCT India Open #5", status: 'ongoing', prize: '₹5,00,000', maxTeams: 16, registered: 16, startDate: '2026-10-19', format: 'Double Elimination' },
     { id: 'tr2', name: 'India Valorant Invitational 2026', status: 'upcoming', prize: '₹2,00,000', maxTeams: 32, registered: 24, startDate: '2026-11-05', format: 'Swiss + Playoffs' },
     { id: 'tr3', name: 'VCT India Qualifier — Stage 3', status: 'upcoming', prize: '₹10,00,000', maxTeams: 8, registered: 6, startDate: '2026-11-20', format: 'Best of 5' },
   ],
   bgmi: [
-    { id: 'tr4', name: "Gamers'G BGMI Pro Series S2", status: 'ongoing', prize: '₹15,00,000', maxTeams: 24, registered: 24, startDate: '2026-10-18', format: 'BMPS Format — Survival Scoring' },
+    { id: 'tr4', name: "FLUX BGMI Pro Series S2", status: 'ongoing', prize: '₹15,00,000', maxTeams: 24, registered: 24, startDate: '2026-10-18', format: 'BMPS Format — Survival Scoring' },
     { id: 'tr5', name: 'BGMI Masters Open — Winter', status: 'upcoming', prize: '₹5,00,000', maxTeams: 32, registered: 18, startDate: '2026-11-12', format: 'Battle Royale — Top 16 Finals' },
     { id: 'tr6', name: 'Krafton India Invitational', status: 'upcoming', prize: '₹25,00,000', maxTeams: 16, registered: 9, startDate: '2026-12-05', format: 'LAN — Survival + Chicken Dinner Scoring' },
   ],
   freefire: [
-    { id: 'tr7', name: "Gamers'G Free Fire Clash Cup #3", status: 'upcoming', prize: '₹3,00,000', maxTeams: 20, registered: 14, startDate: '2026-11-08', format: 'BR Survival Scoring' },
+    { id: 'tr7', name: "FLUX Free Fire Clash Cup #3", status: 'upcoming', prize: '₹3,00,000', maxTeams: 20, registered: 14, startDate: '2026-11-08', format: 'BR Survival Scoring' },
     { id: 'tr8', name: 'FFIC Summer Qualifier 2026', status: 'upcoming', prize: '₹8,00,000', maxTeams: 12, registered: 8, startDate: '2026-11-22', format: 'Free Fire India Championship Format' },
     { id: 'tr9', name: 'Garena Free Fire India Pro League', status: 'ongoing', prize: '₹6,00,000', maxTeams: 16, registered: 16, startDate: '2026-10-15', format: 'League Stage + Playoffs' },
   ],
   coc: [
-    { id: 'tr10', name: "Gamers'G Clash of Clans War Cup", status: 'upcoming', prize: '₹2,50,000', maxTeams: 32, registered: 21, startDate: '2026-11-10', format: 'Clan War League Format' },
+    { id: 'tr10', name: "FLUX Clash of Clans War Cup", status: 'upcoming', prize: '₹2,50,000', maxTeams: 32, registered: 21, startDate: '2026-11-10', format: 'Clan War League Format' },
     { id: 'tr11', name: 'India CWL Open 2026', status: 'upcoming', prize: '₹1,50,000', maxTeams: 16, registered: 11, startDate: '2026-11-28', format: 'Round Robin + Knockout' },
     { id: 'tr12', name: 'Legend League Invitational', status: 'upcoming', prize: '₹5,00,000', maxTeams: 8, registered: 4, startDate: '2026-12-10', format: 'Seeded Bracket — TH17 Only' },
   ],
   cr: [
-    { id: 'tr13', name: "Gamers'G Crown Championship India", status: 'upcoming', prize: '₹2,00,000', maxTeams: 64, registered: 48, startDate: '2026-11-15', format: '1v1 Single Elimination' },
+    { id: 'tr13', name: "FLUX Crown Championship India", status: 'upcoming', prize: '₹2,00,000', maxTeams: 64, registered: 48, startDate: '2026-11-15', format: '1v1 Single Elimination' },
     { id: 'tr14', name: 'Clash Royale Ultimate League — India', status: 'ongoing', prize: '₹1,00,000', maxTeams: 32, registered: 32, startDate: '2026-10-20', format: '1v1 Round Robin + Finals' },
     { id: 'tr15', name: 'Supercell Crown Cup — South Asia', status: 'upcoming', prize: '₹8,00,000', maxTeams: 16, registered: 7, startDate: '2026-12-01', format: 'Seeded 1v1 Bracket — Top 16 Ladder' },
   ],
   cod: [
-    { id: 'tr16', name: "Gamers'G COD Mobile Open #4", status: 'ongoing', prize: '₹3,50,000', maxTeams: 16, registered: 16, startDate: '2026-10-17', format: '5v5 Hardpoint + S&D' },
+    { id: 'tr16', name: "FLUX COD Mobile Open #4", status: 'ongoing', prize: '₹3,50,000', maxTeams: 16, registered: 16, startDate: '2026-10-17', format: '5v5 Hardpoint + S&D' },
     { id: 'tr17', name: 'COD Mobile India Championship 2026', status: 'upcoming', prize: '₹7,00,000', maxTeams: 24, registered: 15, startDate: '2026-11-18', format: 'Group Stage + BO5 Finals' },
     { id: 'tr18', name: 'Activision India Warzone Invitational', status: 'upcoming', prize: '₹12,00,000', maxTeams: 20, registered: 8, startDate: '2026-12-08', format: 'BR Quads — Top 5 Scoring' },
   ],

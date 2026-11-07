@@ -12,40 +12,42 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
     toggleConnectPlayer,
   } = useGameStore();
 
+  const safeUser = currentUser || {};
+
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'career' | 'vods' | 'endorsements'
   const [copiedLink, setCopiedLink] = useState(false);
 
   // Edit form state
-  const [formName, setFormName] = useState(currentUser.name);
-  const [formTagline, setFormTagline] = useState(currentUser.tagline);
-  const [formBio, setFormBio] = useState(currentUser.bio);
-  const [formLocation, setFormLocation] = useState(currentUser.location);
-  const [formLft, setFormLft] = useState(currentUser.lftStatus);
-  const [formScrimHours, setFormScrimHours] = useState(currentUser.scrimAvailability);
-  const [formDiscord, setFormDiscord] = useState(currentUser.discord);
-  const [formValId, setFormValId] = useState(currentUser.gameAccounts?.valorant || '');
-  const [formBgmiId, setFormBgmiId] = useState(currentUser.gameAccounts?.bgmi || '');
-  const [formFfId, setFormFfId] = useState(currentUser.gameAccounts?.freefire || '');
-  const [formCocId, setFormCocId] = useState(currentUser.gameAccounts?.coc || '');
-  const [formCrId, setFormCrId] = useState(currentUser.gameAccounts?.cr || '');
-  const [formCodId, setFormCodId] = useState(currentUser.gameAccounts?.cod || '');
+  const [formName, setFormName] = useState(safeUser.name || '');
+  const [formTagline, setFormTagline] = useState(safeUser.tagline || '');
+  const [formBio, setFormBio] = useState(safeUser.bio || '');
+  const [formLocation, setFormLocation] = useState(safeUser.location || 'India');
+  const [formLft, setFormLft] = useState(safeUser.lftStatus || 'Actively Looking for Team');
+  const [formScrimHours, setFormScrimHours] = useState(safeUser.scrimAvailability || 'Daily 7:00 PM – 11:30 PM IST');
+  const [formDiscord, setFormDiscord] = useState(safeUser.discord || '');
+  const [formValId, setFormValId] = useState(safeUser.gameAccounts?.valorant || '');
+  const [formBgmiId, setFormBgmiId] = useState(safeUser.gameAccounts?.bgmi || '');
+  const [formFfId, setFormFfId] = useState(safeUser.gameAccounts?.freefire || '');
+  const [formCocId, setFormCocId] = useState(safeUser.gameAccounts?.coc || '');
+  const [formCrId, setFormCrId] = useState(safeUser.gameAccounts?.cr || '');
+  const [formCodId, setFormCodId] = useState(safeUser.gameAccounts?.cod || '');
 
   useEffect(() => {
     if (!currentUser) return;
-    setFormName(currentUser.name || '');
-    setFormTagline(currentUser.tagline || '');
-    setFormBio(currentUser.bio || '');
-    setFormLocation(currentUser.location || '');
-    setFormLft(currentUser.lftStatus || '');
-    setFormScrimHours(currentUser.scrimAvailability || '');
-    setFormDiscord(currentUser.discord || '');
-    setFormValId(currentUser.gameAccounts?.valorant || '');
-    setFormBgmiId(currentUser.gameAccounts?.bgmi || '');
-    setFormFfId(currentUser.gameAccounts?.freefire || '');
-    setFormCocId(currentUser.gameAccounts?.coc || '');
-    setFormCrId(currentUser.gameAccounts?.cr || '');
-    setFormCodId(currentUser.gameAccounts?.cod || '');
+    setFormName(safeUser.name || '');
+    setFormTagline(safeUser.tagline || '');
+    setFormBio(safeUser.bio || '');
+    setFormLocation(safeUser.location || '');
+    setFormLft(safeUser.lftStatus || '');
+    setFormScrimHours(safeUser.scrimAvailability || '');
+    setFormDiscord(safeUser.discord || '');
+    setFormValId(safeUser.gameAccounts?.valorant || '');
+    setFormBgmiId(safeUser.gameAccounts?.bgmi || '');
+    setFormFfId(safeUser.gameAccounts?.freefire || '');
+    setFormCocId(safeUser.gameAccounts?.coc || '');
+    setFormCrId(safeUser.gameAccounts?.cr || '');
+    setFormCodId(safeUser.gameAccounts?.cod || '');
   }, [currentUser]);
 
   const handleSaveProfile = async (e) => {
@@ -111,13 +113,13 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
       )}
 
       {/* ═══════════════════════════════════════════════════════
-          LINKEDIN HEADER CARD
+          ATHLETE IDENTITY HEADER CARD
       ═══════════════════════════════════════════════════════ */}
       <div className="relative rounded-3xl overflow-hidden bg-surface-container-low border border-card-border shadow-xl">
         {/* Banner image with overlay */}
         <div className="h-44 sm:h-52 w-full relative overflow-hidden bg-gradient-to-r from-primary/20 via-surface-container-high to-secondary/20">
           <img
-            src={currentUser.banner}
+            src={safeUser.banner}
             alt="Profile Banner"
             className="w-full h-full object-cover opacity-40 mix-blend-luminosity"
           />
@@ -130,15 +132,15 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
             {/* Avatar */}
             <div className="relative">
               <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl p-1 bg-gradient-to-tr from-secondary via-primary to-primary-container shadow-2xl flex items-center justify-center">
-                {currentUser.avatar && !currentUser.avatar.includes('unsplash') && !currentUser.avatar.includes('dicebear') ? (
+                {safeUser.avatar && !safeUser.avatar.includes('unsplash') && !safeUser.avatar.includes('dicebear') ? (
                   <img
-                    src={currentUser.avatar}
-                    alt={currentUser.name}
+                    src={safeUser.avatar}
+                    alt={safeUser.name}
                     className="w-full h-full object-cover rounded-[14px]"
                   />
                 ) : (
                   <div className="w-full h-full rounded-[14px] bg-surface-container flex items-center justify-center font-display font-extrabold text-3xl text-primary">
-                    {(currentUser.name || 'G').slice(0, 2).toUpperCase()}
+                    {(safeUser.name || 'G').slice(0, 2).toUpperCase()}
                   </div>
                 )}
               </div>
@@ -177,33 +179,33 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
           <div className="space-y-1.5">
             <div className="flex items-center gap-2 flex-wrap">
               <h1 className="font-display font-bold text-2xl sm:text-3xl text-on-surface">
-                {currentUser.name}
+                {safeUser.name}
               </h1>
-              {currentUser.isVerified && (
+              {safeUser.isVerified && (
                 <CheckCircle2 className="w-5 h-5 text-secondary shrink-0" title="Verified Pro Athlete" />
               )}
               <span className="px-2.5 py-0.5 rounded font-mono text-xs bg-surface-container-highest text-on-surface-variant font-semibold">
-                @{currentUser.username}
+                @{safeUser.username}
               </span>
             </div>
 
             <p className="font-body text-sm sm:text-base text-on-surface font-medium max-w-3xl leading-relaxed">
-              {currentUser.tagline}
+              {safeUser.tagline}
             </p>
 
             <div className="flex items-center gap-4 text-xs font-mono text-on-surface-variant flex-wrap pt-1">
-              <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5 text-secondary" /> {currentUser.location}</span>
+              <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5 text-secondary" /> {safeUser.location}</span>
               <span>•</span>
               <span className="text-secondary font-bold">
-                {currentUser.connectionsCount || 428} Pro Connections
+                {safeUser.connectionsCount || 428} Pro Connections
               </span>
               <span>•</span>
               <span className="text-tertiary font-bold">
-                Discord: {currentUser.discord}
+                Discord: {safeUser.discord}
               </span>
               <span>•</span>
               <span className="px-2.5 py-0.5 rounded-full bg-secondary/10 text-secondary border border-secondary/20 font-bold">
-                {currentUser.lftStatus}
+                {safeUser.lftStatus}
               </span>
             </div>
           </div>
@@ -219,10 +221,10 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
             Competitive Tier
           </span>
           <div className="font-display font-bold text-xl text-tertiary">
-            {currentUser.stats?.valorant?.rank || 'IMMORTAL 3'}
+            {safeUser.stats?.valorant?.rank || 'IMMORTAL 3'}
           </div>
           <span className="font-mono text-[10px] text-secondary">
-            {currentUser.stats?.valorant?.rr || '284 RR'} · Top 0.8%
+            {safeUser.stats?.valorant?.rr || '284 RR'} · Top 0.8%
           </span>
         </div>
 
@@ -231,7 +233,7 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
             Tournament KD
           </span>
           <div className="font-display font-bold text-xl text-secondary">
-            {currentUser.stats?.valorant?.kd || '1.38'}
+            {safeUser.stats?.valorant?.kd || '1.38'}
           </div>
           <span className="font-mono text-[10px] text-on-surface-variant">
             Verified Scrim Sample (48 Maps)
@@ -243,7 +245,7 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
             Headshot Precision
           </span>
           <div className="font-display font-bold text-xl text-primary">
-            {currentUser.stats?.valorant?.hs || '34.2%'}
+            {safeUser.stats?.valorant?.hs || '34.2%'}
           </div>
           <span className="font-mono text-[10px] text-on-surface-variant">
             Rifle &amp; Vandal Accuracy
@@ -255,7 +257,7 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
             Clutch Winrate
           </span>
           <div className="font-display font-bold text-xl text-on-surface">
-            {currentUser.stats?.valorant?.winrate || '68.4%'}
+            {safeUser.stats?.valorant?.winrate || '68.4%'}
           </div>
           <span className="font-mono text-[10px] text-secondary">
             1v2+ Clutches (31 Converted)
@@ -264,7 +266,7 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
       </div>
 
       {/* ═══════════════════════════════════════════════════════
-          NAV TABS (LinkedIn Resume Navigation)
+          NAV TABS (Athlete Dossier Navigation)
       ═══════════════════════════════════════════════════════ */}
       <div className="flex border-b border-card-border gap-6">
         {[
@@ -298,10 +300,10 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
           <div className="p-6 rounded-3xl bg-surface-container-low border border-card-border space-y-2">
             <h3 className="font-display font-bold text-lg text-on-surface">About Athlete</h3>
             <p className="font-body text-sm text-on-surface-variant leading-relaxed">
-              {currentUser.bio}
+              {safeUser.bio}
             </p>
             <div className="pt-2 flex items-center gap-4 text-xs font-mono text-on-surface-variant">
-              <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5 text-secondary" /> Scrim Windows: <b className="text-on-surface">{currentUser.scrimAvailability}</b></span>
+              <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5 text-secondary" /> Scrim Windows: <b className="text-on-surface">{safeUser.scrimAvailability}</b></span>
             </div>
           </div>
 
@@ -324,7 +326,7 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
                   <CheckCircle2 className="w-4 h-4 text-secondary" />
                 </div>
                 <div className="font-mono text-xs text-on-surface font-semibold">
-                  IGN: {currentUser.gameAccounts?.valorant || 'Vortex#IND'}
+                  IGN: {safeUser.gameAccounts?.valorant || 'Vortex#IND'}
                 </div>
                 <div className="flex items-center justify-between text-xs font-mono text-on-surface-variant pt-1 border-t border-card-border">
                   <span>Immortal 3 (284 RR)</span>
@@ -339,7 +341,7 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
                   <CheckCircle2 className="w-4 h-4 text-secondary" />
                 </div>
                 <div className="font-mono text-xs text-on-surface font-semibold">
-                  ID: {currentUser.gameAccounts?.bgmi || '512948194'}
+                  ID: {safeUser.gameAccounts?.bgmi || '512948194'}
                 </div>
                 <div className="flex items-center justify-between text-xs font-mono text-on-surface-variant pt-1 border-t border-card-border">
                   <span>Conqueror (6400 pts)</span>
@@ -354,7 +356,7 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
                   <CheckCircle2 className="w-4 h-4 text-secondary" />
                 </div>
                 <div className="font-mono text-xs text-on-surface font-semibold">
-                  UID: {currentUser.gameAccounts?.freefire || '891240182'}
+                  UID: {safeUser.gameAccounts?.freefire || '891240182'}
                 </div>
                 <div className="flex items-center justify-between text-xs font-mono text-on-surface-variant pt-1 border-t border-card-border">
                   <span>Grandmaster (84 Stars)</span>
@@ -369,7 +371,7 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
                   <CheckCircle2 className="w-4 h-4 text-secondary" />
                 </div>
                 <div className="font-mono text-xs text-on-surface font-semibold">
-                  Tag: {currentUser.gameAccounts?.coc || '#2QP9LV0'}
+                  Tag: {safeUser.gameAccounts?.coc || '#2QP9LV0'}
                 </div>
                 <div className="flex items-center justify-between text-xs font-mono text-on-surface-variant pt-1 border-t border-card-border">
                   <span>Town Hall 17 Max</span>
@@ -384,7 +386,7 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
                   <CheckCircle2 className="w-4 h-4 text-secondary" />
                 </div>
                 <div className="font-mono text-xs text-on-surface font-semibold">
-                  Tag: {currentUser.gameAccounts?.cr || '#8P8Y20R'}
+                  Tag: {safeUser.gameAccounts?.cr || '#8P8Y20R'}
                 </div>
                 <div className="flex items-center justify-between text-xs font-mono text-on-surface-variant pt-1 border-t border-card-border">
                   <span>Ultimate Champion</span>
@@ -399,7 +401,7 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
                   <CheckCircle2 className="w-4 h-4 text-secondary" />
                 </div>
                 <div className="font-mono text-xs text-on-surface font-semibold">
-                  Activision: {currentUser.gameAccounts?.cod || 'Vortex#91823'}
+                  Activision: {safeUser.gameAccounts?.cod || 'Vortex#91823'}
                 </div>
                 <div className="flex items-center justify-between text-xs font-mono text-on-surface-variant pt-1 border-t border-card-border">
                   <span>Legendary Tier</span>
@@ -421,7 +423,7 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
           </h3>
 
           <div className="space-y-4 relative before:absolute before:inset-0 before:left-3 before:w-0.5 before:bg-card-border">
-            {currentUser.careerMilestones?.map((milestone, idx) => (
+            {safeUser.careerMilestones?.map((milestone, idx) => (
               <div key={idx} className="relative flex items-start gap-4 pl-8">
                 <span className="absolute left-1.5 top-1.5 w-3 h-3 rounded-full bg-secondary ring-4 ring-surface-container-low" />
                 <div className="space-y-0.5">
@@ -495,7 +497,7 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
             <div>
               <h3 className="font-display font-bold text-2xl text-on-surface">Edit Gamer Profile</h3>
               <p className="font-body text-xs text-on-surface-variant mt-0.5">
-                Update your LinkedIn-style gaming portfolio, linked game tags, and scrim availability.
+                Update your competitive gaming passport, linked game tags, and scrim availability.
               </p>
             </div>
 

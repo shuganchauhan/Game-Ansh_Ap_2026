@@ -20,6 +20,7 @@ import OnboardingPage from '../features/onboarding/OnboardingPage';
 import TeamCreationModal from '../features/teams/TeamCreationModal';
 import AuthModal from '../features/auth/AuthModal';
 import ChatDrawer from '../features/chat/ChatDrawer';
+import ErrorBoundary from '../components/common/ErrorBoundary';
 import { Lock, ShieldAlert, LogIn, Sparkles, Trophy, Gamepad2, Shield } from 'lucide-react';
 
 function ProtectedGate({ title, message, requiredRole = null, currentRole = null, onOpenAuth }) {
@@ -67,6 +68,7 @@ function AppContent() {
   const [authInitialMode, setAuthInitialMode] = useState('login');
   const [chatOpen, setChatOpen] = useState(false);
   const [teamCreationModalOpen, setTeamCreationModalOpen] = useState(false);
+  const [pendingAction, setPendingAction] = useState(null);
 
   const { user, isAuthenticated } = useAuth();
   const { setCurrentUser, setActiveRole, setActiveOrgId } = useGameStore();
@@ -88,6 +90,12 @@ function AppContent() {
   const handleLandingNavigation = (tab) => setActiveTab(tab);
 
   const handleAuthSuccess = (loggedUser, isNewSignup = false) => {
+    if (pendingAction === 'createTeam') {
+      setPendingAction(null);
+      setTeamCreationModalOpen(true);
+      return;
+    }
+
     if (loggedUser?.role === 'admin') {
       setActiveTab('admin');
       return;
@@ -111,6 +119,7 @@ function AppContent() {
 
   const handleOpenTeamCreator = () => {
     if (!isAuthenticated) {
+      setPendingAction('createTeam');
       handleOpenAuthWithRole('player', 'login');
       return;
     }
@@ -140,11 +149,13 @@ function AppContent() {
 
       {/* Main Viewport */}
       <main className="flex-1 pb-20 md:pb-10">
+        <ErrorBoundary key={activeTab} fallbackTitle={`Unable to render ${activeTab} view`} onReset={() => setActiveTab('landing')}>
         {/* Public Routes */}
         {activeTab === 'landing' && (
           <LandingPage
             onSelectTab={handleLandingNavigation}
             onOpenAuthWithRole={handleOpenAuthWithRole}
+            onOpenTeamCreator={handleOpenTeamCreator}
           />
         )}
 
@@ -286,7 +297,7 @@ function AppContent() {
           !isAuthenticated ? (
             <ProtectedGate
               title="Gamer Profile Locked"
-              message="Sign in to view and customize your LinkedIn-style competitive gaming profile, stats, and milestones."
+              message="Sign in to view and customize your competitive gamer passport, verified stats, and career milestones."
               onOpenAuth={handleOpenAuthWithRole}
             />
           ) : (
@@ -326,6 +337,7 @@ function AppContent() {
             />
           )
         )}
+        </ErrorBoundary>
       </main>
 
       {/* Floating Bottom Nav for Mobile Screens */}

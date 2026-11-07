@@ -27,6 +27,12 @@ export const teamService = {
   createPosting: (teamId, data) => api.post(`/teams/${teamId}/postings`, data),
   closePosting: (postingId) => api.patch(`/postings/${postingId}/close`),
   applyToPosting: (postingId, pitch, vod_link = '') => api.post(`/postings/${postingId}/apply`, { pitch, vod_link }),
+  // Team Invitations (Unstop-style invitation & acceptance flow)
+  sendInvitation: (teamId, data) => api.post(`/teams/${teamId}/invitations`, data),
+  listTeamInvitations: (teamId) => api.get(`/teams/${teamId}/invitations`),
+  cancelInvitation: (teamId, inviteId) => api.delete(`/teams/${teamId}/invitations/${inviteId}`),
+  listMyInvitations: () => api.get('/teams/invitations/my'),
+  respondInvitation: (inviteId, action) => api.post(`/teams/invitations/${inviteId}/respond`, { action }),
 };
 
 export const recruitmentService = {

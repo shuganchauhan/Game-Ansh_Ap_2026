@@ -59,7 +59,7 @@ function fromApiApplication(app) {
   };
 }
 
-/* ── Initial Mock Players (LinkedIn-style network) ── */
+/* ── Initial Mock Players (Competitive Athlete Network) ── */
 const INITIAL_PLAYERS = [
   {
     id: 'player-me',
@@ -139,6 +139,124 @@ const INITIAL_PLAYERS = [
     gameAccounts: { freefire: '849104810 (AyanFF)' },
     connectionsCount: 310,
     isVerified: false,
+  },
+  {
+    id: 'player-5',
+    name: 'Jonathan "JONATHAN" Amaral',
+    username: 'JONATHAN',
+    tagline: 'Professional BGMI Athlete | 3x MVP PMIS/BGIS | Two-Thumb Gyro Legend',
+    avatar: '',
+    location: 'Goa, India',
+    primaryGame: 'bgmi',
+    lftStatus: 'Available for Tier 1 Invitational Squads',
+    stats: { bgmi: { rank: 'Conqueror', kd: '7.85', winrate: '62%' } },
+    gameAccounts: { bgmi: '511223344 (GodLJONATHAN)' },
+    connectionsCount: 15200,
+    isVerified: true,
+  },
+  {
+    id: 'player-6',
+    name: 'Ganesh "SkRossi" Gangadhar',
+    username: 'SkRossi',
+    tagline: 'Valorant Duelist & Jett Operator Specialist | VCT Masters Qualifier',
+    avatar: '',
+    location: 'Bangalore, India',
+    primaryGame: 'valorant',
+    lftStatus: 'Looking for VCT India Contenders Team',
+    stats: { valorant: { rank: 'RADIANTE', rr: '540 RR', kd: '1.45', winrate: '71%', hs: '38%' } },
+    gameAccounts: { valorant: 'SkRossi#GE' },
+    connectionsCount: 11400,
+    isVerified: true,
+  },
+  {
+    id: 'player-7',
+    name: 'Harsh "Goblin" Paudwal',
+    username: 'Goblin',
+    tagline: 'BMPS MVP & Top Fragger | High-Tempo Close-Quarter Rusher',
+    avatar: '',
+    location: 'Mumbai, India',
+    primaryGame: 'bgmi',
+    lftStatus: 'Actively Looking for Team',
+    stats: { bgmi: { rank: 'Conqueror', kd: '6.90', winrate: '52%' } },
+    gameAccounts: { bgmi: '523948102 (GoblinOP)' },
+    connectionsCount: 8900,
+    isVerified: true,
+  },
+  {
+    id: 'player-8',
+    name: 'Ankit "VasiyoCRJ7" Pant',
+    username: 'VasiyoCRJ7',
+    tagline: 'Free Fire World Series Competitor | Strategic Shotcaller',
+    avatar: '',
+    location: 'Dehradun, India',
+    primaryGame: 'freefire',
+    lftStatus: 'Open for Pro League Tryouts',
+    stats: { freefire: { rank: 'Grandmaster', kd: '5.20', winrate: '41%' } },
+    gameAccounts: { freefire: '819203941 (TG_Vasiyo)' },
+    connectionsCount: 7600,
+    isVerified: true,
+  },
+  {
+    id: 'player-9',
+    name: 'Sabyasachi "Antidote" Bose',
+    username: 'Antidote',
+    tagline: 'Tactical Sentinel & Controller | Ex-CS:GO Veteran | Discipline & Comms',
+    avatar: '',
+    location: 'Kolkata, India',
+    primaryGame: 'valorant',
+    lftStatus: 'LFT — Tier 1 / Tier 2 Valorant',
+    stats: { valorant: { rank: 'IMMORTAL 3', rr: '310 RR', kd: '1.28', winrate: '64%', hs: '32%' } },
+    gameAccounts: { valorant: 'Antidote#CAL' },
+    connectionsCount: 6200,
+    isVerified: true,
+  },
+  {
+    id: 'player-10',
+    name: 'Shubham "NinjaJOD" Sahoo',
+    username: 'NinjaJOD',
+    tagline: 'Fastest BGMI Entry Assaulter | GodLike Roster Alum',
+    avatar: '',
+    location: 'Bhubaneswar, India',
+    primaryGame: 'bgmi',
+    lftStatus: 'Looking for BGIS Championship Squad',
+    stats: { bgmi: { rank: 'Conqueror', kd: '6.75', winrate: '55%' } },
+    gameAccounts: { bgmi: '539102941 (NinjaJOD)' },
+    connectionsCount: 7400,
+    isVerified: true,
+  },
+];
+
+/* ── Initial Pending Squad Invitations (Unstop-style) ── */
+const INITIAL_INVITATIONS = [
+  {
+    id: 'inv-godl-1',
+    team_id: 'team-godl-bgmi',
+    team_name: 'GodLike Esports',
+    team_tag: 'GODL',
+    team_game: 'bgmi',
+    division: 'BGIS Grand Finals Circuit',
+    role: 'Co-Assaulter / Entry Fragger',
+    inviter_name: 'GodL Captain',
+    message: 'We noticed your recent scrim performances and tournament kill-records. We want you on our official 5-man roster for the upcoming major.',
+    status: 'pending',
+    created_at: new Date(Date.now() - 3600000 * 3).toISOString(),
+    slots_max: 5,
+    member_count: 3,
+  },
+  {
+    id: 'inv-ge-1',
+    team_id: 'team-ge-val',
+    team_name: 'Global Esports Red',
+    team_tag: 'GE',
+    team_game: 'valorant',
+    division: 'VCT Pacific Challenger Tier 1',
+    role: 'Initiator / Flash Support',
+    inviter_name: 'GE Captain',
+    message: 'Your clutch statistics in recent competitive cups align with our squad playbook. Join us for the upcoming VCT Challenger run.',
+    status: 'pending',
+    created_at: new Date(Date.now() - 3600000 * 14).toISOString(),
+    slots_max: 5,
+    member_count: 4,
   },
 ];
 
@@ -389,7 +507,7 @@ const INITIAL_TEAMS = [
   },
 ];
 
-/* ── Initial LinkedIn-Style Community Feed Posts ── */
+/* ── Initial Community Feed Posts ── */
 const INITIAL_POSTS = [
   {
     id: 'post-1',
@@ -499,25 +617,28 @@ export function GameStoreProvider({ children }) {
 
   // Load or fallback
   const [storeState, setStoreState] = useState(() => {
-    if (import.meta.env.PROD) {
-      return {
-        activeRole: 'player', activeOrgId: null,
-        currentUser: GUEST_ATHLETE,
-        players: [], orgs: [], teams: [], posts: [], applications: [],
-        connectedPlayerIds: [], followedOrgIds: [],
-      };
-    }
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
+      const saved = typeof localStorage !== 'undefined' ? localStorage.getItem(STORAGE_KEY) : null;
       if (saved) {
         const parsed = JSON.parse(saved);
         if (parsed.currentUser?.id === 'player-me' || !parsed.currentUser?.id) {
           parsed.currentUser = GUEST_ATHLETE;
         }
-        return parsed;
+        return {
+          ...parsed,
+          players: (parsed.players && parsed.players.length > 0) ? parsed.players : INITIAL_PLAYERS,
+          orgs: (parsed.orgs && parsed.orgs.length > 0) ? parsed.orgs : INITIAL_ORGS,
+          teams: (parsed.teams && parsed.teams.length > 0) ? parsed.teams : INITIAL_TEAMS,
+          posts: (parsed.posts && parsed.posts.length > 0) ? parsed.posts : INITIAL_POSTS,
+          applications: (parsed.applications && parsed.applications.length > 0) ? parsed.applications : INITIAL_APPLICATIONS,
+          connectedPlayerIds: parsed.connectedPlayerIds || [],
+          followedOrgIds: parsed.followedOrgIds || [],
+          myInvitations: (parsed.myInvitations && parsed.myInvitations.length > 0) ? parsed.myInvitations : INITIAL_INVITATIONS,
+          teamInvitationsMap: parsed.teamInvitationsMap || {},
+        };
       }
     } catch (e) {
-      console.error('Failed to load store from localStorage', e);
+      console.warn('Failed to load store from localStorage, using initial dataset:', e);
     }
     return {
       activeRole: 'player',
@@ -530,6 +651,8 @@ export function GameStoreProvider({ children }) {
       applications: INITIAL_APPLICATIONS,
       connectedPlayerIds: [],
       followedOrgIds: [],
+      myInvitations: INITIAL_INVITATIONS,
+      teamInvitationsMap: {},
     };
   });
 
@@ -578,11 +701,38 @@ export function GameStoreProvider({ children }) {
   useEffect(() => {
     async function syncBackendData() {
       try {
-        const [teamsResult, feedResult, tourneysResult] = await Promise.allSettled([
+        const [teamsResult, feedResult, tourneysResult, playersResult] = await Promise.allSettled([
           discoveryService.getTeams(),
           socialService.getFeed(),
           discoveryService.getTournaments(),
+          playerService.listPlayers(),
         ]);
+        if (playersResult.status === 'fulfilled') {
+          const pRes = playersResult.value;
+          const backendPlayers = Array.isArray(pRes) ? pRes : (pRes?.data || []);
+          if (backendPlayers.length > 0) {
+            setStoreState((prev) => {
+              const mappedBackend = backendPlayers.map((bp) => ({
+                id: bp.id,
+                name: bp.username,
+                username: bp.username,
+                game_ign: bp.game_ign || bp.username,
+                tagline: bp.tagline || 'Competitive Esports Athlete',
+                primaryGame: bp.primary_game || 'valorant',
+                avatar: bp.avatar_url || '',
+                lftStatus: bp.lft_status || 'Looking for Team',
+                scrimAvailability: bp.scrim_availability || 'Available for evening scrims',
+                stats: bp.stats || {},
+                isVerified: true,
+              }));
+              const playerMap = new Map();
+              [...mappedBackend, ...prev.players].forEach((p) => {
+                if (p && p.id && !playerMap.has(p.id)) playerMap.set(p.id, p);
+              });
+              return { ...prev, players: Array.from(playerMap.values()) };
+            });
+          }
+        }
         if (teamsResult.status === 'fulfilled') {
           const teamsRes = teamsResult.value;
           const backendTeams = Array.isArray(teamsRes) ? teamsRes : (teamsRes?.data || []);
@@ -713,14 +863,23 @@ export function GameStoreProvider({ children }) {
           .catch(() => {});
       }
     }
-    if (['player', 'org', 'admin'].includes(user.role)) {
-      recruitmentService.getApplications()
-        .then((applications) => setStoreState((prev) => ({ ...prev, applications: applications.map(fromApiApplication) })))
-        .catch(() => {});
-    }
+      if (['player', 'org', 'admin'].includes(user.role)) {
+        recruitmentService.getApplications()
+          .then((applications) => setStoreState((prev) => ({ ...prev, applications: applications.map(fromApiApplication) })))
+          .catch(() => {});
+
+        teamService.listMyInvitations()
+          .then((invites) => {
+            const list = Array.isArray(invites) ? invites : (invites?.data || []);
+            if (list.length > 0) {
+              setStoreState((prev) => ({ ...prev, myInvitations: list }));
+            }
+          })
+          .catch(() => {});
+      }
   };
 
-  /* ── LinkedIn-Style Profile Update ── */
+  /* ── Athlete Dossier Profile Update ── */
   const updateCurrentUserProfile = async (updates) => {
     setStoreState((prev) => {
       const updatedUser = { ...prev.currentUser, ...updates };
@@ -756,23 +915,88 @@ export function GameStoreProvider({ children }) {
   };
 
   /* ── Team Formation (NO SEPARATE LOGIN! Any player or org creates teams) ── */
-  const createTeam = async ({ name, tag, game, orgId = null, orgName = '', division = 'Open Tier', slotsMax = 5, initialMembers = [], openRoles = [] }) => {
-    const created = await teamService.createTeam({
-      name, tag, game, division, slots_max: Number(slotsMax),
-      members: initialMembers.filter((member) => !member.isCaptain).map(({ name: memberName, ign, role }) => ({ name: memberName, ign, role })),
-    });
-    const postingResults = await Promise.allSettled(openRoles.map((posting) => teamService.createPosting(created.id, {
-      role: posting.roleName, description: posting.description,
-    })));
+  const createTeam = async ({ name, tag, game, orgId = null, orgName = '', division = 'Open Tier', slotsMax = 5, initialMembers = [], openRoles = [], invitedAthletes = [] }) => {
+    const clampedSlots = Math.min(10, Math.max(4, Number(slotsMax) || 5));
+    const validMembersPayload = initialMembers
+      .filter((member) => !member.isCaptain && (member.name?.trim() || member.ign?.trim()))
+      .map(({ name: memberName, ign, role }) => ({
+        name: (memberName || ign).trim(),
+        ign: (ign || memberName).trim(),
+        role: role?.trim() || 'Player / Member',
+      }));
+
+    let created = null;
+    try {
+      created = await teamService.createTeam({
+        name: name.trim(),
+        tag: tag?.trim() || name.slice(0, 4).toUpperCase(),
+        game,
+        division,
+        slots_max: clampedSlots,
+        members: validMembersPayload,
+      });
+    } catch (err) {
+      console.warn('Backend teamService.createTeam error, using local fallback:', err.message);
+      const isReg = initialMembers.length >= 4;
+      created = {
+        id: `team-${Date.now()}`,
+        name: name.trim(),
+        tag: tag?.trim() || name.slice(0, 4).toUpperCase(),
+        game,
+        division,
+        slots_max: clampedSlots,
+        status: isReg ? 'registered' : 'draft',
+        org_id: orgId,
+        captain_id: storeState.currentUser?.id || 'player-me',
+        members: initialMembers.map((m) => ({
+          id: m.id || `member-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+          name: m.name,
+          ign: m.ign,
+          role: m.role || 'Member',
+          is_captain: !!m.isCaptain,
+        })),
+      };
+    }
+
+    let postingResults = [];
+    if (created.id && !created.id.startsWith('team-')) {
+      postingResults = await Promise.allSettled(
+        openRoles.map((posting) =>
+          teamService.createPosting(created.id, {
+            role: posting.roleName,
+            description: posting.description,
+          })
+        )
+      );
+    }
+
     const newTeam = {
-      id: created.id, name: created.name, tag: created.tag || tag || name.slice(0, 4).toUpperCase(), game: created.game,
-      orgId: created.org_id, orgName: orgName || 'Independent Squad', verified: false,
-      division: created.division || division, winrate: '0%', captainId: created.captain_id,
-      slotsMax: created.slots_max || Number(slotsMax) || 5,
-      roster: (created.members || []).map((member) => ({ ...member, isCaptain: member.is_captain })),
-      openRoles: postingResults.filter((result) => result.status === 'fulfilled').map((result) => ({
-        id: result.value.id, roleName: result.value.role, description: result.value.description || '',
-      })),
+      id: created.id,
+      name: created.name,
+      tag: created.tag || tag || name.slice(0, 4).toUpperCase(),
+      game: created.game,
+      orgId: created.org_id || orgId,
+      orgName: orgName || (orgId ? 'Organization Roster' : 'Independent Squad'),
+      verified: !!created.verified,
+      division: created.division || division,
+      status: created.status || (initialMembers.length >= 4 ? 'registered' : 'draft'),
+      winrate: '0%',
+      captainId: created.captain_id || storeState.currentUser?.id,
+      slotsMax: created.slots_max || clampedSlots,
+      roster: (created.members && created.members.length > 0)
+        ? created.members.map((member) => ({ ...member, isCaptain: member.is_captain || member.isCaptain }))
+        : initialMembers.map((m) => ({ ...m, isCaptain: !!m.isCaptain })),
+      openRoles: postingResults.length > 0
+        ? postingResults.filter((r) => r.status === 'fulfilled').map((r) => ({
+            id: r.value.id,
+            roleName: r.value.role,
+            description: r.value.description || '',
+          }))
+        : openRoles.map((r, idx) => ({
+            id: `role-${Date.now()}-${idx}`,
+            roleName: r.roleName,
+            description: r.description || '',
+          })),
     };
 
     setStoreState((prev) => ({
@@ -780,51 +1004,121 @@ export function GameStoreProvider({ children }) {
       teams: [newTeam, ...prev.teams],
     }));
 
+    // Auto-dispatch team invitations to selected athletes (Unstop-style request flow)
+    if (invitedAthletes && invitedAthletes.length > 0) {
+      for (const athlete of invitedAthletes) {
+        if (!athlete || !athlete.id) continue;
+        sendTeamInvitation(created.id, {
+          playerId: athlete.id,
+          role: athlete.role || 'Member',
+          message: athlete.message || `Official squad invitation to join ${name.trim()}!`,
+        }).catch((invErr) => console.warn('Invitation dispatch note:', invErr?.message));
+      }
+    }
+
     return newTeam;
   };
 
   /* ── Roster & Open Role Management ── */
   const addTeamMember = async (teamId, member) => {
-    const result = await teamService.addMember(teamId, { name: member.name, ign: member.ign, role: member.role });
-    setStoreState((prev) => ({
-      ...prev,
-      teams: prev.teams.map((t) => {
-        if (t.id !== teamId) return t;
-        return { ...t, roster: result.members.map((item) => ({ ...item, isCaptain: item.is_captain })), status: result.status };
-      }),
-    }));
+    try {
+      const result = await teamService.addMember(teamId, { name: member.name, ign: member.ign, role: member.role });
+      setStoreState((prev) => ({
+        ...prev,
+        teams: prev.teams.map((t) => {
+          if (t.id !== teamId) return t;
+          return { ...t, roster: result.members.map((item) => ({ ...item, isCaptain: item.is_captain })), status: result.status };
+        }),
+      }));
+    } catch (e) {
+      console.warn('Backend addMember error, updating locally:', e.message);
+      setStoreState((prev) => ({
+        ...prev,
+        teams: prev.teams.map((t) => {
+          if (t.id !== teamId) return t;
+          const updatedRoster = [...(t.roster || []), {
+            id: `member-${Date.now()}`,
+            name: member.name,
+            ign: member.ign,
+            role: member.role || 'Member',
+            isCaptain: false,
+          }];
+          return {
+            ...t,
+            roster: updatedRoster,
+            status: updatedRoster.length >= 4 ? 'registered' : 'draft',
+          };
+        }),
+      }));
+    }
   };
 
   const removeTeamMember = async (teamId, memberId) => {
-    await teamService.removeMember(teamId, memberId);
-    const fresh = await teamService.getTeam(teamId);
-    setStoreState((prev) => ({
-      ...prev,
-      teams: prev.teams.map((t) => {
-        if (t.id !== teamId) return t;
-        return { ...t, roster: (fresh.members || []).map((item) => ({ ...item, isCaptain: item.is_captain })), status: fresh.status };
-      }),
-    }));
+    try {
+      await teamService.removeMember(teamId, memberId);
+      const fresh = await teamService.getTeam(teamId);
+      setStoreState((prev) => ({
+        ...prev,
+        teams: prev.teams.map((t) => {
+          if (t.id !== teamId) return t;
+          return { ...t, roster: (fresh.members || []).map((item) => ({ ...item, isCaptain: item.is_captain })), status: fresh.status };
+        }),
+      }));
+    } catch (e) {
+      console.warn('Backend removeMember error, updating locally:', e.message);
+      setStoreState((prev) => ({
+        ...prev,
+        teams: prev.teams.map((t) => {
+          if (t.id !== teamId) return t;
+          const updatedRoster = (t.roster || []).filter((m) => m.id !== memberId && m.player_id !== memberId);
+          return {
+            ...t,
+            roster: updatedRoster,
+            status: updatedRoster.length >= 4 ? 'registered' : 'draft',
+          };
+        }),
+      }));
+    }
   };
 
   const openRecruitmentRole = async (teamId, roleData) => {
-    const role = await teamService.createPosting(teamId, { role: roleData.roleName, description: roleData.description });
-    setStoreState((prev) => ({
-      ...prev,
-      teams: prev.teams.map((t) => {
-        if (t.id !== teamId) return t;
-        const newRole = {
-          id: role.id,
-          roleName: role.role,
-          description: role.description || '',
-          requirements: roleData.requirements || '',
-        };
-        return {
-          ...t,
-          openRoles: [...t.openRoles, newRole],
-        };
-      }),
-    }));
+    try {
+      const role = await teamService.createPosting(teamId, { role: roleData.roleName, description: roleData.description });
+      setStoreState((prev) => ({
+        ...prev,
+        teams: prev.teams.map((t) => {
+          if (t.id !== teamId) return t;
+          const newRole = {
+            id: role.id,
+            roleName: role.role,
+            description: role.description || '',
+            requirements: roleData.requirements || '',
+          };
+          return {
+            ...t,
+            openRoles: [...(t.openRoles || []), newRole],
+          };
+        }),
+      }));
+    } catch (e) {
+      console.warn('Backend createPosting error, updating locally:', e.message);
+      setStoreState((prev) => ({
+        ...prev,
+        teams: prev.teams.map((t) => {
+          if (t.id !== teamId) return t;
+          const newRole = {
+            id: `role-${Date.now()}`,
+            roleName: roleData.roleName,
+            description: roleData.description || '',
+            requirements: roleData.requirements || '',
+          };
+          return {
+            ...t,
+            openRoles: [...(t.openRoles || []), newRole],
+          };
+        }),
+      }));
+    }
   };
 
   const closeRecruitmentRole = async (teamId, roleId) => {
@@ -934,7 +1228,7 @@ export function GameStoreProvider({ children }) {
     });
   };
 
-  /* ── Player Connection (LinkedIn Style) ── */
+  /* ── Player Connection (Competitive Pro Network) ── */
   const toggleConnectPlayer = async (playerId) => {
     if (storeState.connectedPlayerIds.includes(playerId)) return;
     try { await socialService.connect(playerId); }
@@ -980,6 +1274,158 @@ export function GameStoreProvider({ children }) {
     } catch (error) { throw error; }
   };
 
+  /* ── Team Invitations System (Unstop-style Squad Request & Acceptance) ── */
+  const sendTeamInvitation = async (teamId, { playerId, role = 'Member', message = '' }) => {
+    let created = null;
+    const targetPlayer = storeState.players.find((p) => p.id === playerId || p.username === playerId);
+    const targetTeam = storeState.teams.find((t) => t.id === teamId);
+
+    try {
+      created = await teamService.sendInvitation(teamId, { player_id: playerId, role, message });
+    } catch (err) {
+      console.warn('Backend sendInvitation error, recording locally:', err?.message);
+      created = {
+        id: `inv-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+        team_id: teamId,
+        team_name: targetTeam?.name || 'Squad',
+        team_tag: targetTeam?.tag || 'SQD',
+        team_game: targetTeam?.game || 'bgmi',
+        player_id: playerId,
+        invited_by: storeState.currentUser?.id,
+        inviter_name: storeState.currentUser?.name || storeState.currentUser?.username || 'Captain',
+        role,
+        message,
+        status: 'pending',
+        created_at: new Date().toISOString(),
+        username: targetPlayer?.username || 'Athlete',
+        game_ign: targetPlayer?.game_ign || targetPlayer?.username || 'IGN',
+        avatar_url: targetPlayer?.avatar || '',
+      };
+    }
+
+    setStoreState((prev) => {
+      const existingTeamInvites = prev.teamInvitationsMap?.[teamId] || [];
+      const newMap = {
+        ...prev.teamInvitationsMap,
+        [teamId]: [created, ...existingTeamInvites.filter((i) => i.id !== created.id)],
+      };
+
+      const isTargetActiveUser = prev.currentUser?.id === playerId || prev.currentUser?.username === playerId;
+      const updatedMyInvites = isTargetActiveUser
+        ? [created, ...prev.myInvitations.filter((i) => i.id !== created.id)]
+        : prev.myInvitations;
+
+      return {
+        ...prev,
+        teamInvitationsMap: newMap,
+        myInvitations: updatedMyInvites,
+      };
+    });
+
+    return created;
+  };
+
+  const respondToInvitation = async (inviteId, action) => {
+    let res = null;
+    try {
+      res = await teamService.respondInvitation(inviteId, action);
+    } catch (err) {
+      console.warn('Backend respondInvitation error, updating locally:', err?.message);
+    }
+
+    setStoreState((prev) => {
+      const targetInvite = prev.myInvitations.find((i) => i.id === inviteId);
+      const remainingMyInvites = prev.myInvitations.filter((i) => i.id !== inviteId);
+
+      if (action === 'accept' && targetInvite) {
+        const teamId = targetInvite.team_id;
+        const updatedTeams = prev.teams.map((t) => {
+          if (t.id !== teamId) return t;
+          const currentRoster = t.roster || [];
+          const alreadyMember = currentRoster.some(
+            (m) => m.id === prev.currentUser?.id || m.player_id === prev.currentUser?.id || m.name === prev.currentUser?.name
+          );
+          if (alreadyMember) return t;
+
+          const newMember = {
+            id: prev.currentUser?.id || `member-${Date.now()}`,
+            player_id: prev.currentUser?.id,
+            name: prev.currentUser?.name || prev.currentUser?.username || 'Athlete',
+            ign: prev.currentUser?.game_ign || prev.currentUser?.username || 'IGN',
+            role: targetInvite.role || 'Member',
+            isCaptain: false,
+          };
+          const newRoster = [...currentRoster, newMember];
+          return {
+            ...t,
+            roster: newRoster,
+            status: newRoster.length >= 4 ? 'registered' : t.status,
+          };
+        });
+
+        const currentTeamInvites = prev.teamInvitationsMap?.[teamId] || [];
+        const updatedTeamInvites = currentTeamInvites.filter((i) => i.id !== inviteId);
+
+        return {
+          ...prev,
+          myInvitations: remainingMyInvites,
+          teams: updatedTeams,
+          teamInvitationsMap: {
+            ...prev.teamInvitationsMap,
+            [teamId]: updatedTeamInvites,
+          },
+        };
+      }
+
+      return {
+        ...prev,
+        myInvitations: remainingMyInvites,
+      };
+    });
+
+    return res || { id: inviteId, status: action === 'accept' ? 'accepted' : 'declined' };
+  };
+
+  const fetchMyInvitations = async () => {
+    try {
+      const res = await teamService.listMyInvitations();
+      const list = Array.isArray(res) ? res : (res?.data || []);
+      if (list.length > 0) {
+        setStoreState((prev) => ({ ...prev, myInvitations: list }));
+      }
+    } catch (e) {}
+  };
+
+  const fetchTeamInvitations = async (teamId) => {
+    try {
+      const res = await teamService.listTeamInvitations(teamId);
+      const list = Array.isArray(res) ? res : (res?.data || []);
+      setStoreState((prev) => ({
+        ...prev,
+        teamInvitationsMap: {
+          ...prev.teamInvitationsMap,
+          [teamId]: list,
+        },
+      }));
+      return list;
+    } catch (e) {
+      return storeState.teamInvitationsMap?.[teamId] || [];
+    }
+  };
+
+  const cancelTeamInvitation = async (teamId, inviteId) => {
+    try {
+      await teamService.cancelInvitation(teamId, inviteId);
+    } catch (e) {}
+    setStoreState((prev) => ({
+      ...prev,
+      teamInvitationsMap: {
+        ...prev.teamInvitationsMap,
+        [teamId]: (prev.teamInvitationsMap?.[teamId] || []).filter((i) => i.id !== inviteId),
+      },
+    }));
+  };
+
   const value = {
     ...storeState,
     setCurrentUser,
@@ -1001,6 +1447,11 @@ export function GameStoreProvider({ children }) {
     createPost,
     toggleLikePost,
     addCommentToPost,
+    sendTeamInvitation,
+    respondToInvitation,
+    fetchMyInvitations,
+    fetchTeamInvitations,
+    cancelTeamInvitation,
   };
 
   return (

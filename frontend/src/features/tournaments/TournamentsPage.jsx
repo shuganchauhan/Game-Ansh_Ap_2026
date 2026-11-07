@@ -78,7 +78,7 @@ export default function TournamentsPage({ onRegisterModal, onOpenScrimLobby, onS
   });
 
   const featuredTournament = tournaments[0] || {
-    name: "Gamers'G Championship Masters 2026",
+    name: "FLUX Championship Masters 2026",
     prize_pool: '₹15,00,000 INR',
     first_prize: '1st Place: ₹8,00,000',
     max_teams: 16,
@@ -107,7 +107,7 @@ export default function TournamentsPage({ onRegisterModal, onOpenScrimLobby, onS
               <span>Grand Finals Circuit Live</span>
             </div>
             <h1 className="font-display font-bold text-3xl sm:text-4xl text-on-surface">
-              {featuredTournament.name || featuredTournament.title || "Gamers'G Championship Masters 2026"}
+              {featuredTournament.name || featuredTournament.title || "FLUX Championship Masters 2026"}
             </h1>
             <p className="font-body text-sm text-on-surface-variant max-w-xl">
               {featuredTournament.description || 'Top verified teams competing for regional supremacy, circuit points, and the coveted championship trophy.'}

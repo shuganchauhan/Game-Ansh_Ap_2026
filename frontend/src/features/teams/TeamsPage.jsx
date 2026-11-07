@@ -1,10 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import {
-  ArrowLeft, Check, CheckCircle2, ChevronRight, Crown, Edit3, ExternalLink, FileText, Plus, Search, Shield, Sparkles, Swords, Target, Trash2, Trophy, Users, X, Zap
+  ArrowLeft, Check, CheckCircle2, ChevronRight, Crown, Edit3, ExternalLink, FileText,
+  Plus, Search, Shield, Sparkles, Swords, Target, Trash2, Trophy, Users, X, Zap,
+  Clock, UserPlus, UserCheck, AlertCircle, AlertTriangle
 } from 'lucide-react';
 import { useAuth } from '../../stores/authContext';
 import { useGameStore } from '../../stores/gameStore';
 import { teamService } from '../../services';
+
+const COMMON_ROLES = [
+  'Main Assaulter',
+  'Entry Fragger',
+  'Support / DMR',
+  'Sniper / Marksman',
+  'Anchor / Sentinel',
+  'Shotcaller / Co-IGL',
+  'Flex Sub',
+];
 
 export default function TeamsPage({ onOpenTeamCreator, onSelectTab, onOpenAuth }) {
   const { user, isAuthenticated } = useAuth();
@@ -20,6 +32,11 @@ export default function TeamsPage({ onOpenTeamCreator, onSelectTab, onOpenAuth }
     applications,
     updateApplicationStatus,
     setTeamDetails,
+    players = [],
+    sendTeamInvitation,
+    cancelTeamInvitation,
+    fetchTeamInvitations,
+    teamInvitationsMap = {},
   } = useGameStore();
 
   const [selectedGameFilter, setSelectedGameFilter] = useState('all');
@@ -32,6 +49,9 @@ export default function TeamsPage({ onOpenTeamCreator, onSelectTab, onOpenAuth }
     if (!selectedTeam?.id) return undefined;
     let active = true;
     setTeamLoading(true);
+
+    fetchTeamInvitations(selectedTeam.id).catch(() => {});
+
     teamService.getTeam(selectedTeam.id).then((team) => {
       if (!active) return;
       const details = {
@@ -60,11 +80,14 @@ export default function TeamsPage({ onOpenTeamCreator, onSelectTab, onOpenAuth }
   const [roleDesc, setRoleDesc] = useState('');
   const [roleReqs, setRoleReqs] = useState('');
 
-  // Add member modal state
-  const [addMemberModalOpen, setAddMemberModalOpen] = useState(false);
-  const [newMemberName, setNewMemberName] = useState('');
-  const [newMemberIgn, setNewMemberIgn] = useState('');
-  const [newMemberRole, setNewMemberRole] = useState('Flex Fragger');
+  // Invite athlete modal state (Unstop-style invitation flow)
+  const [inviteModalOpen, setInviteModalOpen] = useState(false);
+  const [athleteSearch, setAthleteSearch] = useState('');
+  const [selectedAthlete, setSelectedAthlete] = useState(null);
+  const [inviteRole, setInviteRole] = useState('Main Assaulter');
+  const [inviteMessage, setInviteMessage] = useState('');
+  const [inviteSending, setInviteSending] = useState(false);
+  const [inviteSuccessMsg, setInviteSuccessMsg] = useState('');
 
   // Filtered teams
   const filteredTeams = teams.filter((t) => {
@@ -81,12 +104,36 @@ export default function TeamsPage({ onOpenTeamCreator, onSelectTab, onOpenAuth }
     : null;
 
   const isCaptainOrManager = activeTeamObj
-    ? activeTeamObj.captainId === currentUser.id || activeRole === 'org'
+    ? (activeTeamObj.captainId && activeTeamObj.captainId === currentUser?.id) || activeRole === 'org'
     : false;
 
   const teamApplications = activeTeamObj
     ? applications.filter((a) => a.teamId === activeTeamObj.id)
     : [];
+
+  const squadInvitations = activeTeamObj ? (teamInvitationsMap[activeTeamObj.id] || []) : [];
+
+  const availableAthletesForSquad = useMemo(() => {
+    if (!activeTeamObj) return [];
+    const q = athleteSearch.trim().toLowerCase();
+    const currentMemberIds = new Set((activeTeamObj.roster || []).map((m) => m.player_id || m.id));
+    const invitedPlayerIds = new Set(squadInvitations.map((i) => i.player_id));
+
+    return players.filter((p) => {
+      if (currentMemberIds.has(p.id)) return false;
+      if (invitedPlayerIds.has(p.id)) return false;
+      if (p.id === currentUser?.id || (currentUser?.username && p.username === currentUser.username)) {
+        return false;
+      }
+      if (q) {
+        const matchesName = (p.name || '').toLowerCase().includes(q);
+        const matchesUser = (p.username || '').toLowerCase().includes(q);
+        const matchesIgn = (p.game_ign || p.gameAccounts?.[activeTeamObj.game] || '').toLowerCase().includes(q);
+        return matchesName || matchesUser || matchesIgn;
+      }
+      return true;
+    });
+  }, [players, activeTeamObj, athleteSearch, squadInvitations, currentUser]);
 
   const handleApplySubmit = async (e) => {
     e.preventDefault();
@@ -128,20 +175,30 @@ export default function TeamsPage({ onOpenTeamCreator, onSelectTab, onOpenAuth }
     setRoleReqs('');
   };
 
-  const handleAddMemberSubmit = (e) => {
+  const handleSendInviteSubmit = async (e) => {
     e.preventDefault();
-    if (!newMemberName.trim() || !activeTeamObj) return;
+    if (!selectedAthlete || !activeTeamObj) return;
 
-    addTeamMember(activeTeamObj.id, {
-      name: newMemberName.trim(),
-      ign: newMemberIgn.trim() || newMemberName.trim(),
-      role: newMemberRole.trim(),
-      isCaptain: false,
-    });
-
-    setAddMemberModalOpen(false);
-    setNewMemberName('');
-    setNewMemberIgn('');
+    setInviteSending(true);
+    setTeamActionError('');
+    try {
+      await sendTeamInvitation(activeTeamObj.id, {
+        playerId: selectedAthlete.id,
+        role: inviteRole,
+        message: inviteMessage.trim() || `Official squad invitation to join ${activeTeamObj.name}`,
+      });
+      setInviteSuccessMsg(`Invitation dispatched to ${selectedAthlete.name || selectedAthlete.username}!`);
+      setTimeout(() => {
+        setInviteModalOpen(false);
+        setSelectedAthlete(null);
+        setInviteMessage('');
+        setInviteSuccessMsg('');
+      }, 1400);
+    } catch (err) {
+      setTeamActionError(err?.message || 'Failed to dispatch squad invitation.');
+    } finally {
+      setInviteSending(false);
+    }
   };
 
   /* ═══════════════════════════════════════════════════════
@@ -198,12 +255,12 @@ export default function TeamsPage({ onOpenTeamCreator, onSelectTab, onOpenAuth }
             {isCaptainOrManager && (
               <div className="flex items-center gap-2 flex-wrap">
                 <button
-                  onClick={() => setAddMemberModalOpen(true)}
+                  onClick={() => setInviteModalOpen(true)}
                   disabled={activeTeamObj.roster.length >= activeTeamObj.slotsMax}
-                  className="px-4 py-2 rounded-xl bg-surface-container-high hover:bg-surface-container-highest border border-card-border text-on-surface font-display font-bold text-xs uppercase tracking-wider disabled:opacity-50 flex items-center gap-1.5"
+                  className="px-4 py-2 rounded-xl bg-surface-container-high hover:bg-surface-container-highest border border-card-border text-on-surface font-display font-bold text-xs uppercase tracking-wider disabled:opacity-50 flex items-center gap-1.5 transition-all"
                 >
-                  <Plus className="w-4 h-4" />
-                  Add Member
+                  <UserPlus className="w-4 h-4 text-primary" />
+                  Invite Registered Athlete
                 </button>
                 <button
                   onClick={() => setOpenRoleModalOpen(true)}
@@ -218,7 +275,7 @@ export default function TeamsPage({ onOpenTeamCreator, onSelectTab, onOpenAuth }
         </div>
 
         {/* 5-Slot Interactive Roster Board */}
-        <section className="space-y-3">
+        <section className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="font-display font-bold text-xl text-on-surface">
               Starting Roster ({activeTeamObj.roster.length}/{activeTeamObj.slotsMax} Slots)
@@ -277,22 +334,66 @@ export default function TeamsPage({ onOpenTeamCreator, onSelectTab, onOpenAuth }
                       Empty Roster Slot
                     </span>
                     <span className="font-mono text-[10px] text-on-surface-variant/60">
-                      Open for tryout signing
+                      Open for tryout or athlete invite
                     </span>
                   </div>
                 </div>
 
                 {isCaptainOrManager && (
                   <button
-                    onClick={() => setAddMemberModalOpen(true)}
+                    onClick={() => setInviteModalOpen(true)}
                     className="text-xs font-mono text-primary font-bold hover:underline"
                   >
-                    + Fill
+                    + Invite Athlete
                   </button>
                 )}
               </div>
             ))}
           </div>
+
+          {/* Pending Invitations Sent to Registered Athletes */}
+          {isCaptainOrManager && squadInvitations.length > 0 && (
+            <div className="pt-4 border-t border-card-border space-y-2.5">
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-xs uppercase tracking-wider text-amber-400 font-bold flex items-center gap-1.5">
+                  <Clock className="w-3.5 h-3.5" />
+                  Pending Squad Join Requests ({squadInvitations.length})
+                </span>
+                <span className="font-mono text-[10px] text-on-surface-variant">
+                  Awaiting Athlete Acceptance
+                </span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {squadInvitations.map((inv) => (
+                  <div
+                    key={inv.id}
+                    className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-between gap-3"
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-300 font-display font-bold text-xs flex items-center justify-center shrink-0">
+                        {inv.username?.slice(0, 2).toUpperCase() || 'PL'}
+                      </div>
+                      <div className="min-w-0">
+                        <span className="font-display font-bold text-xs text-on-surface block truncate">
+                          {inv.username || 'Invited Athlete'}
+                        </span>
+                        <span className="font-mono text-[10px] text-amber-300/90 block">
+                          Role: {inv.role || 'Member'}
+                        </span>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => cancelTeamInvitation(activeTeamObj.id, inv.id)}
+                      className="text-[11px] font-mono text-on-surface-variant hover:text-error px-2 py-1 rounded-lg hover:bg-error/10 transition-colors"
+                      title="Cancel invitation"
+                    >
+                      Cancel ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </section>
 
         {/* Open Recruitment Roles (Active Tryouts) */}
@@ -577,70 +678,175 @@ export default function TeamsPage({ onOpenTeamCreator, onSelectTab, onOpenAuth }
           </div>
         )}
 
-        {/* ── Add Member Modal ── */}
-        {addMemberModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-            <div className="w-full max-w-md rounded-3xl glass-modal p-6 sm:p-7 space-y-4 shadow-2xl border border-card-border">
-              <h3 className="font-display font-bold text-xl text-on-surface">
-                Add Player to Roster
-              </h3>
+        {/* ── Invite Registered Athlete Modal (Unstop-Style Request Flow) ── */}
+        {inviteModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+            <div className="w-full max-w-lg rounded-3xl glass-modal p-6 sm:p-7 space-y-4 shadow-2xl border border-card-border">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/15 text-primary text-[10px] font-mono uppercase tracking-wider font-bold mb-1">
+                    <UserPlus className="w-3 h-3" /> Join Request Dispatch
+                  </div>
+                  <h3 className="font-display font-black text-xl text-on-surface">
+                    Invite Registered Athlete to Squad
+                  </h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setInviteModalOpen(false);
+                    setSelectedAthlete(null);
+                    setInviteSuccessMsg('');
+                  }}
+                  className="p-1.5 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-container"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
 
-              <form onSubmit={handleAddMemberSubmit} className="space-y-3">
-                <div>
-                  <label className="block font-mono text-[11px] uppercase text-on-surface-variant mb-1">
-                    Player Name *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={newMemberName}
-                    onChange={(e) => setNewMemberName(e.target.value)}
-                    placeholder="Player Name"
-                    className="w-full p-2.5 rounded-xl bg-surface-container border border-card-border text-on-surface text-sm font-body focus:outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block font-mono text-[11px] uppercase text-on-surface-variant mb-1">
-                    In-Game IGN *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={newMemberIgn}
-                    onChange={(e) => setNewMemberIgn(e.target.value)}
-                    placeholder="e.g. SoulNeyo or Player#IND"
-                    className="w-full p-2.5 rounded-xl bg-surface-container border border-card-border text-on-surface text-sm font-mono focus:outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block font-mono text-[11px] uppercase text-on-surface-variant mb-1">
-                    Assigned Role
-                  </label>
-                  <input
-                    type="text"
-                    value={newMemberRole}
-                    onChange={(e) => setNewMemberRole(e.target.value)}
-                    placeholder="e.g. Assaulter / Controller"
-                    className="w-full p-2.5 rounded-xl bg-surface-container border border-card-border text-on-surface text-sm font-body focus:outline-none"
-                  />
-                </div>
+              <p className="font-body text-xs text-on-surface-variant">
+                Search verified platform athletes. A join request will be dispatched to their dashboard. Once accepted, they join your squad roster.
+              </p>
 
-                <div className="flex items-center justify-end gap-3 pt-2">
-                  <button
-                    type="button"
-                    onClick={() => setAddMemberModalOpen(false)}
-                    className="px-4 py-2 font-display text-sm font-semibold text-on-surface-variant hover:text-on-surface"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-6 py-2.5 rounded-xl bg-secondary-container text-on-secondary-container font-display font-bold text-xs uppercase tracking-wider shadow-glow-accent active:scale-95 transition-all"
-                  >
-                    Add to Roster
-                  </button>
+              {inviteSuccessMsg ? (
+                <div className="p-4 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 font-body text-xs flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>{inviteSuccessMsg}</span>
                 </div>
-              </form>
+              ) : (
+                <form onSubmit={handleSendInviteSubmit} className="space-y-4">
+                  {/* Athlete Search Bar */}
+                  <div className="space-y-1.5">
+                    <label className="block font-mono text-[11px] uppercase text-on-surface-variant font-bold">
+                      1. Search Athlete *
+                    </label>
+                    <div className="relative">
+                      <Search className="w-4 h-4 text-on-surface-variant absolute left-3 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="text"
+                        value={athleteSearch}
+                        onChange={(e) => setAthleteSearch(e.target.value)}
+                        placeholder="Search by username, IGN, or name..."
+                        className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-surface-container border border-card-border text-xs text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary font-body"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Athlete Selection List */}
+                  <div className="max-h-44 overflow-y-auto space-y-1.5 pr-1 divide-y divide-card-border/40">
+                    {availableAthletesForSquad.length > 0 ? (
+                      availableAthletesForSquad.slice(0, 5).map((ath) => {
+                        const ign = ath.gameAccounts?.[activeTeamObj.game] || ath.game_ign || ath.username;
+                        const isChosen = selectedAthlete?.id === ath.id;
+                        return (
+                          <div
+                            key={ath.id}
+                            onClick={() => setSelectedAthlete(ath)}
+                            className={`pt-2 pb-1.5 px-2 rounded-xl cursor-pointer flex items-center justify-between gap-3 transition-colors ${
+                              isChosen
+                                ? 'bg-primary/20 border border-primary/40'
+                                : 'hover:bg-surface-container'
+                            }`}
+                          >
+                            <div className="flex items-center gap-2.5 min-w-0">
+                              <div className="w-8 h-8 rounded-lg bg-surface-container-high text-primary font-display font-bold text-xs flex items-center justify-center shrink-0">
+                                {ath.username?.slice(0, 2).toUpperCase() || 'PL'}
+                              </div>
+                              <div className="min-w-0">
+                                <div className="flex items-center gap-1.5">
+                                  <span className="font-display font-bold text-xs text-on-surface truncate">
+                                    {ath.name || ath.username}
+                                  </span>
+                                  <span className="font-mono text-[10px] text-on-surface-variant">
+                                    @{ath.username}
+                                  </span>
+                                  {ath.isVerified && <Shield className="w-3 h-3 text-primary shrink-0" />}
+                                </div>
+                                <span className="font-mono text-[10px] text-on-surface-variant block truncate">
+                                  IGN: <strong className="text-secondary">{ign}</strong>
+                                </span>
+                              </div>
+                            </div>
+                            <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase ${
+                              isChosen ? 'bg-primary text-white' : 'bg-surface-container text-on-surface-variant'
+                            }`}>
+                              {isChosen ? 'Selected' : 'Select'}
+                            </span>
+                          </div>
+                        );
+                      })
+                    ) : (
+                      <div className="py-4 text-center text-xs font-mono text-on-surface-variant">
+                        No athletes found matching &ldquo;{athleteSearch}&rdquo;.
+                      </div>
+                    )}
+                  </div>
+
+                  {selectedAthlete && (
+                    <div className="space-y-3 pt-2 border-t border-card-border">
+                      <div className="p-2.5 rounded-xl bg-primary/10 border border-primary/25 flex items-center justify-between text-xs">
+                        <span className="font-mono text-[11px] text-on-surface-variant">
+                          Selected Candidate:
+                        </span>
+                        <span className="font-display font-bold text-primary">
+                          {selectedAthlete.name} (@{selectedAthlete.username})
+                        </span>
+                      </div>
+
+                      <div>
+                        <label className="block font-mono text-[11px] uppercase text-on-surface-variant mb-1 font-bold">
+                          2. Assigned Role *
+                        </label>
+                        <select
+                          value={inviteRole}
+                          onChange={(e) => setInviteRole(e.target.value)}
+                          className="w-full p-2.5 rounded-xl bg-surface-container border border-card-border text-on-surface text-xs font-mono focus:outline-none focus:border-primary"
+                        >
+                          {COMMON_ROLES.map((r) => (
+                            <option key={r} value={r}>
+                              {r}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className="block font-mono text-[11px] uppercase text-on-surface-variant mb-1 font-bold">
+                          3. Custom Message (Optional)
+                        </label>
+                        <input
+                          type="text"
+                          value={inviteMessage}
+                          onChange={(e) => setInviteMessage(e.target.value)}
+                          placeholder="e.g. We need an assaulter for the upcoming championship qualifiers"
+                          className="w-full p-2.5 rounded-xl bg-surface-container border border-card-border text-on-surface text-xs font-body focus:outline-none focus:border-primary"
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex items-center justify-end gap-3 pt-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setInviteModalOpen(false);
+                        setSelectedAthlete(null);
+                      }}
+                      className="px-4 py-2 font-display text-sm font-semibold text-on-surface-variant hover:text-on-surface"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={!selectedAthlete || inviteSending}
+                      className="px-6 py-2.5 rounded-xl bg-primary text-white font-display font-bold text-xs uppercase tracking-wider shadow-glow active:scale-95 transition-all disabled:opacity-50 flex items-center gap-1.5"
+                    >
+                      <Zap className="w-3.5 h-3.5 text-white" />
+                      <span>{inviteSending ? 'Dispatching...' : 'Send Squad Invitation'}</span>
+                    </button>
+                  </div>
+                </form>
+              )}
             </div>
           </div>
         )}

@@ -16,11 +16,23 @@ export default function OrgDashboard({ onSelectTab, onOpenTeamCreator, onSelectT
     createPost,
   } = useGameStore();
 
-  const currentOrg = orgs.find((o) => o.id === activeOrgId) || orgs[0];
+  const fallbackOrg = {
+    id: activeOrgId || 'org-default',
+    name: 'Competitive Esports Org',
+    legalName: 'Esports Organization',
+    tag: 'ORG',
+    founded: '2025',
+    website: '',
+    twitter: '',
+    verificationStatus: 'pending',
+    teams: [],
+  };
+
+  const currentOrg = (orgs && orgs.find((o) => o.id === activeOrgId)) || orgs?.[0] || fallbackOrg;
 
   // Org verification form state
   const [verificationModalOpen, setVerificationModalOpen] = useState(false);
-  const [formLegalName, setFormLegalName] = useState(currentOrg.legalName || currentOrg.name);
+  const [formLegalName, setFormLegalName] = useState(currentOrg.legalName || currentOrg.name || '');
   const [formGst, setFormGst] = useState('27AABCU9603R1ZM');
   const [formWebsite, setFormWebsite] = useState(currentOrg.website || '');
   const [formTwitter, setFormTwitter] = useState(currentOrg.twitter || '');
@@ -484,7 +496,7 @@ export default function OrgDashboard({ onSelectTab, onOpenTeamCreator, onSelectT
       </section>
 
       {/* ═══════════════════════════════════════════════════════
-          OFFICIAL ORG BROADCASTER (LinkedIn Post to Feed)
+          OFFICIAL ORG BROADCASTER (Broadcast Post to Feed)
       ═══════════════════════════════════════════════════════ */}
       <section className="p-6 rounded-3xl bg-surface-container-low border border-card-border space-y-4">
         <div className="flex items-center gap-2">
@@ -535,7 +547,7 @@ export default function OrgDashboard({ onSelectTab, onOpenTeamCreator, onSelectT
             required
             value={announcementText}
             onChange={(e) => setAnnouncementText(e.target.value)}
-            placeholder="Share verified tournament wins, tryout schedules, or roster signings with the entire Gamers'G community..."
+            placeholder="Share verified tournament wins, tryout schedules, or roster signings with the entire FLUX community..."
             className="w-full p-3.5 rounded-xl bg-surface-container border border-card-border text-on-surface placeholder:text-on-surface-variant focus:outline-none text-sm font-body"
           />
 
@@ -660,7 +672,7 @@ export default function OrgDashboard({ onSelectTab, onOpenTeamCreator, onSelectT
                         contracts_package_2026.pdf (Uploaded &amp; Encrypted)
                       </span>
                       <span className="font-mono text-[10px] text-on-surface-variant">
-                        Verified via Gamers'G Anti-Fraud Protocol
+                        Verified via FLUX Anti-Fraud Protocol
                       </span>
                     </div>
                   </div>

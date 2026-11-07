@@ -183,7 +183,8 @@ export default function ScrimLobbyPage({ scrimId, onBack, onSelectTab }) {
   // Available qualified teams the user can register
   const myTeams = teams.filter((team) =>
     (team.status === 'registered' || team.status === 'active') &&
-    (team.orgId === currentUser.id || team.captainId === currentUser.id)
+    currentUser?.id &&
+    (team.orgId === currentUser.id || team.captainId === currentUser.id || team.captain_id === currentUser.id)
   );
 
   return (

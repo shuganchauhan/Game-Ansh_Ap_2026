@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  AlertCircle, ArrowRight, Award, Briefcase, Building2, Check, CheckCircle2, ChevronRight, Clock, Crown, Edit3, ExternalLink, FileText, Flame, Gamepad2, MapPin, MessageSquare, Plus, Send, Share2, Shield, Sparkles, Swords, Target, Timer, Trophy, Users, X, Zap
+  AlertCircle, ArrowRight, Award, Briefcase, Building2, Check, CheckCircle2, ChevronRight, Clock, Crown, Edit3, ExternalLink, FileText, Flame, Gamepad2, MapPin, MessageSquare, Plus, Send, Share2, Shield, Sparkles, Swords, Target, Timer, Trophy, User, Users, X, Zap
 } from 'lucide-react';
 import { useAuth } from '../../stores/authContext';
 import { useGameStore } from '../../stores/gameStore';
@@ -19,13 +19,46 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
     toggleConnectPlayer,
     toggleFollowOrg,
     followedOrgIds,
+    myInvitations = [],
+    respondToInvitation,
   } = useGameStore();
 
-  const displayName = user?.name || user?.username || (user?.email ? user.email.split('@')[0] : currentUser.name);
-  const displayEmail = user?.email || currentUser.email || '';
-  const displayAvatar = currentUser.avatar && !currentUser.avatar.includes('dicebear') && !currentUser.avatar.includes('unsplash') ? currentUser.avatar : null;
+  const safeUser = currentUser || {};
+  const displayName = user?.name || user?.username || (user?.email ? user.email.split('@')[0] : (safeUser.name || 'Gamer Athlete'));
+  const displayEmail = user?.email || safeUser.email || '';
+  const displayAvatar = safeUser.avatar && !safeUser.avatar.includes('dicebear') && !safeUser.avatar.includes('unsplash') ? safeUser.avatar : null;
 
-  const [activeGameStatsTab, setActiveGameStatsTab] = useState(currentUser.primaryGame || 'valorant');
+  const [activeGameStatsTab, setActiveGameStatsTab] = useState(safeUser.primaryGame || 'valorant');
+  const [respondingInviteId, setRespondingInviteId] = useState(null);
+  const [inviteFeedback, setInviteFeedback] = useState(null);
+
+  const pendingInvites = (myInvitations || []).filter((inv) => inv && inv.status === 'pending');
+
+  const handleRespondInvite = async (inviteId, action) => {
+    setRespondingInviteId(inviteId);
+    try {
+      const res = await respondToInvitation(inviteId, action);
+      if (action === 'accept') {
+        setInviteFeedback({
+          type: 'success',
+          text: `Awesome! You have joined ${res?.team_name || 'the squad'}. Your active roster has been updated.`,
+        });
+      } else {
+        setInviteFeedback({
+          type: 'info',
+          text: 'Invitation declined.',
+        });
+      }
+      setTimeout(() => setInviteFeedback(null), 6000);
+    } catch (err) {
+      setInviteFeedback({
+        type: 'error',
+        text: err?.message || 'Failed to respond to invitation.',
+      });
+    } finally {
+      setRespondingInviteId(null);
+    }
+  };
 
   // Verification application statuses from backend
   const [orgStatus, setOrgStatus] = useState({ status: 'not_applied' });
@@ -40,16 +73,16 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
 
   // Profile Edit State
   const [profileForm, setProfileForm] = useState({
-    name: currentUser.name || '',
-    tagline: currentUser.tagline || '',
-    primaryGame: currentUser.primaryGame || 'valorant',
-    location: currentUser.location || 'India',
-    lftStatus: currentUser.lftStatus || 'Actively Looking for Team',
-    scrimAvailability: currentUser.scrimAvailability || 'Daily 7:00 PM – 11:30 PM IST',
-    discord: currentUser.discord || '',
-    bio: currentUser.bio || '',
-    valorantIgn: currentUser.gameAccounts?.valorant || '',
-    bgmiIgn: currentUser.gameAccounts?.bgmi || '',
+    name: safeUser.name || '',
+    tagline: safeUser.tagline || '',
+    primaryGame: safeUser.primaryGame || 'valorant',
+    location: safeUser.location || 'India',
+    lftStatus: safeUser.lftStatus || 'Actively Looking for Team',
+    scrimAvailability: safeUser.scrimAvailability || 'Daily 7:00 PM – 11:30 PM IST',
+    discord: safeUser.discord || '',
+    bio: safeUser.bio || '',
+    valorantIgn: safeUser.gameAccounts?.valorant || '',
+    bgmiIgn: safeUser.gameAccounts?.bgmi || '',
   });
 
   // Org Application State
@@ -58,7 +91,7 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
     gst_number: '',
     website: '',
     twitter: '',
-    rep_name: currentUser.name || '',
+    rep_name: safeUser.name || safeUser.username || '',
     rep_email: '',
     pitch: '',
   });
@@ -101,17 +134,34 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
   }, []);
 
   // Filter teams the player is in or captains
-  const myTeams = teams.filter(
-    (t) => t.captainId === currentUser.id || t.roster?.some((m) => m.name?.includes(currentUser.username) || m.ign?.includes(currentUser.username))
-  );
+  const myTeams = teams.filter((t) => {
+    if (!t) return false;
+    const uid = safeUser.id || user?.id;
+    const uName = (safeUser.name || safeUser.username || user?.username || user?.name || '').toLowerCase();
+    const uIgn = (safeUser.game_ign || user?.game_ign || '').toLowerCase();
+
+    if (uid && (t.captainId === uid || t.captain_id === uid)) return true;
+    if (t.roster && Array.isArray(t.roster)) {
+      return t.roster.some((m) => {
+        if (!m) return false;
+        if (uid && (m.playerId === uid || m.player_id === uid)) return true;
+        const mName = (m.name || '').toLowerCase();
+        const mIgn = (m.ign || '').toLowerCase();
+        if (uName && (mName.includes(uName) || mIgn.includes(uName))) return true;
+        if (uIgn && (mName.includes(uIgn) || mIgn.includes(uIgn))) return true;
+        return false;
+      });
+    }
+    return false;
+  });
 
   // Suggested connections (players not yet connected)
-  const suggestedPlayers = players.filter(
-    (p) => p.id !== currentUser.id && !connectedPlayerIds.includes(p.id)
+  const suggestedPlayers = (players || []).filter(
+    (p) => p && p.id !== safeUser.id && !(connectedPlayerIds || []).includes(p.id)
   );
 
   // Suggested orgs
-  const suggestedOrgs = orgs.slice(0, 3);
+  const suggestedOrgs = (orgs || []).slice(0, 3);
 
   const showNotification = (msg) => {
     setFeedbackMessage(msg);
@@ -131,16 +181,16 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
       discord: profileForm.discord,
       bio: profileForm.bio,
       gameAccounts: {
-        ...(currentUser.gameAccounts || {}),
+        ...(safeUser.gameAccounts || {}),
         valorant: profileForm.valorantIgn,
         bgmi: profileForm.bgmiIgn,
       },
     };
     updateCurrentUserProfile(updates);
 
-    if (currentUser.id && !String(currentUser.id).startsWith('player-me')) {
+    if (safeUser.id && !String(safeUser.id).startsWith('player-me')) {
       try {
-        await playerService.updateProfile(currentUser.id, {
+        await playerService.updateProfile(safeUser.id, {
           tagline: profileForm.tagline,
           bio: profileForm.bio,
           primary_game: profileForm.primaryGame,
@@ -399,7 +449,7 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
       </section>
 
       {/* ═══════════════════════════════════════════════════════
-          TACTICAL IDENTITY BANNER (Player LinkedIn Header)
+          TACTICAL IDENTITY BANNER (Player Athlete Header)
       ═══════════════════════════════════════════════════════ */}
       <section className="relative overflow-hidden rounded-3xl bg-surface-container-low border border-card-border p-6 sm:p-8 shadow-xl">
         <div className="absolute -right-16 -top-16 w-64 h-64 rounded-full bg-primary/15 blur-3xl pointer-events-none" />
@@ -434,7 +484,7 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
                 <h1 className="font-display font-bold text-2xl sm:text-3xl text-on-surface">
                   {displayName}
                 </h1>
-                {(currentUser.isVerified || user?.verified) && (
+                {(safeUser.isVerified || user?.verified) && (
                   <CheckCircle2 className="w-5 h-5 text-secondary shrink-0" title="Verified Esports Athlete" />
                 )}
                 <span className="px-2.5 py-0.5 rounded-full font-mono text-[10px] uppercase font-bold bg-secondary/15 text-secondary border border-secondary/30">
@@ -443,12 +493,12 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
               </div>
 
               <p className="font-body text-xs sm:text-sm text-on-surface-variant line-clamp-1 max-w-xl">
-                {currentUser.tagline || 'Competitive Esports Athlete · Registered on Gamers\'G Protocol'}
+                {safeUser.tagline || 'Competitive Esports Athlete · Registered on FLUX Protocol'}
               </p>
 
               <div className="flex items-center gap-3 text-xs font-mono text-on-surface-variant flex-wrap pt-1">
                 <span className="text-on-surface font-semibold flex items-center gap-1">
-                  <MapPin className="w-3.5 h-3.5 text-secondary inline mr-1" />{currentUser.location}
+                  <MapPin className="w-3.5 h-3.5 text-secondary inline mr-1" />{safeUser.location || 'India'}
                 </span>
                 <span>•</span>
                 <span className="text-secondary font-bold">
@@ -456,7 +506,7 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
                 </span>
                 <span>•</span>
                 <span className="px-2 py-0.5 rounded bg-primary/10 text-primary font-bold">
-                  LFT: {currentUser.lftStatus}
+                  LFT: {safeUser.lftStatus || 'Available for Squad'}
                 </span>
               </div>
             </div>
@@ -468,8 +518,8 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
               onClick={() => onSelectTab('profile')}
               className="flex-1 sm:flex-none px-5 py-2.5 rounded-xl bg-primary-container text-on-primary font-display font-bold text-xs uppercase tracking-wider shadow-glow active:scale-95 transition-all flex items-center justify-center gap-2"
             >
-              <Edit3 className="w-4 h-4" />
-              View LinkedIn Profile
+              <User className="w-4 h-4" />
+              View Athlete Dossier
             </button>
             <button
               onClick={onOpenTeamCreator}
@@ -502,6 +552,132 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
           </button>
         </div>
       </section>
+
+      {/* ═══════════════════════════════════════════════════════
+          PENDING SQUAD INVITATIONS (Unstop-Style Request Acceptance)
+      ═══════════════════════════════════════════════════════ */}
+      {pendingInvites.length > 0 && (
+        <section className="space-y-4 p-6 sm:p-7 rounded-3xl bg-secondary/10 border-2 border-secondary/30 relative overflow-hidden shadow-xl animate-fade-in">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-secondary animate-ping" />
+                <span className="font-mono text-xs uppercase tracking-wider text-secondary font-bold">
+                  Official Squad Invitations Received ({pendingInvites.length})
+                </span>
+              </div>
+              <h2 className="font-display font-black text-2xl text-on-surface mt-1">
+                Squad Join Requests Awaiting Your Acceptance
+              </h2>
+              <p className="font-body text-xs text-on-surface-variant">
+                Team captains have scouted your athlete profile and sent official roster invitations. Review and accept to join their active roster.
+              </p>
+            </div>
+            <span className="px-3 py-1 rounded-full font-mono text-xs font-bold bg-secondary/20 text-secondary border border-secondary/40 shrink-0 self-start sm:self-center">
+              Requires Athlete Decision
+            </span>
+          </div>
+
+          {inviteFeedback && (
+            <div className={`p-3.5 rounded-2xl text-xs font-body flex items-center gap-2 ${
+              inviteFeedback.type === 'success'
+                ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
+                : inviteFeedback.type === 'error'
+                ? 'bg-error/15 text-error border border-error/30'
+                : 'bg-surface-container text-on-surface border border-card-border'
+            }`}>
+              {inviteFeedback.type === 'success' ? (
+                <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
+              ) : (
+                <AlertCircle className="w-4 h-4 shrink-0" />
+              )}
+              <span>{inviteFeedback.text}</span>
+            </div>
+          )}
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {pendingInvites.map((invite) => {
+              const isResponding = respondingInviteId === invite.id;
+              return (
+                <div
+                  key={invite.id}
+                  className="p-5 rounded-2xl bg-surface-container border border-card-border hover:border-secondary/50 transition-all flex flex-col justify-between gap-4 shadow-lg"
+                >
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="px-2.5 py-0.5 rounded font-mono text-[10px] uppercase font-bold bg-secondary/15 text-secondary border border-secondary/30">
+                        {invite.team_game?.toUpperCase() || 'ESPORTS'}
+                      </span>
+                      <span className="font-mono text-[11px] text-on-surface-variant flex items-center gap-1">
+                        <Clock className="w-3.5 h-3.5" />
+                        {new Date(invite.created_at).toLocaleDateString()}
+                      </span>
+                    </div>
+
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-display font-black text-xl text-on-surface">
+                          {invite.team_name}
+                        </h3>
+                        {invite.team_tag && (
+                          <span className="font-mono text-xs text-secondary font-bold">
+                            [{invite.team_tag}]
+                          </span>
+                        )}
+                      </div>
+                      <p className="font-mono text-xs text-on-surface-variant mt-0.5">
+                        {invite.division || 'Competitive Division'}
+                      </p>
+                    </div>
+
+                    <div className="p-3 rounded-xl bg-surface-container-low border border-card-border space-y-1.5">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="font-mono text-[11px] uppercase text-on-surface-variant">
+                          Offered Role:
+                        </span>
+                        <strong className="font-mono text-secondary font-bold">
+                          {invite.role || 'Roster Member'}
+                        </strong>
+                      </div>
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="font-mono text-[11px] uppercase text-on-surface-variant">
+                          Invited By:
+                        </span>
+                        <span className="font-mono text-on-surface font-semibold">
+                          {invite.inviter_name || 'Squad Captain'}
+                        </span>
+                      </div>
+                      {invite.message && (
+                        <p className="font-body text-xs text-on-surface-variant pt-1.5 italic border-t border-card-border/50">
+                          &ldquo;{invite.message}&rdquo;
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 pt-2 border-t border-card-border">
+                    <button
+                      onClick={() => handleRespondInvite(invite.id, 'accept')}
+                      disabled={isResponding}
+                      className="flex-1 py-2.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-black font-display font-bold text-xs uppercase tracking-wider shadow-lg shadow-emerald-500/20 active:scale-95 transition-all flex items-center justify-center gap-1.5 disabled:opacity-50"
+                    >
+                      <Check className="w-4 h-4 text-black stroke-[3]" />
+                      <span>{isResponding ? 'Joining Squad...' : 'Accept & Join Squad'}</span>
+                    </button>
+                    <button
+                      onClick={() => handleRespondInvite(invite.id, 'decline')}
+                      disabled={isResponding}
+                      className="py-2.5 px-4 rounded-xl bg-surface-container hover:bg-error/15 text-on-surface-variant hover:text-error border border-card-border font-display font-bold text-xs uppercase tracking-wider transition-all disabled:opacity-50"
+                    >
+                      Decline
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
       {/* ═══════════════════════════════════════════════════════
           MY SQUADS & ROSTERS (Teams user captains or is in)
@@ -623,7 +799,7 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
       </section>
 
       {/* ═══════════════════════════════════════════════════════
-          MY APPLICATIONS & SCOUT RADAR (LinkedIn Pipeline)
+          MY APPLICATIONS & SCOUT RADAR (Tryout Pipeline)
       ═══════════════════════════════════════════════════════ */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
@@ -739,7 +915,7 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
       </div>
 
       {/* ═══════════════════════════════════════════════════════
-          LINKEDIN-STYLE NETWORKING ROW (Players & Orgs)
+          COMPETITIVE NETWORKING RADAR (Players & Orgs)
       ═══════════════════════════════════════════════════════ */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
