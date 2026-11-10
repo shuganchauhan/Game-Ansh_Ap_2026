@@ -8,7 +8,7 @@ import { useGSAPReveal } from '../../hooks/useGSAP';
 import useApi from '../../hooks/useApi';
 
 /* ═══════════════════════════════════════════════════════
-   DUMMY DATA
+   Supported game directory
 ═══════════════════════════════════════════════════════ */
 const GAME_ICONS = {
   valorant: Zap,
@@ -25,14 +25,11 @@ const GAMES = [
     name: 'VALORANT',
     publisher: 'Riot Games',
     genre: 'Tactical FPS',
-    activePlayers: '8,200+',
-    activeTeams: 312,
-    activeTournaments: 14,
-    prizePools: '₹32L+',
-    color: '#37ebf3',
-    gradient: 'from-[#37ebf3]/25 via-[#37ebf3]/5 to-transparent',
-    border: 'border-[#37ebf3]/30 hover:border-[#37ebf3]/80',
-    badge: 'bg-[#37ebf3]/15 text-[#37ebf3]',
+    image: '/valorant.png',
+    color: '#8B5CF6',
+    gradient: 'from-[#8B5CF6]/25 via-[#8B5CF6]/5 to-transparent',
+    border: 'border-[#8B5CF6]/30 hover:border-[#8B5CF6]/80',
+    badge: 'bg-[#8B5CF6]/15 text-[#8B5CF6]',
     description: "Precision 5v5 character-based tactical shooter with abilities. India's fastest growing FPS esport.",
     tag: 'TIER-1 FPS',
   },
@@ -41,14 +38,11 @@ const GAMES = [
     name: 'BGMI',
     publisher: 'Krafton',
     genre: 'Battle Royale',
-    activePlayers: '12,400+',
-    activeTeams: 540,
-    activeTournaments: 22,
-    prizePools: '₹58L+',
-    color: '#C48200',
-    gradient: 'from-[#C48200]/25 via-[#C48200]/5 to-transparent',
-    border: 'border-[#C48200]/30 hover:border-[#C48200]/80',
-    badge: 'bg-[#C48200]/15 text-[#C48200]',
+    image: '/bgmi.png',
+    color: '#22D3EE',
+    gradient: 'from-[#22D3EE]/25 via-[#22D3EE]/5 to-transparent',
+    border: 'border-[#22D3EE]/30 hover:border-[#22D3EE]/80',
+    badge: 'bg-[#22D3EE]/15 text-[#22D3EE]',
     description: 'Battlegrounds Mobile India — the premier competitive mobile battle royale in India.',
     tag: 'PREMIER BR',
   },
@@ -57,14 +51,11 @@ const GAMES = [
     name: 'Free Fire',
     publisher: 'Garena',
     genre: 'Battle Royale',
-    activePlayers: '9,800+',
-    activeTeams: 410,
-    activeTournaments: 18,
-    prizePools: '₹24L+',
-    color: '#e455ae',
-    gradient: 'from-[#e455ae]/25 via-[#e455ae]/5 to-transparent',
-    border: 'border-[#e455ae]/30 hover:border-[#e455ae]/80',
-    badge: 'bg-[#e455ae]/15 text-[#e455ae]',
+    image: '/freefire.png',
+    color: '#EC4899',
+    gradient: 'from-[#EC4899]/25 via-[#EC4899]/5 to-transparent',
+    border: 'border-[#EC4899]/30 hover:border-[#EC4899]/80',
+    badge: 'bg-[#EC4899]/15 text-[#EC4899]',
     description: 'High-octane 50-player battle royale with clash squad competitive circuits.',
     tag: 'PRO LEAGUE',
   },
@@ -73,14 +64,11 @@ const GAMES = [
     name: 'Clash of Clans',
     publisher: 'Supercell',
     genre: 'Strategy / Clan War',
-    activePlayers: '6,100+',
-    activeTeams: 280,
-    activeTournaments: 8,
-    prizePools: '₹18L+',
-    color: '#1ac5b0',
-    gradient: 'from-[#1ac5b0]/25 via-[#1ac5b0]/5 to-transparent',
-    border: 'border-[#1ac5b0]/30 hover:border-[#1ac5b0]/80',
-    badge: 'bg-[#1ac5b0]/15 text-[#1ac5b0]',
+    image: '/coc.png',
+    color: '#F59E0B',
+    gradient: 'from-[#F59E0B]/25 via-[#F59E0B]/5 to-transparent',
+    border: 'border-[#F59E0B]/30 hover:border-[#F59E0B]/80',
+    badge: 'bg-[#F59E0B]/15 text-[#F59E0B]',
     description: 'Clan Wars, Trophy Pushing, and Legend League — strategic clan battle operations.',
     tag: 'CWL LEAGUE',
   },
@@ -89,14 +77,11 @@ const GAMES = [
     name: 'Clash Royale',
     publisher: 'Supercell',
     genre: 'Strategy / Card',
-    activePlayers: '4,600+',
-    activeTeams: 195,
-    activeTournaments: 9,
-    prizePools: '₹14L+',
-    color: '#9381ff',
-    gradient: 'from-[#9381ff]/25 via-[#9381ff]/5 to-transparent',
-    border: 'border-[#9381ff]/30 hover:border-[#9381ff]/80',
-    badge: 'bg-[#9381ff]/15 text-[#9381ff]',
+    image: '/cr.png',
+    color: '#6366F1',
+    gradient: 'from-[#6366F1]/25 via-[#6366F1]/5 to-transparent',
+    border: 'border-[#6366F1]/30 hover:border-[#6366F1]/80',
+    badge: 'bg-[#6366F1]/15 text-[#6366F1]',
     description: 'Real-time deck-building card duels — Crown Championship 1v1 ladder circuit.',
     tag: 'CROWN CUP',
   },
@@ -105,161 +90,59 @@ const GAMES = [
     name: 'Call of Duty',
     publisher: 'Activision',
     genre: 'FPS / BR',
-    activePlayers: '5,300+',
-    activeTeams: 224,
-    activeTournaments: 11,
-    prizePools: '₹22L+',
-    color: '#cb1dcd',
-    gradient: 'from-[#cb1dcd]/25 via-[#cb1dcd]/5 to-transparent',
-    border: 'border-[#cb1dcd]/30 hover:border-[#cb1dcd]/80',
-    badge: 'bg-[#cb1dcd]/15 text-[#cb1dcd]',
+    image: '/cod.png',
+    color: '#10B981',
+    gradient: 'from-[#10B981]/25 via-[#10B981]/5 to-transparent',
+    border: 'border-[#10B981]/30 hover:border-[#10B981]/80',
+    badge: 'bg-[#10B981]/15 text-[#10B981]',
     description: 'COD Mobile + Warzone — 5v5 Hardpoint, S&D and Battle Royale operations.',
     tag: 'WARZONE',
   },
 ];
 
-const TEAMS_BY_GAME = {
-  valorant: [
-    { id: 't1', name: 'Global Esports Red', org: 'Global Esports', verified: true, status: 'active', roster: 5, winrate: '74%', openRoles: ['Initiator'], division: 'VCT India — Tier 1' },
-    { id: 't2', name: 'Velocity Gaming', org: 'Velocity', verified: true, status: 'active', roster: 4, winrate: '70%', openRoles: ['Controller', 'Flex'], division: 'VCT India — Tier 1' },
-    { id: 't3', name: 'Enigma Gaming', org: 'Enigma', verified: true, status: 'active', roster: 5, winrate: '66%', openRoles: [], division: 'VCT India — Tier 1' },
-    { id: 't4', name: 'Revenant XSpark', org: 'Revenant', verified: true, status: 'active', roster: 5, winrate: '62%', openRoles: ['Duelist'], division: 'VCT India — Tier 2' },
-    { id: 't5', name: 'Team Brutality', org: 'Brutality eSports', verified: false, status: 'draft', roster: 3, winrate: '55%', openRoles: ['IGL', 'Sentinel'], division: 'Open Qualifier' },
-    { id: 't6', name: 'Neon Protocol IN', org: 'Neon Esports', verified: false, status: 'draft', roster: 2, winrate: '48%', openRoles: ['Duelist', 'Controller', 'Initiator'], division: 'Tier 3' },
-  ],
-  bgmi: [
-    { id: 't7', name: 'Team Soul', org: 'S8UL', verified: true, status: 'active', roster: 4, winrate: '82%', openRoles: [], division: 'BMPS Season 4 — Grand Final' },
-    { id: 't8', name: 'Godlike Esports', org: 'Godlike', verified: true, status: 'active', roster: 4, winrate: '78%', openRoles: [], division: 'BMPS Season 4 — Grand Final' },
-    { id: 't9', name: 'OR Esports', org: 'OR', verified: true, status: 'active', roster: 4, winrate: '73%', openRoles: ['Fragger'], division: 'BMPS Season 4' },
-    { id: 't10', name: 'Team XO', org: 'XO Esports', verified: true, status: 'active', roster: 4, winrate: '68%', openRoles: ['IGL'], division: 'BMPS Season 4' },
-    { id: 't11', name: 'Marcos Gaming', org: 'Marcos', verified: false, status: 'active', roster: 4, winrate: '61%', openRoles: ['Support'], division: 'BMIS Qualifier' },
-    { id: 't12', name: 'Blind Esports', org: 'Blind', verified: false, status: 'draft', roster: 3, winrate: '50%', openRoles: ['Sniper', 'Fragger'], division: 'Open Circuit' },
-  ],
-  freefire: [
-    { id: 't13', name: 'Total Gaming Esports', org: 'Total Gaming', verified: true, status: 'active', roster: 4, winrate: '76%', openRoles: [], division: 'Free Fire India Pro — Division 1' },
-    { id: 't14', name: 'AS Esports', org: 'AS Esports', verified: true, status: 'active', roster: 4, winrate: '71%', openRoles: ['Rusher'], division: 'Free Fire India Pro — Division 1' },
-    { id: 't15', name: 'BTR India', org: 'BTR', verified: true, status: 'active', roster: 4, winrate: '68%', openRoles: ['Sniper'], division: 'Free Fire India Pro — Division 1' },
-    { id: 't16', name: 'Neyoo Esports', org: 'Neyoo Club', verified: false, status: 'draft', roster: 3, winrate: '53%', openRoles: ['IGL', 'Support'], division: 'Tier 2 Circuit' },
-  ],
-  coc: [
-    { id: 't17', name: 'INDIA Warriors', org: 'Warriors Clan', verified: true, status: 'active', roster: 15, winrate: '80%', openRoles: [], division: 'Legend League — Top 200 India' },
-    { id: 't18', name: 'Desi Destroyers', org: 'DD Clan', verified: true, status: 'active', roster: 14, winrate: '74%', openRoles: ['TH17 Max'], division: 'Legend League' },
-    { id: 't19', name: 'Royal Clan IN', org: 'Royal Esports', verified: false, status: 'active', roster: 12, winrate: '65%', openRoles: ['TH15+', 'War Hero'], division: 'Platinum War League' },
-    { id: 't20', name: 'Storm Clan India', org: 'Storm', verified: false, status: 'draft', roster: 8, winrate: '52%', openRoles: ['TH14+', 'TH15+', 'TH16+'], division: 'Open Clan Wars' },
-  ],
-  cr: [
-    { id: 't21', name: 'Phoenix Force CR', org: 'Phoenix eSports', verified: true, status: 'active', roster: 1, winrate: '79%', openRoles: [], division: 'Ultimate Championship — India Top 50' },
-    { id: 't22', name: 'Crown Raiders', org: 'CR Squad', verified: true, status: 'active', roster: 1, winrate: '72%', openRoles: [], division: 'Ultimate Championship' },
-    { id: 't23', name: 'Clash Kings IN', org: 'Kings Club', verified: false, status: 'active', roster: 1, winrate: '64%', openRoles: ['1v1 Dueler'], division: 'Crown Championship Qualifier' },
-    { id: 't24', name: 'Ladder Legends', org: 'LL Esports', verified: false, status: 'draft', roster: 1, winrate: '56%', openRoles: ['Deck Builder Specialist'], division: 'Open Ladder' },
-  ],
-  cod: [
-    { id: 't25', name: 'SynerGY India', org: 'SynerGY', verified: true, status: 'active', roster: 5, winrate: '75%', openRoles: ['Sniper'], division: 'COD Mobile World — India Region' },
-    { id: 't26', name: 'Team IND CoD', org: 'IND Esports', verified: true, status: 'active', roster: 5, winrate: '69%', openRoles: ['SMG Rusher'], division: 'COD Mobile World — India Region' },
-    { id: 't27', name: 'Warzone Wolves', org: 'WZ Wolves', verified: false, status: 'active', roster: 4, winrate: '63%', openRoles: ['AR / IGL'], division: 'Regional Qualifier' },
-    { id: 't28', name: 'Phantom Squad IN', org: 'Phantom Club', verified: false, status: 'draft', roster: 3, winrate: '51%', openRoles: ['Sniper', 'Support', 'AR'], division: 'Open Bracket' },
-  ],
-};
-
-const TOURNAMENTS_BY_GAME = {
-  valorant: [
-    { id: 'tr1', name: "FLUX VCT India Open #5", status: 'ongoing', prize: '₹5,00,000', maxTeams: 16, registered: 16, startDate: '2026-10-19', format: 'Double Elimination' },
-    { id: 'tr2', name: 'India Valorant Invitational 2026', status: 'upcoming', prize: '₹2,00,000', maxTeams: 32, registered: 24, startDate: '2026-11-05', format: 'Swiss + Playoffs' },
-    { id: 'tr3', name: 'VCT India Qualifier — Stage 3', status: 'upcoming', prize: '₹10,00,000', maxTeams: 8, registered: 6, startDate: '2026-11-20', format: 'Best of 5' },
-  ],
-  bgmi: [
-    { id: 'tr4', name: "FLUX BGMI Pro Series S2", status: 'ongoing', prize: '₹15,00,000', maxTeams: 24, registered: 24, startDate: '2026-10-18', format: 'BMPS Format — Survival Scoring' },
-    { id: 'tr5', name: 'BGMI Masters Open — Winter', status: 'upcoming', prize: '₹5,00,000', maxTeams: 32, registered: 18, startDate: '2026-11-12', format: 'Battle Royale — Top 16 Finals' },
-    { id: 'tr6', name: 'Krafton India Invitational', status: 'upcoming', prize: '₹25,00,000', maxTeams: 16, registered: 9, startDate: '2026-12-05', format: 'LAN — Survival + Chicken Dinner Scoring' },
-  ],
-  freefire: [
-    { id: 'tr7', name: "FLUX Free Fire Clash Cup #3", status: 'upcoming', prize: '₹3,00,000', maxTeams: 20, registered: 14, startDate: '2026-11-08', format: 'BR Survival Scoring' },
-    { id: 'tr8', name: 'FFIC Summer Qualifier 2026', status: 'upcoming', prize: '₹8,00,000', maxTeams: 12, registered: 8, startDate: '2026-11-22', format: 'Free Fire India Championship Format' },
-    { id: 'tr9', name: 'Garena Free Fire India Pro League', status: 'ongoing', prize: '₹6,00,000', maxTeams: 16, registered: 16, startDate: '2026-10-15', format: 'League Stage + Playoffs' },
-  ],
-  coc: [
-    { id: 'tr10', name: "FLUX Clash of Clans War Cup", status: 'upcoming', prize: '₹2,50,000', maxTeams: 32, registered: 21, startDate: '2026-11-10', format: 'Clan War League Format' },
-    { id: 'tr11', name: 'India CWL Open 2026', status: 'upcoming', prize: '₹1,50,000', maxTeams: 16, registered: 11, startDate: '2026-11-28', format: 'Round Robin + Knockout' },
-    { id: 'tr12', name: 'Legend League Invitational', status: 'upcoming', prize: '₹5,00,000', maxTeams: 8, registered: 4, startDate: '2026-12-10', format: 'Seeded Bracket — TH17 Only' },
-  ],
-  cr: [
-    { id: 'tr13', name: "FLUX Crown Championship India", status: 'upcoming', prize: '₹2,00,000', maxTeams: 64, registered: 48, startDate: '2026-11-15', format: '1v1 Single Elimination' },
-    { id: 'tr14', name: 'Clash Royale Ultimate League — India', status: 'ongoing', prize: '₹1,00,000', maxTeams: 32, registered: 32, startDate: '2026-10-20', format: '1v1 Round Robin + Finals' },
-    { id: 'tr15', name: 'Supercell Crown Cup — South Asia', status: 'upcoming', prize: '₹8,00,000', maxTeams: 16, registered: 7, startDate: '2026-12-01', format: 'Seeded 1v1 Bracket — Top 16 Ladder' },
-  ],
-  cod: [
-    { id: 'tr16', name: "FLUX COD Mobile Open #4", status: 'ongoing', prize: '₹3,50,000', maxTeams: 16, registered: 16, startDate: '2026-10-17', format: '5v5 Hardpoint + S&D' },
-    { id: 'tr17', name: 'COD Mobile India Championship 2026', status: 'upcoming', prize: '₹7,00,000', maxTeams: 24, registered: 15, startDate: '2026-11-18', format: 'Group Stage + BO5 Finals' },
-    { id: 'tr18', name: 'Activision India Warzone Invitational', status: 'upcoming', prize: '₹12,00,000', maxTeams: 20, registered: 8, startDate: '2026-12-08', format: 'BR Quads — Top 5 Scoring' },
-  ],
-};
-
+/* Legacy local showcase entries removed: discovery must reflect backend data only. */
 /* ═══════════════════════════════════════════════════════
-   GAME SELECTION CARD
+   GAME SELECTION CARD (Cinematic Cover & Metadata)
 ═══════════════════════════════════════════════════════ */
 function GameCard({ game, onSelect }) {
   return (
     <button
       onClick={() => onSelect(game)}
-      className={`relative group w-full text-left p-5 rounded-2xl bg-surface-container-low border ${game.border} transition-all duration-300 hover:scale-[1.02] overflow-hidden`}
+      className="group relative w-full text-left rounded-3xl bg-[#151B2B] border border-white/[0.08] hover:border-[#8B5CF6]/50 transition-all duration-300 hover:-translate-y-1.5 overflow-hidden shadow-xl"
     >
-      {/* Background gradient glow */}
-      <div className={`absolute inset-0 bg-gradient-to-br ${game.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
-
-      <div className="relative z-10 flex items-start justify-between gap-4">
-        <div className="flex items-start gap-4">
-          {(() => {
-            const IconComp = GAME_ICONS[game.id] || Zap;
-            return (
-              <div
-                className="w-14 h-14 rounded-xl flex items-center justify-center shrink-0 border border-card-border shadow-sm"
-                style={{ backgroundColor: `${game.color}18`, color: game.color }}
-              >
-                <IconComp className="w-7 h-7" />
-              </div>
-            );
-          })()}
-
-          <div className="space-y-1">
-            <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="font-display font-bold text-lg text-on-surface">{game.name}</h3>
-              <span className={`px-2 py-0.5 rounded text-[10px] font-mono uppercase font-bold ${game.badge}`}>
-                {game.genre}
-              </span>
-              {game.tag && (
-                <span className="px-2 py-0.5 rounded text-[10px] font-mono uppercase font-bold bg-surface-container-high text-on-surface-variant border border-card-border">
-                  {game.tag}
-                </span>
-              )}
-            </div>
-            <p className="font-body text-xs text-on-surface-variant line-clamp-1 max-w-[260px]">
-              {game.description}
-            </p>
-            <span className="font-mono text-[10px] text-on-surface-variant">{game.publisher}</span>
-          </div>
-        </div>
-
-        <ChevronRight className="w-5 h-5 text-on-surface-variant group-hover:text-on-surface group-hover:translate-x-1 transition-all shrink-0 mt-1" />
+      {/* Cover Image Banner */}
+      <div className="relative aspect-[16/9] w-full overflow-hidden">
+        <img
+          src={game.image}
+          alt={game.name}
+          className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#151B2B] via-[#151B2B]/40 to-transparent" />
+        <span className="absolute top-3 left-3 px-2.5 py-0.5 rounded-lg bg-black/60 backdrop-blur-md border border-white/10 font-mono text-[10px] font-bold text-[#22D3EE] uppercase tracking-wider">
+          {game.tag}
+        </span>
       </div>
 
-      {/* Stats row */}
-      <div className="relative z-10 mt-4 pt-3 border-t border-card-border grid grid-cols-4 gap-2">
-        {[
-          { v: game.activePlayers, l: 'Players' },
-          { v: game.activeTeams, l: 'Teams' },
-          { v: game.activeTournaments, l: 'Tourneys' },
-          { v: game.prizePools, l: 'Prize Pool' },
-        ].map((s, i) => (
-          <div key={i} className="text-center">
-            <div
-              className="font-display font-bold text-sm text-on-surface"
-              style={{ color: i === 3 ? game.color : undefined }}
-            >
-              {s.v}
-            </div>
-            <div className="font-mono text-[9px] uppercase text-on-surface-variant tracking-wide">{s.l}</div>
-          </div>
-        ))}
+      <div className="p-5 space-y-2">
+        <div className="flex items-center justify-between gap-2">
+          <h3 className="font-display font-black text-xl text-[#F8FAFC] group-hover:text-white transition-colors">
+            {game.name}
+          </h3>
+          <span className="px-2 py-0.5 rounded text-[10px] font-mono uppercase font-bold bg-[#8B5CF6]/20 text-[#8B5CF6]">
+            {game.genre}
+          </span>
+        </div>
+
+        <p className="font-body text-xs text-[#94A3B8] line-clamp-2">
+          {game.description}
+        </p>
+
+        <div className="pt-3 border-t border-white/[0.06] flex items-center justify-between text-xs font-mono text-[#94A3B8]">
+          <span>{game.publisher}</span>
+          <span className="text-[#22D3EE] font-bold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+            Browse Arena <ChevronRight className="w-3.5 h-3.5" />
+          </span>
+        </div>
       </div>
     </button>
   );
@@ -281,7 +164,7 @@ function TeamCard({ team, gameColor, onApply }) {
                 : 'bg-surface-container text-on-surface-variant'
             }`}
           >
-            {team.status === 'active' ? '● Active' : '○ Draft'}
+            {team.status || 'Team'}
           </span>
           {team.verified && <CheckCircle2 className="w-4 h-4 text-secondary shrink-0" title="Verified" />}
         </div>
@@ -289,20 +172,10 @@ function TeamCard({ team, gameColor, onApply }) {
         {/* Name + org */}
         <div>
           <h3 className="font-display font-bold text-lg text-on-surface">{team.name}</h3>
-          <p className="font-mono text-xs text-on-surface-variant">{team.org} · {team.division}</p>
+          <p className="font-mono text-xs text-on-surface-variant">{[team.org, team.division].filter(Boolean).join(' · ')}</p>
         </div>
 
-        {/* Roster + Winrate */}
-        <div className="grid grid-cols-2 gap-3">
-          <div className="p-2.5 rounded-xl bg-surface-container text-center">
-            <div className="font-display font-bold text-base text-on-surface">{team.roster}</div>
-            <div className="font-mono text-[10px] text-on-surface-variant uppercase">Roster</div>
-          </div>
-          <div className="p-2.5 rounded-xl bg-surface-container text-center">
-            <div className="font-display font-bold text-base text-secondary">{team.winrate}</div>
-            <div className="font-mono text-[10px] text-on-surface-variant uppercase">Win Rate</div>
-          </div>
-        </div>
+        {team.roster != null && <div className="inline-flex items-center gap-2 rounded-lg bg-surface-container px-3 py-2 text-xs text-on-surface-variant"><Users className="h-4 w-4 text-secondary" />{team.roster} roster members</div>}
 
         {/* Open roles */}
         {team.openRoles.length > 0 ? (
@@ -314,9 +187,7 @@ function TeamCard({ team, gameColor, onApply }) {
               </span>
             ))}
           </div>
-        ) : (
-          <span className="text-[11px] font-mono text-on-surface-variant">Full Roster — No Openings</span>
-        )}
+        ) : null}
       </div>
 
       {/* CTA */}
@@ -344,7 +215,8 @@ function TeamCard({ team, gameColor, onApply }) {
    TOURNAMENT CARD
 ═══════════════════════════════════════════════════════ */
 function TournamentCard({ tourney, gameColor, onRegister }) {
-  const fillPct = Math.round((tourney.registered / tourney.maxTeams) * 100);
+  const hasCapacity = Number.isFinite(Number(tourney.registered)) && Number.isFinite(Number(tourney.maxTeams)) && Number(tourney.maxTeams) > 0;
+  const fillPct = hasCapacity ? Math.min(100, Math.round((Number(tourney.registered) / Number(tourney.maxTeams)) * 100)) : null;
   return (
     <div className="p-5 rounded-2xl bg-surface-container-low border border-card-border hover:border-secondary/40 transition-all duration-300 hover:scale-[1.01] flex flex-col justify-between">
       <div className="space-y-3">
@@ -368,13 +240,13 @@ function TournamentCard({ tourney, gameColor, onRegister }) {
         <h3 className="font-display font-bold text-base text-on-surface line-clamp-2">{tourney.name}</h3>
 
         {/* Prize */}
-        <div className="flex items-center gap-2">
+        {tourney.prize && <div className="flex items-center gap-2">
           <Trophy className="w-4 h-4 text-tertiary" />
           <span className="font-display font-bold text-lg text-tertiary">{tourney.prize}</span>
-        </div>
+        </div>}
 
         {/* Registration progress */}
-        <div className="space-y-1">
+        {hasCapacity && <div className="space-y-1">
           <div className="flex items-center justify-between text-[11px] font-mono text-on-surface-variant">
             <span>Teams Registered</span>
             <span className="font-bold text-on-surface">{tourney.registered}/{tourney.maxTeams}</span>
@@ -389,22 +261,22 @@ function TournamentCard({ tourney, gameColor, onRegister }) {
             />
           </div>
           <span className="font-mono text-[10px] text-on-surface-variant">{fillPct}% capacity filled</span>
-        </div>
+        </div>}
 
-        <div className="font-mono text-xs text-on-surface-variant">
+        {tourney.startDate && <div className="font-mono text-xs text-on-surface-variant">
           {new Date(tourney.startDate + 'T00:00:00').toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' })}
-        </div>
+        </div>}
       </div>
 
       {/* CTA */}
       <div className="pt-4 mt-2 border-t border-card-border">
         <button
-          disabled={fillPct >= 100}
+          disabled={fillPct === 100}
           onClick={onRegister}
           className="w-full py-2.5 rounded-xl font-display font-bold text-xs uppercase tracking-wider text-white flex items-center justify-center gap-2 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-          style={{ backgroundColor: fillPct >= 100 ? 'var(--color-surface-container-high)' : (gameColor || 'var(--color-secondary-container)') }}
+          style={{ backgroundColor: fillPct === 100 ? 'var(--color-surface-container-high)' : (gameColor || 'var(--color-secondary-container)') }}
         >
-          {fillPct >= 100 ? 'Registration Closed' : 'Register Team'}
+          {fillPct === 100 ? 'Registration Closed' : 'Register Team'}
         </button>
       </div>
     </div>
@@ -471,36 +343,28 @@ export default function DiscoveryPage({ onSelectTab, onOpenAuth }) {
   const backendTeams = Array.isArray(apiTeamsData) ? apiTeamsData : (apiTeamsData?.data || []);
   const backendTourneys = Array.isArray(apiTourneysData) ? apiTourneysData : (apiTourneysData?.data || []);
 
-  const fallbackTeams = selectedGame ? (TEAMS_BY_GAME[selectedGame.id] || []) : [];
-  const fallbackTourneys = selectedGame ? (TOURNAMENTS_BY_GAME[selectedGame.id] || []) : [];
+  const rawTeams = backendTeams.map((bt) => ({
+    id: bt.id,
+    name: bt.name,
+    org: bt.org_name || (bt.org_id ? 'Esports Org' : 'Independent Squad'),
+    verified: Boolean(bt.verified),
+    status: bt.status,
+    division: bt.division,
+    roster: bt.members_count,
+    openRoles: (bt.open_postings || []).map((p) => p.role).filter(Boolean),
+    openPostings: bt.open_postings || [],
+  }));
 
-  const rawTeams = backendTeams.length > 0
-    ? backendTeams.map((bt) => ({
-        id: bt.id,
-        name: bt.name,
-        org: bt.org_name || (bt.org_id ? 'Esports Org' : 'Independent Squad'),
-        verified: Boolean(bt.verified),
-        status: bt.status || 'active',
-        division: bt.division || 'Competitive Division',
-        roster: bt.members_count || 4,
-        winrate: '68%',
-        openRoles: (bt.open_postings || []).map((p) => p.role).filter(Boolean),
-        openPostings: bt.open_postings || [],
-      }))
-    : fallbackTeams;
-
-  const rawTournaments = backendTourneys.length > 0
-    ? backendTourneys.map((tr) => ({
-        id: tr.id,
-        name: tr.name,
-        status: tr.status || 'upcoming',
-        prize: tr.prize_pool ? `₹${Number(tr.prize_pool).toLocaleString('en-IN')}` : '₹5,00,000',
-        maxTeams: 16,
-        registered: 8,
-        startDate: tr.start_date || '2026-11-20',
-        format: 'Single Elimination',
-      }))
-    : fallbackTourneys;
+  const rawTournaments = backendTourneys.map((tr) => ({
+    id: tr.id,
+    name: tr.name,
+    status: tr.status,
+    prize: tr.prize_pool ? `₹${Number(tr.prize_pool).toLocaleString('en-IN')}` : null,
+    maxTeams: tr.max_teams,
+    registered: tr.registered_teams,
+    startDate: tr.start_date,
+    format: tr.format,
+  }));
 
   const teams = rawTeams;
   const tournaments = rawTournaments;
@@ -560,43 +424,20 @@ export default function DiscoveryPage({ onSelectTab, onOpenAuth }) {
   /* ── GAME SELECTION VIEW ────────────────────────────── */
   if (!selectedGame) {
     return (
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 space-y-8">
+      <div className="flux-page-shell mx-auto max-w-[1440px] px-4 py-10 sm:px-6 lg:px-10 space-y-8">
 
         {/* Header */}
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="font-mono text-xs uppercase tracking-[0.18em] text-secondary font-bold">PRO ROSTER GATEWAY</span>
-            <span className="font-mono text-xs text-on-surface-variant">· Season 2026 // Live</span>
+            <span className="font-mono text-xs uppercase tracking-[0.18em] text-secondary font-bold">GAME DIRECTORY</span>
+            <span className="font-mono text-xs text-on-surface-variant"></span>
           </div>
           <h1 className="font-display font-bold text-4xl text-on-surface">
             Choose Your <span className="gradient-text">Game</span>
           </h1>
           <p className="font-body text-sm text-on-surface-variant mt-1">
-            Select a title to explore verified team rosters, open recruitment roles, and live tournament brackets.
+            Choose a game to browse teams and tournaments published on Flux.
           </p>
-        </div>
-
-        {/* Live telemetry bar */}
-        <div className="flex items-center gap-4 p-4 rounded-2xl bg-surface-container-low border border-card-border overflow-x-auto">
-          <div className="flex items-center gap-2 shrink-0">
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75" />
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-secondary" />
-            </span>
-            <span className="font-mono text-xs font-bold text-secondary uppercase tracking-wider">Scout Radar Engaged</span>
-          </div>
-          <div className="h-4 w-px bg-card-border shrink-0" />
-          {[
-            { label: 'Total Players', value: '38,100+', color: 'text-secondary' },
-            { label: 'Active Teams', value: '1,961+', color: 'text-primary' },
-            { label: 'Live Tourneys', value: '86', color: 'text-error' },
-            { label: 'Prize Pool', value: '₹1.68 Cr+', color: 'text-tertiary' },
-          ].map((s, i) => (
-            <div key={i} className="flex flex-col items-center shrink-0 px-2">
-              <span className={`font-display font-bold text-base ${s.color}`}>{s.value}</span>
-              <span className="font-mono text-[9px] text-on-surface-variant uppercase">{s.label}</span>
-            </div>
-          ))}
         </div>
 
         {/* Game Grid */}
@@ -613,15 +454,22 @@ export default function DiscoveryPage({ onSelectTab, onOpenAuth }) {
 
   /* ── GAME DETAIL VIEW ────────────────────────────────── */
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+    <div className="flux-page-shell mx-auto max-w-[1440px] px-4 py-8 sm:px-6 lg:px-10 space-y-6">
 
       {/* Game hero banner */}
       <div
-        className="relative overflow-hidden rounded-3xl border border-card-border p-6 sm:p-8"
-        style={{ background: `linear-gradient(135deg, ${selectedGame.color}18 0%, var(--color-surface-container-low) 100%)` }}
+        className="relative overflow-hidden rounded-3xl border border-white/[0.1] bg-[#151B2B] p-6 sm:p-8 shadow-2xl"
       >
+        {selectedGame.image && (
+          <img
+            src={selectedGame.image}
+            alt={selectedGame.name}
+            className="absolute inset-0 w-full h-full object-cover object-center filter brightness-[0.3] opacity-65"
+          />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#090B12] via-[#090B12]/85 to-transparent" />
         <div
-          className="absolute top-0 right-0 w-64 h-64 rounded-full blur-[80px] pointer-events-none opacity-20"
+          className="absolute top-0 right-0 w-72 h-72 rounded-full blur-[80px] pointer-events-none opacity-25"
           style={{ background: selectedGame.color }}
         />
 
@@ -629,7 +477,7 @@ export default function DiscoveryPage({ onSelectTab, onOpenAuth }) {
           <div className="space-y-3">
             <button
               onClick={handleBack}
-              className="flex items-center gap-1.5 text-on-surface-variant hover:text-on-surface font-mono text-xs uppercase tracking-wider transition-colors"
+              className="flex items-center gap-1.5 text-[#94A3B8] hover:text-[#F8FAFC] font-mono text-xs uppercase tracking-wider transition-colors"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               All Games
@@ -640,22 +488,22 @@ export default function DiscoveryPage({ onSelectTab, onOpenAuth }) {
                 const IconComp = GAME_ICONS[selectedGame.id] || Zap;
                 return (
                   <div
-                    className="w-16 h-16 rounded-2xl flex items-center justify-center border border-card-border shadow-md"
-                    style={{ backgroundColor: `${selectedGame.color}20`, color: selectedGame.color }}
+                    className="w-16 h-16 rounded-2xl flex items-center justify-center border border-white/[0.1] shadow-lg"
+                    style={{ backgroundColor: `${selectedGame.color}25`, color: selectedGame.color }}
                   >
                     <IconComp className="w-8 h-8" />
                   </div>
                 );
               })()}
               <div>
-                <h1 className="font-display font-bold text-3xl sm:text-4xl text-on-surface">{selectedGame.name}</h1>
+                <h1 className="font-display font-black text-3xl sm:text-4xl text-[#F8FAFC]">{selectedGame.name}</h1>
                 <div className="flex items-center gap-2 mt-1 flex-wrap">
                   <span className={`px-2.5 py-0.5 rounded text-xs font-mono uppercase font-bold ${selectedGame.badge}`}>
                     {selectedGame.genre}
                   </span>
-                  <span className="font-mono text-xs text-on-surface-variant">{selectedGame.publisher}</span>
+                  <span className="font-mono text-xs text-[#94A3B8]">{selectedGame.publisher}</span>
                   {selectedGame.tag && (
-                    <span className="font-mono text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant border border-card-border">
+                    <span className="font-mono text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-white/[0.08] text-[#F8FAFC] border border-white/[0.1]">
                       {selectedGame.tag}
                     </span>
                   )}
@@ -664,25 +512,6 @@ export default function DiscoveryPage({ onSelectTab, onOpenAuth }) {
             </div>
           </div>
 
-          {/* Quick stats */}
-          <div className="grid grid-cols-4 gap-3 shrink-0">
-            {[
-              { v: selectedGame.activePlayers, l: 'Players' },
-              { v: selectedGame.activeTeams, l: 'Teams' },
-              { v: selectedGame.activeTournaments, l: 'Tourneys' },
-              { v: selectedGame.prizePools, l: 'Prize Pool' },
-            ].map((s, i) => (
-              <div key={i} className="p-3 rounded-xl bg-surface-container/60 backdrop-blur-sm border border-card-border text-center min-w-[60px]">
-                <div
-                  className="font-display font-bold text-base text-on-surface"
-                  style={{ color: i === 3 ? selectedGame.color : undefined }}
-                >
-                  {s.v}
-                </div>
-                <div className="font-mono text-[9px] text-on-surface-variant uppercase">{s.l}</div>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
 
@@ -697,7 +526,7 @@ export default function DiscoveryPage({ onSelectTab, onOpenAuth }) {
             style={activeSection === 'teams' ? { backgroundColor: selectedGame.color } : {}}
           >
             <Shield className="w-4 h-4" />
-            Teams ({teams.length})
+            Teams
           </button>
           <button
             onClick={() => setActiveSection('tournaments')}
@@ -707,7 +536,7 @@ export default function DiscoveryPage({ onSelectTab, onOpenAuth }) {
             style={activeSection === 'tournaments' ? { backgroundColor: selectedGame.color } : {}}
           >
             <Trophy className="w-4 h-4" />
-            Tournaments ({tournaments.length})
+            Tournaments
           </button>
         </div>
 
@@ -750,9 +579,9 @@ export default function DiscoveryPage({ onSelectTab, onOpenAuth }) {
               ))}
             </div>
           ) : (
-            <div className="py-20 text-center space-y-2">
+            <div className="flux-empty-panel rounded-3xl border border-card-border py-20 text-center space-y-2">
               <Users className="w-10 h-10 text-on-surface-variant mx-auto" />
-              <p className="font-display font-semibold text-on-surface-variant">No teams found for &ldquo;{search}&rdquo;</p>
+              <p className="font-display font-semibold text-on-surface-variant">{search ? `No teams match “${search}”` : 'No teams have been published for this game yet.'}</p>
             </div>
           )
         ) : (
@@ -777,25 +606,14 @@ export default function DiscoveryPage({ onSelectTab, onOpenAuth }) {
               ))}
             </div>
           ) : (
-            <div className="py-20 text-center space-y-2">
+            <div className="flux-empty-panel rounded-3xl border border-card-border py-20 text-center space-y-2">
               <Trophy className="w-10 h-10 text-on-surface-variant mx-auto" />
               <p className="font-display font-semibold text-on-surface-variant">No tournaments found.</p>
-              <p className="font-body text-sm text-on-surface-variant">New brackets drop weekly — check back soon.</p>
+              <p className="font-body text-sm text-on-surface-variant">Published tournaments for this game will appear here.</p>
             </div>
           )
         )}
       </div>
-
-      {/* Pagination hint */}
-      {((activeSection === 'teams' && filteredTeams.length >= 4) ||
-        (activeSection === 'tournaments' && filteredTournaments.length >= 3)) && (
-        <div className="text-center py-4 font-mono text-xs text-on-surface-variant">
-          <span className="font-bold" style={{ color: selectedGame.color }}>
-            {activeSection === 'teams' ? filteredTeams.length : filteredTournaments.length} {activeSection}
-          </span>
-          {' '}· Index synced · Low Latency Active
-        </div>
-      )}
 
       {/* ── Apply Modal ── */}
       {applyTarget && (

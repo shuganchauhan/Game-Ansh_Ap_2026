@@ -3,75 +3,23 @@
 @tailwind utilities;
 
 @layer base {
-  /* ─── Gamers'G Brand Design Tokens — Light Mode (Clean Studio Aesthetic) ─── */
-  :root, .light {
+  /* ─── FLUX Brand Design Tokens — Dark Mode Only ─── */
+  :root, .dark {
     /* Backgrounds */
-    --color-surface: #F8FAFC;
-    --color-surface-dim: #F1F5F9;
-    --color-surface-bright: #FFFFFF;
-    --color-surface-container-lowest: #FFFFFF;
-    --color-surface-container-low: #F8FAFC;
-    --color-surface-container: #F1F5F9;
-    --color-surface-container-high: #E2E8F0;
-    --color-surface-container-highest: #CBD5E1;
+    --color-surface: #090B12;
+    --color-surface-dim: #06080E;
+    --color-surface-bright: #151B2B;
+    --color-surface-container-lowest: #090B12;
+    --color-surface-container-low: #101522;
+    --color-surface-container: #151B2B;
+    --color-surface-container-high: #1B2335;
+    --color-surface-container-highest: #232D42;
 
-    /* Text & Accents — Rich Obsidian Ink */
-    --color-on-surface: #0F172A;
-    --color-on-surface-variant: #475569;
-    --color-outline: #64748B;
-    --color-outline-variant: #CBD5E1;
-    --color-card-border: rgba(15, 23, 42, 0.08);
-
-    /* Brand — Royal Electric Violet */
-    --color-primary: #7C3AED;
-    --color-on-primary: #FFFFFF;
-    --color-primary-container: #8B5CF6;
-    --color-on-primary-container: #FFFFFF;
-    --color-primary-hover: #6D28D9;
-
-    /* Accent — Cyber Cyan */
-    --color-secondary: #0891B2;
-    --color-on-secondary: #FFFFFF;
-    --color-secondary-container: #06B6D4;
-    --color-on-secondary-container: #0F172A;
-
-    /* Highlight / Attention — Amber Gold */
-    --color-tertiary: #D97706;
-    --color-on-tertiary: #FFFFFF;
-    --color-tertiary-container: #F59E0B;
-
-    /* Semantic */
-    --color-error: #E11D48;
-    --color-on-error: #FFFFFF;
-    --color-error-container: #FFE4E6;
-    --color-success: #059669;
-    --color-warning: #D97706;
-
-    /* Glow effects */
-    --glow-primary: rgba(124, 58, 237, 0.2);
-    --glow-secondary: rgba(8, 145, 178, 0.2);
-    --glow-accent: rgba(225, 29, 72, 0.15);
-    --glow-yellow: rgba(217, 119, 6, 0.18);
-    --glow-crimson: rgba(225, 29, 72, 0.2);
-  }
-
-  /* ─── Gamers'G Brand Design Tokens — Dark Mode (Deep Obsidian Neo-Esports) ─── */
-  .dark {
-    /* Backgrounds — Deep Obsidian */
-    --color-surface: #07080D;
-    --color-surface-dim: #050508;
-    --color-surface-bright: #121522;
-    --color-surface-container-lowest: #0A0C13;
-    --color-surface-container-low: #0F121C;
-    --color-surface-container: #141724;
-    --color-surface-container-high: #1C2032;
-    --color-surface-container-highest: #262B42;
-
-    /* Text & Accents — Crisp High Contrast White & Platinum */
+    /* Text & Accents */
     --color-on-surface: #F8FAFC;
     --color-on-surface-variant: #94A3B8;
     --color-outline: #64748B;
-    --color-outline-variant: #334155;
+    --color-outline-variant: rgba(255, 255, 255, 0.08);
     --color-card-border: rgba(255, 255, 255, 0.08);
 
     /* Brand — Electric Violet */
@@ -82,14 +30,14 @@
     --color-primary-hover: #9333EA;
 
     /* Accent — Cyber Aqua & Cyan */
-    --color-secondary: #06B6D4;
-    --color-on-secondary: #07080D;
-    --color-secondary-container: #0891B2;
+    --color-secondary: #22D3EE;
+    --color-on-secondary: #090B12;
+    --color-secondary-container: #06B6D4;
     --color-on-secondary-container: #FFFFFF;
 
-    /* Highlight / Attention — Championship Gold */
+    /* Highlight — Championship Gold */
     --color-tertiary: #F59E0B;
-    --color-on-tertiary: #07080D;
+    --color-on-tertiary: #090B12;
     --color-tertiary-container: #D97706;
 
     /* Semantic */
@@ -97,14 +45,14 @@
     --color-on-error: #FFFFFF;
     --color-error-container: #881337;
     --color-success: #10B981;
-    --color-warning: #F59E0B;
+    --color-warning: #FBBF24;
 
     /* Glow effects */
-    --glow-primary: rgba(139, 92, 246, 0.45);
-    --glow-secondary: rgba(6, 182, 212, 0.45);
-    --glow-accent: rgba(236, 72, 153, 0.4);
-    --glow-yellow: rgba(245, 158, 11, 0.35);
-    --glow-crimson: rgba(244, 63, 94, 0.4);
+    --glow-primary: rgba(139, 92, 246, 0.35);
+    --glow-secondary: rgba(34, 211, 238, 0.35);
+    --glow-accent: rgba(236, 72, 153, 0.35);
+    --glow-yellow: rgba(245, 158, 11, 0.3);
+    --glow-crimson: rgba(244, 63, 94, 0.35);
   }
 
   * {
@@ -127,9 +75,9 @@
 }
 
 .glass-panel {
-  background: rgba(33, 35, 43, 0.85);
-  backdrop-filter: blur(20px) saturate(1.4);
-  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  background: rgba(18, 21, 29, 0.92);
+  backdrop-filter: blur(18px) saturate(1.2);
+  -webkit-backdrop-filter: blur(18px) saturate(1.2);
   border: 1px solid var(--color-card-border);
 }
 
@@ -139,9 +87,9 @@
 }
 
 .glass-modal {
-  background: rgba(33, 35, 43, 0.92);
-  backdrop-filter: blur(28px) saturate(1.6);
-  -webkit-backdrop-filter: blur(28px) saturate(1.6);
+  background: rgba(18, 21, 29, 0.97);
+  backdrop-filter: blur(24px) saturate(1.3);
+  -webkit-backdrop-filter: blur(24px) saturate(1.3);
   border: 1px solid var(--color-card-border);
 }
 
@@ -260,6 +208,211 @@
 .fade-up-4 { animation-delay: 0.5s; }
 .fade-up-5 { animation-delay: 0.64s; }
 
+/* Flux platform shell */
+.flux-header {
+  background: rgba(11, 13, 18, 0.88);
+  border-color: rgba(177, 190, 215, 0.12);
+  backdrop-filter: blur(18px) saturate(1.2);
+  -webkit-backdrop-filter: blur(18px) saturate(1.2);
+}
+
+.flux-page-shell {
+  width: 100%;
+}
+
+.flux-page-heading {
+  position: relative;
+  padding: 1.25rem 0 1.5rem;
+}
+
+.flux-page-heading::after {
+  content: '';
+  display: block;
+  width: min(100%, 64px);
+  height: 2px;
+  margin-top: 1.25rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #8b5cf6, #22d3ee);
+}
+
+.flux-feature-panel {
+  background: radial-gradient(ellipse at 90% 0%, rgba(34, 211, 238, 0.09), transparent 35%), radial-gradient(ellipse at 12% 100%, rgba(139, 92, 246, 0.11), transparent 48%), var(--color-surface-container-low);
+}
+
+.flux-empty-panel {
+  background: radial-gradient(ellipse at 50% 0%, rgba(139, 92, 246, 0.1), transparent 58%), var(--color-surface-container-low);
+}
+
+.flux-content-card {
+  transition: transform 180ms ease, border-color 180ms ease, background-color 180ms ease;
+}
+
+.flux-content-card:hover {
+  transform: translateY(-2px);
+}
+
+.flux-game-directory-card {
+  min-height: 190px;
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.025);
+}
+
+.flux-brand-mark {
+  background: linear-gradient(145deg, #a78bfa, #7c3aed 58%, #22d3ee);
+  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.25);
+}
+
+.flux-nav-link {
+  position: relative;
+  transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease;
+}
+
+.flux-nav-link[aria-current="page"]::after {
+  content: '';
+  position: absolute;
+  height: 2px;
+  left: 12px;
+  right: 12px;
+  bottom: -8px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #8b5cf6, #22d3ee);
+}
+
+.flux-hero-art {
+  min-height: 420px;
+  background: #12151d;
+  isolation: isolate;
+}
+
+.flux-home-hero {
+  background: #0b0d12;
+}
+
+.flux-home-hero__image {
+  position: absolute;
+  inset: 0 0 0 auto;
+  width: 62%;
+  z-index: -2;
+  background-image:
+    linear-gradient(90deg, #0b0d12 0%, rgba(11, 13, 18, 0.54) 24%, rgba(11, 13, 18, 0.05) 75%),
+    linear-gradient(0deg, rgba(11, 13, 18, 0.74) 0%, transparent 45%, rgba(11, 13, 18, 0.08) 100%),
+    url('/flux-esports-crowd.jpg');
+  background-size: cover;
+  background-position: center 48%;
+  opacity: 0.85;
+}
+
+.flux-home-hero__grid {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.15;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: linear-gradient(90deg, transparent, #000 58%, #000);
+}
+
+.flux-gradient-text {
+  background: linear-gradient(100deg, #c4b5fd 8%, #a78bfa 45%, #67e8f9 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.flux-game-card {
+  isolation: isolate;
+  background: linear-gradient(150deg, rgba(255, 255, 255, 0.055), transparent 68%), #12151d;
+}
+
+.flux-game-card::before,
+.flux-game-card::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+}
+
+.flux-game-card::before {
+  width: 155px;
+  height: 155px;
+  top: 14px;
+  right: -42px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 42% 58% 61% 39%;
+  transform: rotate(-24deg);
+  transition: transform 350ms ease, opacity 350ms ease;
+  opacity: 0.8;
+}
+
+.flux-game-card::after {
+  inset: 0;
+  opacity: 0.7;
+  background: radial-gradient(ellipse at 82% 24%, var(--game-glow), transparent 54%);
+  z-index: -1;
+}
+
+.flux-game-card:hover::before {
+  transform: rotate(-10deg) scale(1.08);
+}
+
+.flux-game-card__index {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 2;
+  color: rgba(255, 255, 255, 0.42);
+  font: 600 10px/1 'JetBrains Mono', monospace;
+  letter-spacing: 0.14em;
+}
+
+.flux-game-card__mark {
+  position: absolute;
+  top: 31px;
+  right: 10px;
+  z-index: 0;
+  color: var(--game-mark);
+  font: 900 clamp(44px, 6vw, 72px)/0.9 'Outfit', sans-serif;
+  letter-spacing: -0.08em;
+  opacity: 0.2;
+  transform: rotate(-9deg);
+  transition: transform 250ms ease, opacity 250ms ease;
+}
+
+.flux-game-card:hover .flux-game-card__mark {
+  opacity: 0.35;
+  transform: rotate(-5deg) translateY(-3px);
+}
+
+.flux-game-card--violet { --game-glow: rgba(139, 92, 246, 0.45); --game-mark: #c4b5fd; }
+.flux-game-card--cyan { --game-glow: rgba(34, 211, 238, 0.34); --game-mark: #67e8f9; }
+.flux-game-card--orange { --game-glow: rgba(249, 115, 22, 0.34); --game-mark: #fdba74; }
+.flux-game-card--amber { --game-glow: rgba(245, 158, 11, 0.3); --game-mark: #fcd34d; }
+.flux-game-card--green { --game-glow: rgba(52, 211, 153, 0.28); --game-mark: #6ee7b7; }
+.flux-game-card--blue { --game-glow: rgba(96, 165, 250, 0.3); --game-mark: #93c5fd; }
+
+.flux-bottom-cta {
+  background: radial-gradient(ellipse at 82% 10%, rgba(34, 211, 238, 0.16), transparent 35%), radial-gradient(ellipse at 15% 100%, rgba(139, 92, 246, 0.22), transparent 48%), #12151d;
+}
+
+@media (max-width: 640px) {
+  .flux-home-hero__image {
+    width: 100%;
+    opacity: 0.55;
+    background-image:
+      linear-gradient(90deg, rgba(11, 13, 18, 0.78), rgba(11, 13, 18, 0.34)),
+      linear-gradient(0deg, #0b0d12 0%, transparent 55%),
+      url('/flux-esports-crowd.jpg');
+    background-position: center 45%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 /* ─── Counter animation ─── */
 @keyframes countUp {
   from { opacity: 0; transform: translateY(20px) scale(0.9); }
@@ -315,4 +468,38 @@
 
 .animate-marquee-smooth-reverse:hover {
   animation-play-state: paused;
+}
+
+/* ─── Featured Games spotlight progress bar ─── */
+@keyframes progressBar {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
+
+/* ─── Tactical Radar Sweep ─── */
+@keyframes radar-sweep {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.animate-radar-sweep {
+  animation: radar-sweep 4s linear infinite;
+  will-change: transform;
+}
+
+/* ─── Border Beam Glowing Aura ─── */
+@keyframes borderBeam {
+  0% { offset-distance: 0%; }
+  100% { offset-distance: 100%; }
+}
+
+/* ─── Landing page theme-aware backgrounds (dark-only) ─── */
+
+.flux-page-bg {
+  background-color: #090B12;
+  color: #F8FAFC;
+}
+
+.flux-marquee-bg {
+  background-color: #06080E;
 }

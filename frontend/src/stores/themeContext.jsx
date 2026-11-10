@@ -3,28 +3,16 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState(() => {
-    const saved = localStorage.getItem('gamersg_theme');
-    if (saved) return saved;
-    // Default to dark for esports aesthetic
-    return 'dark';
-  });
+  const [theme] = useState('dark');
 
   useEffect(() => {
     const root = document.documentElement;
-    if (theme === 'dark') {
-      root.classList.add('dark');
-      root.classList.remove('light');
-    } else {
-      root.classList.remove('dark');
-      root.classList.add('light');
-    }
-    localStorage.setItem('gamersg_theme', theme);
-  }, [theme]);
+    root.classList.add('dark');
+    root.classList.remove('light');
+  }, []);
 
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
-  };
+  // Light mode disabled — platform is dark-only
+  const toggleTheme = () => {};
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>

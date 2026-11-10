@@ -2,7 +2,12 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { api } from '../lib/api';
 import { disconnectSocket } from '../lib/socket';
 
-const AuthContext = createContext();
+// Keep the context object stable while Vite replaces this module during HMR.
+// Otherwise a refreshed hook can read a new context instance while the mounted
+// provider still owns the previous one, making useContext return undefined.
+const AuthContext = import.meta.hot?.data?.authContext || createContext(undefined);
+if (import.meta.hot) import.meta.hot.data.authContext = AuthContext;
+AuthContext.displayName = 'AuthContext';
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
@@ -99,5 +104,9 @@ export function AuthProvider({ children }) {
 }
 
 export function useAuth() {
-  return useContext(AuthContext);
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider.');
+  }
+  return context;
 }

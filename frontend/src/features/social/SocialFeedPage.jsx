@@ -110,7 +110,7 @@ export default function SocialFeedPage({ onSelectTab, onOpenAuth }) {
   });
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+    <div className="flux-page-shell mx-auto max-w-[1440px] px-4 py-8 sm:px-6 lg:px-10">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
         {/* ═══════════════════════════════════════════════════════
@@ -120,15 +120,15 @@ export default function SocialFeedPage({ onSelectTab, onOpenAuth }) {
           {actionError && <p role="alert" className="p-3 rounded-xl bg-error/10 text-error text-sm">{actionError}</p>}
 
           {/* Feed Header */}
-          <div>
+          <div className="flux-page-heading">
             <div className="flex items-center gap-2 mb-1">
               <span className="font-mono text-xs uppercase tracking-wider text-secondary font-bold">
-                Competitive Network // 2026 Season
+                Competitive Network
               </span>
             </div>
             <h1 className="font-display font-bold text-3xl text-on-surface">Community Feed</h1>
             <p className="font-body text-xs sm:text-sm text-on-surface-variant mt-0.5">
-              Live tryout dispatches, LFT player resumes, scrim results, and official esports org announcements.
+              Tryout posts, player introductions, scrim updates, and announcements from esports organizations.
             </p>
           </div>
 

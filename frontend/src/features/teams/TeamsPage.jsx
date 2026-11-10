@@ -206,7 +206,7 @@ export default function TeamsPage({ onOpenTeamCreator, onSelectTab, onOpenAuth }
   ═══════════════════════════════════════════════════════ */
   if (activeTeamObj) {
     return (
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+      <div className="flux-page-shell mx-auto max-w-[1440px] px-4 py-8 sm:px-6 lg:px-10 space-y-6">
         {teamActionError && <p role="alert" className="p-3 rounded-xl bg-error/10 text-error text-sm">{teamActionError}</p>}
         {teamLoading && <p className="text-xs text-on-surface-variant">Loading current roster…</p>}
         {/* Back navigation */}
@@ -234,18 +234,15 @@ export default function TeamsPage({ onOpenTeamCreator, onSelectTab, onOpenAuth }
                     <CheckCircle2 className="w-5 h-5 text-secondary shrink-0" title="Verified Roster" />
                   )}
                 </div>
-                <p className="font-body text-xs text-on-surface-variant mt-0.5">
-                  Affiliated with <b className="text-on-surface">{activeTeamObj.orgName}</b> · {activeTeamObj.division}
-                </p>
+                {(activeTeamObj.orgName || activeTeamObj.division) && <p className="font-body text-xs text-on-surface-variant mt-0.5">
+                  {[activeTeamObj.orgName && <>Affiliated with <b className="text-on-surface">{activeTeamObj.orgName}</b></>, activeTeamObj.division].filter(Boolean).map((part, index) => <React.Fragment key={index}>{index > 0 && ' · '}{part}</React.Fragment>)}
+                </p>}
                 <div className="flex items-center gap-2 mt-2">
                   <span className="px-2.5 py-0.5 rounded font-mono text-xs uppercase font-bold bg-primary/15 text-primary">
                     {activeTeamObj.game.toUpperCase()}
                   </span>
                   <span className="px-2.5 py-0.5 rounded-full font-mono text-xs uppercase font-bold bg-secondary/15 text-secondary border border-secondary/30">
                     {activeTeamObj.roster.length}/{activeTeamObj.slotsMax} Active Roster
-                  </span>
-                  <span className="font-mono text-xs text-on-surface-variant">
-                    Winrate: <b className="text-secondary">{activeTeamObj.winrate}</b>
                   </span>
                 </div>
               </div>
@@ -859,10 +856,10 @@ export default function TeamsPage({ onOpenTeamCreator, onSelectTab, onOpenAuth }
      VIEW 2: SQUAD DIRECTORY (Browse All Teams)
   ═══════════════════════════════════════════════════════ */
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+    <div className="flux-page-shell mx-auto max-w-[1440px] px-4 py-8 sm:px-6 lg:px-10 space-y-6">
 
       {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 sm:p-8 rounded-3xl bg-surface-container-low border border-card-border">
+      <div className="flux-feature-panel flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 sm:p-8 rounded-3xl border border-card-border">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <span className="font-mono text-xs uppercase tracking-wider text-secondary font-bold">
@@ -873,7 +870,7 @@ export default function TeamsPage({ onOpenTeamCreator, onSelectTab, onOpenAuth }
             Teams &amp; <span className="gradient-text">Rosters</span>
           </h1>
           <p className="font-body text-xs sm:text-sm text-on-surface-variant max-w-xl">
-            Explore verified franchise rosters, independent 5-stacks, and open recruitment roles across all 6 competitive titles.
+            Find teams, browse open roles, and build your roster across the games on Flux.
           </p>
         </div>
 
