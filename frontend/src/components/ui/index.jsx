@@ -1,5 +1,5 @@
 /**
- * Gamers'G — Shared UI Component Library
+ * FLUX — Shared UI Component Library
  * Reusable, design-token-driven components for consistent product experience.
  */
 

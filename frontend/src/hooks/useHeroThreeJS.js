@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
 /**
- * Tactical Esports 3D Background Hook for Gamers'G.
+ * Tactical Esports 3D Background Hook for FLUX.
  *
  * Implements a high-octane competitive gaming visual environment:
  * 1. Undulating Holographic Cyber Arena Grid (floor radar mesh with digital energy waves)

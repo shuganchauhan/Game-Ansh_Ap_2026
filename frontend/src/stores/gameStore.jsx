@@ -571,7 +571,7 @@ const INITIAL_POSTS = [
     isVerified: true,
     category: 'Recruitment',
     game: 'freefire',
-    content: 'Free Fire India Championship (FFIC) 2026 Tryouts are active! If you hold a 55%+ headshot rate and competitive scrim tournament experience, check our team openings on Gamers’G.',
+    content: 'Free Fire India Championship (FFIC) 2026 Tryouts are active! If you hold a 55%+ headshot rate and competitive scrim tournament experience, check our team openings on FLUX.',
     createdAt: '1 day ago',
     likes: 670,
     likedByMe: false,

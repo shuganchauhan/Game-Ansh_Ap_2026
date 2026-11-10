@@ -133,7 +133,7 @@ export default function AuthModal({
             <p className="font-body text-xs text-on-surface-variant mt-1 max-w-xs mx-auto">
               {mode === 'login'
                 ? 'Sign in to access your competitive dashboard, scrims, and match rooms.'
-                : 'Join Gamers\'G to compete in tournaments, form rosters, and build your gaming profile.'}
+                : 'Join FLUX to compete in tournaments, form rosters, and build your gaming profile.'}
             </p>
           </div>
         </div>

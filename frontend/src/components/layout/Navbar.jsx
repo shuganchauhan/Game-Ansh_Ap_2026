@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   Swords, Trophy, MessageSquare, Bell, LogIn, User, Sparkles,
   LayoutDashboard, UserCheck, CheckCircle2, LogOut, Users,
-  Gamepad2, Search, X, ChevronDown, Shield, Clock, ExternalLink, Zap
+  Gamepad2, Search, X, ChevronDown, Shield, Clock, ExternalLink, Zap,
+  Home, Building2, Rocket
 } from 'lucide-react';
 import { useAuth } from '../../stores/authContext';
 import { useGameStore } from '../../stores/gameStore';
@@ -72,13 +73,13 @@ export default function Navbar({ activeTab, onSelectTab, onOpenAuth, onOpenChat,
     }
   }, [searchModalOpen]);
 
-  // Primary Nav Links as requested in Section 4:
-  // Home, Discover, Games, Community, Leaderboards
+  // Primary Nav Links
   const navLinks = [
-    { id: 'landing', label: 'Home', icon: Sparkles },
-    { id: 'discovery', label: 'Discover', icon: Swords },
+    { id: 'landing', label: 'Home', icon: Home },
     { id: 'tournaments', label: 'Tournaments', icon: Trophy },
     { id: 'feed', label: 'Community', icon: MessageSquare },
+    { id: 'teams', label: 'Teams', icon: Users },
+    { id: 'organizer', label: 'Organizations', icon: Building2 },
   ];
 
 
@@ -113,19 +114,20 @@ export default function Navbar({ activeTab, onSelectTab, onOpenAuth, onOpenChat,
             onClick={() => onSelectTab('landing')}
             className="flex items-center gap-3 cursor-pointer select-none group shrink-0"
           >
-            <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-[#8B5CF6] via-[#7C3AED] to-[#22D3EE] p-[1.5px] shadow-lg shadow-[#8B5CF6]/25 group-hover:shadow-[#8B5CF6]/50 transition-all duration-300 group-hover:scale-105">
-              <div className="w-full h-full rounded-[10px] bg-[#090B12] flex items-center justify-center">
+            {/* FLUX Crest */}
+            <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-[#8B5CF6] via-[#6366F1] to-[#22D3EE] p-[1.5px] shadow-lg shadow-purple-600/30 group-hover:shadow-cyan-400/50 transition-all duration-300 group-hover:scale-105">
+              <div className="w-full h-full rounded-[10px] bg-[#090B12] flex items-center justify-center overflow-hidden">
                 <span className="font-display font-black text-xl bg-gradient-to-br from-white via-slate-100 to-[#22D3EE] bg-clip-text text-transparent">
                   F
                 </span>
               </div>
             </div>
             <div className="flex flex-col">
-              <span className="font-display font-black text-xl tracking-wider text-[#F8FAFC] leading-none flex items-center gap-0.5">
+              <span className="font-display font-black text-xl tracking-wider text-[#F8FAFC] leading-none flex items-center">
                 FLU<span className="text-[#22D3EE]">X</span>
               </span>
-              <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#94A3B8] font-bold mt-1">
-                Enter Next Level
+              <span className="font-mono text-[8.5px] uppercase tracking-[0.22em] text-[#94A3B8] font-bold mt-1">
+                PLAY · CONNECT · COMPETE
               </span>
             </div>
           </div>
@@ -140,22 +142,22 @@ export default function Navbar({ activeTab, onSelectTab, onOpenAuth, onOpenChat,
                   key={link.id}
                   onClick={() => onSelectTab(link.id)}
                   aria-current={isActive ? 'page' : undefined}
-                  className={`relative flex items-center gap-2 px-3.5 py-2 rounded-xl font-display text-xs font-bold uppercase tracking-wider transition-all duration-200 ${
+                  className={`relative flex items-center gap-2 px-4 py-2 rounded-xl font-display text-xs font-bold tracking-wide transition-all duration-200 ${
                     isActive
-                      ? 'text-[#F8FAFC] bg-[#151B2B] shadow-inner border border-white/[0.1]'
+                      ? 'text-white bg-gradient-to-r from-purple-700 via-indigo-600 to-purple-800 shadow-md shadow-purple-900/40 border border-purple-400/30'
                       : 'text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-white/[0.04]'
                   }`}
                 >
-                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[#22D3EE]' : 'text-[#94A3B8]'}`} />
+                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-[#94A3B8]'}`} />
                   <span>{link.label}</span>
                   {isActive && (
-                    <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-[2px] bg-gradient-to-r from-[#8B5CF6] to-[#22D3EE] rounded-full shadow-[0_0_8px_#22D3EE]" />
+                    <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-6 h-[2px] bg-gradient-to-r from-[#A855F7] to-[#38BDF8] rounded-full shadow-[0_0_8px_#A855F7]" />
                   )}
                 </button>
               );
             })}
 
-            {/* Quick Leaderboard Anchor button */}
+            {/* More ▾ Dropdown / Quick Links */}
             <button
               onClick={() => {
                 if (activeTab !== 'landing') onSelectTab('landing');
@@ -164,10 +166,10 @@ export default function Navbar({ activeTab, onSelectTab, onOpenAuth, onOpenChat,
                   if (el) el.scrollIntoView({ behavior: 'smooth' });
                 }, 100);
               }}
-              className="flex items-center gap-2 px-3.5 py-2 rounded-xl font-display text-xs font-bold uppercase tracking-wider text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-white/[0.04] transition-all"
+              className="flex items-center gap-1 px-3 py-2 rounded-xl font-display text-xs font-bold text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-white/[0.04] transition-all"
             >
-              <Trophy className="w-3.5 h-3.5 text-[#F59E0B]" />
-              <span>Leaderboard</span>
+              <span>More</span>
+              <ChevronDown className="w-3.5 h-3.5 text-[#94A3B8]" />
             </button>
           </nav>
 
@@ -176,13 +178,15 @@ export default function Navbar({ activeTab, onSelectTab, onOpenAuth, onOpenChat,
             {/* Quick Search Trigger */}
             <button
               onClick={() => setSearchModalOpen(true)}
-              className="hidden sm:flex items-center gap-2.5 pl-3 pr-2.5 py-1.5 rounded-xl bg-[#151B2B] hover:bg-[#1B2335] border border-white/[0.08] text-[#94A3B8] hover:text-[#F8FAFC] text-xs font-body transition-all group"
-              title="Search games, squads, and tournaments (Cmd+K)"
+              className="hidden sm:flex items-center gap-2.5 pl-3.5 pr-2.5 py-2 rounded-xl bg-[#151B2B]/90 hover:bg-[#1B2335] border border-white/[0.1] text-[#94A3B8] hover:text-[#F8FAFC] text-xs font-body transition-all group shadow-inner"
+              title="Search players, teams... (Cmd+K)"
             >
-              <Search className="w-3.5 h-3.5 text-[#94A3B8] group-hover:text-[#22D3EE] transition-colors" />
-              <span className="text-[11px] font-medium hidden md:inline">Quick Search…</span>
+              <Search className="w-3.5 h-3.5 text-[#94A3B8] group-hover:text-[#A855F7] transition-colors" />
+              <span className="text-[12px] font-medium hidden md:inline text-[#94A3B8]">
+                Search players, teams...
+              </span>
               <kbd className="px-1.5 py-0.5 rounded bg-[#090B12] border border-white/[0.1] font-mono text-[9px] text-[#94A3B8]">
-                ⌘K
+                ⌘ K
               </kbd>
             </button>
 
@@ -285,14 +289,14 @@ export default function Navbar({ activeTab, onSelectTab, onOpenAuth, onOpenChat,
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => onOpenAuth?.('player', 'login')}
-                  className="px-3.5 py-2 rounded-xl bg-[#151B2B] hover:bg-[#1B2335] border border-white/[0.08] font-display font-bold text-xs uppercase tracking-wider text-[#F8FAFC] transition-all flex items-center gap-1.5"
+                  className="px-4 py-2 rounded-xl bg-[#151B2B]/90 hover:bg-[#1E2738] border border-white/[0.1] font-display font-bold text-xs text-[#F8FAFC] transition-all flex items-center gap-2 shadow-sm"
                 >
-                  <LogIn className="w-3.5 h-3.5 text-[#94A3B8]" />
+                  <User className="w-3.5 h-3.5 text-[#94A3B8]" />
                   <span>Sign In</span>
                 </button>
                 <button
                   onClick={() => onOpenAuth?.('player', 'signup')}
-                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#8B5CF6] to-[#7C3AED] text-white font-display font-bold text-xs uppercase tracking-wider shadow-lg shadow-[#8B5CF6]/25 hover:opacity-95 active:scale-95 transition-all flex items-center gap-1.5"
+                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-[#8B5CF6] via-[#6366F1] to-[#3B82F6] hover:from-[#7C3AED] hover:to-[#2563EB] text-white font-display font-bold text-xs tracking-wide shadow-lg shadow-purple-600/30 hover:shadow-purple-600/50 active:scale-95 transition-all flex items-center gap-1.5"
                 >
                   <Sparkles className="w-3.5 h-3.5 text-white" />
                   <span>Register</span>

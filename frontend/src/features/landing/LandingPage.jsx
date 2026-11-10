@@ -3,11 +3,12 @@ import {
   ArrowRight, ArrowUpRight, CalendarDays, CheckCircle2, ChevronRight, Crosshair,
   Crown, ExternalLink, Flame, Gamepad2, Layers, MessageSquare, Play, Radio,
   Search, Shield, ShieldCheck, Sparkles, Star, Swords, Target, Trophy, Users, Zap,
-  TrendingUp, Wifi, Clock, Award, Activity
+  TrendingUp, Wifi, Clock, Award, Activity, Rocket, Mouse
 } from 'lucide-react';
 import { useAuth } from '../../stores/authContext';
 import { useGameStore } from '../../stores/gameStore';
 import useApi from '../../hooks/useApi';
+import heroArenaBg from '../../assets/hero-arena.jpg';
 import CyberHeroCanvas from '../../components/ui/CyberHeroCanvas';
 import LiveArenaCommandDeck from './LiveArenaCommandDeck';
 import { cyberAudio } from '../../lib/cyberAudio';
@@ -216,38 +217,35 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole, onOpenTea
   return (
     <div className="flux-landing flux-page-bg selection:bg-[#8B5CF6]/30 overflow-x-hidden text-[color:var(--color-on-surface)]">
       {/* ═══════════════════════════════════════════════════════
-          1. CINEMATIC HERO SECTION (Steam/Epic Gaming Centerpiece)
+          1. CINEMATIC HERO SECTION (FLUX Centerpiece)
       ═══════════════════════════════════════════════════════ */}
-      <section className="relative min-h-[720px] lg:min-h-[820px] flex items-center isolate overflow-hidden border-b border-white/[0.08]">
-        {/* Background Composite Artwork — Balanced cinematic visibility */}
+      <section className="relative min-h-[780px] lg:min-h-[880px] flex flex-col justify-between isolate overflow-hidden border-b border-white/[0.08]">
+        {/* Background Composite Artwork — Framed with Characters on Left & Right */}
         <div
-          className="absolute inset-0 z-0 bg-cover bg-center lg:bg-[center_18%] transition-opacity duration-700"
+          className="absolute inset-0 z-0 bg-cover bg-center transition-opacity duration-700"
           style={{
-            backgroundImage: `url('/jointgames.jpg')`,
-            opacity: 0.58,
+            backgroundImage: `url(${heroArenaBg})`,
+            backgroundPosition: 'center 30%',
+            opacity: 1,
           }}
           aria-hidden="true"
         />
 
-        {/* Interactive Cyber Particle Constellation Canvas */}
-        <CyberHeroCanvas />
-
-        {/* Balanced cinematic gradient overlay — ensures readability without washing out art */}
+        {/* Soft Radial Center Shadow: Leaves left & right characters 100% vibrant while ensuring text contrast */}
         <div
           className="absolute inset-0 z-[1] pointer-events-none"
           style={{
             background: `
-              radial-gradient(ellipse 80% 65% at 20% 50%, rgba(9, 11, 18, 0.95) 0%, rgba(9, 11, 18, 0.70) 50%, transparent 85%),
-              linear-gradient(to right, #090B12 0%, rgba(9, 11, 18, 0.90) 30%, rgba(9, 11, 18, 0.50) 60%, rgba(9, 11, 18, 0.15) 85%, transparent 100%),
-              linear-gradient(to top, #090B12 0%, rgba(9, 11, 18, 0.85) 10%, transparent 45%),
-              linear-gradient(to bottom, rgba(9, 11, 18, 0.75) 0%, transparent 20%)
+              radial-gradient(ellipse 65% 70% at 50% 48%, rgba(9, 11, 18, 0.70) 0%, rgba(9, 11, 18, 0.35) 55%, transparent 88%),
+              linear-gradient(to top, #090B12 0%, rgba(9, 11, 18, 0.75) 10%, transparent 25%),
+              linear-gradient(to bottom, #090B12 0%, rgba(9, 11, 18, 0.45) 8%, transparent 18%)
             `,
           }}
         />
 
         {/* Subtle Cyber Grid */}
         <div
-          className="absolute inset-0 z-[2] opacity-[0.06] pointer-events-none"
+          className="absolute inset-0 z-[2] opacity-[0.04] pointer-events-none"
           style={{
             backgroundImage: `
               linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
@@ -257,49 +255,48 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole, onOpenTea
           }}
         />
 
-        {/* Hero Content Container — Spacious Left-Aligned Layout leaving the Artwork completely clear */}
-        <div className="relative z-10 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32 w-full">
-          <div className="max-w-2xl lg:max-w-3xl space-y-6 sm:space-y-8">
-            {/* Ecosystem Badge */}
-            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-[#151B2B]/85 border border-white/[0.14] backdrop-blur-md shadow-lg shadow-black/50">
+        {/* Hero Main Content Container — Sits Centered Between Left & Right Characters */}
+        <div className="relative z-10 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 pt-20 lg:pt-28 pb-10 w-full flex-1 flex flex-col justify-center items-center">
+          <div className="max-w-3xl mx-auto text-center space-y-6 sm:space-y-7 flex flex-col items-center">
+            {/* Ecosystem Live Badge */}
+            <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[#151B2B]/90 border border-white/[0.14] backdrop-blur-md shadow-xl shadow-black/50">
               <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22D3EE] opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#22D3EE]" />
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
               </span>
-              <span className="font-mono text-[11px] uppercase tracking-[0.2em] font-bold text-[#F8FAFC]">
-                NEXT-GEN ESPORTS ECOSYSTEM
+              <span className="font-mono text-[10.5px] uppercase tracking-[0.2em] font-bold text-[#F8FAFC]">
+                INDIA'S PREMIER GAMING ECOSYSTEM
               </span>
-              <span className="h-3 w-px bg-white/20" />
-              <span className="font-mono text-[10px] text-[#22D3EE] font-semibold">
-                SEASON 2026 LIVE
+              <span className="font-mono text-[10.5px] text-emerald-400 font-bold tracking-wider">
+                [LIVE]
               </span>
             </div>
 
-            {/* Bold Headline */}
-            <h1 className="font-display font-black text-5xl sm:text-6xl md:text-7xl lg:text-[84px] leading-[0.94] tracking-[-0.035em] text-[#F8FAFC] drop-shadow-2xl">
-              ENTER THE <br />
-              <span className="bg-gradient-to-r from-[#8B5CF6] via-[#C084FC] to-[#22D3EE] bg-clip-text text-transparent">
-                NEXT LEVEL.
+            {/* Slanted Bold Display Headline */}
+            <h1 className="font-display font-black text-4xl sm:text-6xl md:text-7xl lg:text-[76px] leading-[0.98] tracking-tight uppercase italic drop-shadow-[0_12px_32px_rgba(0,0,0,0.9)]">
+              <span className="text-white block">PLAY. CONNECT.</span>
+              <span className="bg-gradient-to-r from-[#A78BFA] via-[#60A5FA] to-[#38BDF8] bg-clip-text text-transparent block mt-1">
+                COMPETE.
               </span>
             </h1>
 
             {/* Supporting Description */}
-            <p className="max-w-xl text-base sm:text-lg lg:text-xl text-[#94A3B8] leading-relaxed font-body drop-shadow-md">
-              Discover games. Connect with players. Compete, explore, and experience gaming without limits.
+            <p className="max-w-xl mx-auto text-sm sm:text-base md:text-lg text-slate-200/90 leading-relaxed font-body drop-shadow-lg">
+              Discover tournaments, build your gaming profile, join teams and be a part of India's biggest gaming community.
             </p>
 
-            {/* Primary & Secondary Action CTAs */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 pt-2">
+            {/* Action CTAs */}
+            <div className="flex flex-row flex-wrap items-center justify-center gap-3.5 pt-1">
               <button
                 onClick={() => {
                   cyberAudio.playClick();
-                  handleExploreGames();
+                  onSelectTab?.('tournaments');
                 }}
                 onMouseEnter={() => cyberAudio.playHover()}
-                className="group relative px-8 py-4 rounded-2xl bg-gradient-to-r from-[#8B5CF6] via-[#7C3AED] to-[#8B5CF6] bg-size-200 text-white font-display font-bold text-sm uppercase tracking-wider shadow-xl shadow-[#8B5CF6]/35 hover:shadow-[#8B5CF6]/55 active:scale-95 transition-all flex items-center justify-center gap-2.5 overflow-hidden"
+                className="group relative px-6 sm:px-8 py-3.5 rounded-xl bg-gradient-to-r from-[#8B5CF6] via-[#6366F1] to-[#3B82F6] hover:from-[#7C3AED] hover:to-[#2563EB] text-white font-display font-bold text-xs sm:text-sm tracking-wide shadow-xl shadow-purple-600/35 hover:shadow-purple-600/55 active:scale-95 transition-all flex items-center justify-center gap-2 overflow-hidden"
               >
-                <Gamepad2 className="w-5 h-5 text-white group-hover:rotate-12 transition-transform" />
-                <span>Explore Games</span>
+                <Rocket className="w-4 h-4 text-white group-hover:rotate-12 transition-transform" />
+                <span>Explore Tournaments</span>
                 <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-1 transition-transform" />
               </button>
 
@@ -309,33 +306,94 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole, onOpenTea
                   handleJoinCommunity();
                 }}
                 onMouseEnter={() => cyberAudio.playHover()}
-                className="px-8 py-4 rounded-2xl bg-[#151B2B]/85 hover:bg-[#1B2335] text-[#F8FAFC] border border-white/[0.14] hover:border-[#22D3EE]/50 font-display font-bold text-sm uppercase tracking-wider backdrop-blur-md active:scale-95 transition-all flex items-center justify-center gap-2.5 shadow-lg"
+                className="px-6 sm:px-8 py-3.5 rounded-xl bg-[#151B2B]/90 hover:bg-[#1E2738] text-white border border-white/[0.14] hover:border-purple-400/40 font-display font-bold text-xs sm:text-sm tracking-wide backdrop-blur-md active:scale-95 transition-all flex items-center justify-center gap-2 shadow-lg"
               >
-                <Users className="w-5 h-5 text-[#22D3EE]" />
+                <Users className="w-4 h-4 text-[#A78BFA]" />
                 <span>Join Community</span>
               </button>
             </div>
 
-            {/* Platform Highlights & Telemetry Proof Bar */}
-            <div className="pt-6 border-t border-white/[0.1] grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 max-w-2xl">
+            {/* 4 Glassmorphic Metrics / Highlights Cards — Centered Grid */}
+            <div className="pt-4 grid grid-cols-2 md:grid-cols-4 gap-3 max-w-3xl w-full mx-auto">
               {[
-                { label: 'Featured Titles', val: '6 Majors', desc: 'FPS, BR & RTS' },
-                { label: 'Active Rosters', val: '120+ Teams', desc: 'Verified Lineups' },
-                { label: 'Monthly Scrims', val: '50K+ Matches', desc: 'Live Matchmaking' },
-                { label: 'Athlete Network', val: '10K+ Players', desc: 'Anti-Cheat Verified' },
-              ].map((stat, i) => (
-                <div key={i} className="space-y-0.5">
-                  <div className="font-display font-black text-xl sm:text-2xl text-[#F8FAFC]">
-                    {stat.val}
+                {
+                  val: '500+',
+                  label: 'Tournaments Hosted',
+                  icon: Trophy,
+                  bg: 'bg-amber-500/15',
+                  border: 'border-amber-500/30',
+                  iconColor: 'text-amber-400',
+                },
+                {
+                  val: '1M+',
+                  label: 'Gamers Joined',
+                  icon: Users,
+                  bg: 'bg-cyan-500/15',
+                  border: 'border-cyan-500/30',
+                  iconColor: 'text-cyan-400',
+                },
+                {
+                  val: '50K+',
+                  label: 'Active Teams',
+                  icon: Shield,
+                  bg: 'bg-purple-500/15',
+                  border: 'border-purple-500/30',
+                  iconColor: 'text-purple-400',
+                },
+                {
+                  val: '25+',
+                  label: 'Supported Games',
+                  icon: Gamepad2,
+                  bg: 'bg-pink-500/15',
+                  border: 'border-pink-500/30',
+                  iconColor: 'text-pink-400',
+                },
+              ].map((stat, i) => {
+                const Icon = stat.icon;
+                return (
+                  <div
+                    key={i}
+                    className="p-3 sm:p-3.5 rounded-2xl bg-[#151B2B]/85 border border-white/[0.1] backdrop-blur-md flex items-center gap-2.5 sm:gap-3 text-left shadow-xl shadow-black/40 hover:border-white/[0.2] transition-all"
+                  >
+                    <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl ${stat.bg} ${stat.border} border flex items-center justify-center shrink-0`}>
+                      <Icon className={`w-4 h-4 sm:w-5 sm:h-5 ${stat.iconColor}`} />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="font-display font-black text-lg sm:text-xl text-white leading-tight">
+                        {stat.val}
+                      </div>
+                      <div className="font-body text-[10px] sm:text-[11px] text-[#94A3B8] font-medium truncate">
+                        {stat.label}
+                      </div>
+                    </div>
                   </div>
-                  <div className="font-mono text-[10px] uppercase font-bold text-[#8B5CF6]">
-                    {stat.label}
-                  </div>
-                  <div className="font-body text-[11px] text-[#94A3B8]">
-                    {stat.desc}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Partner Strip & Scroll to Explore */}
+        <div className="relative z-10 w-full border-t border-white/[0.08] bg-[#090B12]/80 backdrop-blur-md py-4">
+          <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            {/* Trusted By Gamers Across India */}
+            <div className="flex flex-wrap items-center gap-4 sm:gap-8 justify-center md:justify-start">
+              <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-[#64748B] font-bold">
+                TRUSTED BY GAMERS ACROSS INDIA
+              </span>
+              <div className="flex items-center gap-6 sm:gap-8 text-sm font-display font-black tracking-widest text-[#94A3B8]/80">
+                <span className="hover:text-white transition-colors cursor-default">BGMI</span>
+                <span className="hover:text-white transition-colors cursor-default">VALORANT</span>
+                <span className="hover:text-white transition-colors cursor-default">FREE FIRE</span>
+                <span className="hover:text-white transition-colors cursor-default">CALL OF DUTY</span>
+                <span className="hover:text-white transition-colors cursor-default">EA SPORTS</span>
+              </div>
+            </div>
+
+            {/* Scroll to Explore indicator */}
+            <div className="hidden lg:flex items-center gap-2 text-[#94A3B8] font-mono text-[11px] uppercase tracking-wider">
+              <Mouse className="w-3.5 h-3.5 text-[#A78BFA] animate-bounce" />
+              <span>Scroll to Explore</span>
             </div>
           </div>
         </div>
