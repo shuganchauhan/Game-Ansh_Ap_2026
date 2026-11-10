@@ -21,7 +21,7 @@ const FEATURED_GAMES = [
     name: 'VALORANT',
     genre: 'Tactical FPS',
     publisher: 'Riot Games',
-    image: '/valorant.png',
+    image: '/valorant.jpg',
     rating: '9.8',
     activeSquads: '142 Teams',
     activeScrims: '28 Live Lobbies',
@@ -35,7 +35,7 @@ const FEATURED_GAMES = [
     name: 'BGMI',
     genre: 'Battle Royale',
     publisher: 'Krafton',
-    image: '/bgmi.png',
+    image: '/bgmi.jpg',
     rating: '9.7',
     activeSquads: '210 Teams',
     activeScrims: '42 Live Lobbies',
@@ -49,7 +49,7 @@ const FEATURED_GAMES = [
     name: 'Free Fire',
     genre: 'Fast Battle Royale',
     publisher: 'Garena',
-    image: '/freefire.png',
+    image: '/freefire.jpg',
     rating: '9.5',
     activeSquads: '98 Teams',
     activeScrims: '19 Live Lobbies',
@@ -63,7 +63,7 @@ const FEATURED_GAMES = [
     name: 'Call of Duty',
     genre: 'Military FPS',
     publisher: 'Activision',
-    image: '/cod.png',
+    image: '/cod.jpg',
     rating: '9.6',
     activeSquads: '84 Teams',
     activeScrims: '15 Live Lobbies',
@@ -77,7 +77,7 @@ const FEATURED_GAMES = [
     name: 'Clash of Clans',
     genre: 'Strategy & Clan Wars',
     publisher: 'Supercell',
-    image: '/coc.png',
+    image: '/coc.jpg',
     rating: '9.4',
     activeSquads: '115 Clans',
     activeScrims: 'Clan War Leagues',
@@ -91,7 +91,7 @@ const FEATURED_GAMES = [
     name: 'Clash Royale',
     genre: 'Tactical Card Arena',
     publisher: 'Supercell',
-    image: '/cr.png',
+    image: '/cr.jpg',
     rating: '9.3',
     activeSquads: '76 Rosters',
     activeScrims: '1v1 Duel Ladders',
@@ -223,7 +223,7 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole, onOpenTea
         <div
           className="absolute inset-0 z-0 bg-cover bg-center lg:bg-[center_18%] transition-opacity duration-700"
           style={{
-            backgroundImage: `url('/jointgames.png')`,
+            backgroundImage: `url('/jointgames.jpg')`,
             opacity: 0.58,
           }}
           aria-hidden="true"
