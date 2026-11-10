@@ -115,6 +115,8 @@ function GameCard({ game, onSelect }) {
         <img
           src={game.image}
           alt={game.name}
+          loading="lazy"
+          decoding="async"
           className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#151B2B] via-[#151B2B]/40 to-transparent" />
@@ -464,6 +466,8 @@ export default function DiscoveryPage({ onSelectTab, onOpenAuth }) {
           <img
             src={selectedGame.image}
             alt={selectedGame.name}
+            loading="lazy"
+            decoding="async"
             className="absolute inset-0 w-full h-full object-cover object-center filter brightness-[0.3] opacity-65"
           />
         )}

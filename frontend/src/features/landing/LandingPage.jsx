@@ -463,6 +463,9 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole, onOpenTea
             key={activeSpotlightGame.id}
             src={activeSpotlightGame.image}
             alt={activeSpotlightGame.name}
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
             className={`absolute inset-0 w-full h-full object-cover object-center filter brightness-[0.75] transition-all duration-700 ${isTransitioning ? 'opacity-0 scale-105' : 'opacity-100 scale-100'}`}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#090B12] via-[#090B12]/60 to-transparent" />
@@ -553,8 +556,9 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole, onOpenTea
                   <img
                     src={game.image}
                     alt={game.name}
-                    className={`w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110 ${isActive ? 'scale-105' : ''}`}
                     loading="lazy"
+                    decoding="async"
+                    className={`w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110 ${isActive ? 'scale-105' : ''}`}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#090B12] via-[#090B12]/40 to-transparent" />
 
