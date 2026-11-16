@@ -132,27 +132,30 @@ export default function SocialFeedPage({ onSelectTab, onOpenAuth }) {
             </p>
           </div>
 
-          {/* ── Rich Post Composer (Guarded by Authentication) ── */}
+          {/* ── Rich Post Composer & Feed (Guarded by Authentication) ── */}
           {!isAuthenticated ? (
-            <section className="p-6 rounded-3xl bg-surface-container-low border border-card-border shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 text-primary flex items-center justify-center shrink-0">
-                  <MessageSquare className="w-6 h-6" />
-                </div>
-                <div>
-                  <h3 className="font-display font-bold text-base text-on-surface">Join the Competitive Conversation</h3>
-                  <p className="text-xs text-on-surface-variant">Sign in with your account to publish tryouts, like match results, and reply to pro rosters.</p>
-                </div>
+            <div className="my-6 p-8 sm:p-12 rounded-3xl bg-surface-container-low border border-card-border text-center space-y-6 shadow-2xl">
+              <div className="w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto text-primary shadow-lg">
+                <Lock className="w-7 h-7" />
+              </div>
+              <div className="space-y-2">
+                <h2 className="font-display font-extrabold text-2xl sm:text-3xl text-on-surface">
+                  Sign In to View Community Feed
+                </h2>
+                <p className="text-sm text-on-surface-variant max-w-md mx-auto leading-relaxed">
+                  Connect with verified pro players, view tournament discussions, and share roster updates. Sign in to join the community feed.
+                </p>
               </div>
               <button
                 onClick={() => onOpenAuth?.('player', 'login')}
-                className="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-display font-bold text-xs uppercase tracking-wider shrink-0 hover:opacity-95 shadow-md flex items-center justify-center gap-2 transition-all"
+                className="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-primary to-secondary hover:opacity-95 text-white font-display font-bold text-xs uppercase tracking-wider shadow-lg shadow-primary/20 active:scale-95 transition-all inline-flex items-center gap-2"
               >
-                <LogIn className="w-4 h-4 text-white" />
-                <span>Sign In to Post</span>
+                <LogIn className="w-4 h-4" />
+                <span>Sign In to Join Community</span>
               </button>
-            </section>
+            </div>
           ) : (
+            <>
             <section className="p-5 rounded-3xl bg-surface-container-low border border-card-border shadow-lg space-y-3">
               <div className="flex items-center gap-3">
                 {(() => {
@@ -232,7 +235,6 @@ export default function SocialFeedPage({ onSelectTab, onOpenAuth }) {
                 </div>
               </form>
             </section>
-          )}
 
           {/* ── Feed Filter Tabs ── */}
           <div className="flex items-center gap-2 overflow-x-auto pb-1">
@@ -401,6 +403,8 @@ export default function SocialFeedPage({ onSelectTab, onOpenAuth }) {
               </article>
             ))}
           </div>
+          </>
+          )}
         </div>
 
         {/* ═══════════════════════════════════════════════════════
@@ -408,116 +412,121 @@ export default function SocialFeedPage({ onSelectTab, onOpenAuth }) {
         ═══════════════════════════════════════════════════════ */}
         <aside className="lg:col-span-4 space-y-6">
 
-          {/* Player Network Widget */}
-          <div className="p-5 rounded-3xl bg-surface-container-low border border-card-border space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Users className="w-4 h-4 text-primary" />
-                <h3 className="font-display font-bold text-sm text-on-surface">
-                  Pro Gamers to Connect
-                </h3>
-              </div>
-              <span className="font-mono text-[10px] text-secondary font-bold">Network</span>
-            </div>
-
-            <div className="space-y-3">
-              {(players || []).filter(p => p && p.id !== currentUser?.id).slice(0, 3).map((p) => {
-                const isConnected = (connectedPlayerIds || []).includes(p.id);
-                return (
-                  <div
-                    key={p.id}
-                    className="flex items-center justify-between p-3 rounded-2xl bg-surface-container border border-card-border gap-2.5"
-                  >
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      {p.avatar ? (
-                        <img src={p.avatar} alt={p.name} className="w-9 h-9 rounded-xl object-cover shrink-0" />
-                      ) : (
-                        <div className="w-9 h-9 rounded-xl bg-surface-container-high border border-card-border flex items-center justify-center font-display font-bold text-[11px] text-primary shrink-0">
-                          {(p.name || 'P').slice(0, 2).toUpperCase()}
-                        </div>
-                      )}
-                      <div className="min-w-0">
-                        <span className="font-display font-bold text-xs text-on-surface block truncate">
-                          {p.name}
-                        </span>
-                        <span className="font-mono text-[10px] text-on-surface-variant truncate block">
-                          {p.tagline.split('|')[0]}
-                        </span>
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={() => handleToggleConnect(p.id)}
-                      className={`px-3 py-1.5 rounded-lg font-mono text-[11px] font-bold shrink-0 transition-all ${
-                        isConnected
-                          ? 'bg-surface-container-high text-on-surface-variant'
-                          : 'bg-primary text-white shadow-sm'
-                      }`}
-                    >
-                      {isConnected ? 'Connected' : '+ Connect'}
-                    </button>
+          {/* Player Network & Orgs Widgets (Only for Authenticated Users) */}
+          {isAuthenticated && (
+            <>
+              {/* Player Network Widget */}
+              <div className="p-5 rounded-3xl bg-surface-container-low border border-card-border space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Users className="w-4 h-4 text-primary" />
+                    <h3 className="font-display font-bold text-sm text-on-surface">
+                      Pro Gamers to Connect
+                    </h3>
                   </div>
-                );
-              })}
-            </div>
-          </div>
+                  <span className="font-mono text-[10px] text-secondary font-bold">Network</span>
+                </div>
 
-          {/* Esports Organizations to Follow Widget */}
-          <div className="p-5 rounded-3xl bg-surface-container-low border border-card-border space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Shield className="w-4 h-4 text-secondary" />
-                <h3 className="font-display font-bold text-sm text-on-surface">
-                  Esports Orgs to Follow
-                </h3>
-              </div>
-              <span className="font-mono text-[10px] text-tertiary font-bold">Franchises</span>
-            </div>
+                <div className="space-y-3">
+                  {(players || []).filter(p => p && p.id !== currentUser?.id).slice(0, 3).map((p) => {
+                    const isConnected = (connectedPlayerIds || []).includes(p.id);
+                    return (
+                      <div
+                        key={p.id}
+                        className="flex items-center justify-between p-3 rounded-2xl bg-surface-container border border-card-border gap-2.5"
+                      >
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          {p.avatar ? (
+                            <img src={p.avatar} alt={p.name} className="w-9 h-9 rounded-xl object-cover shrink-0" />
+                          ) : (
+                            <div className="w-9 h-9 rounded-xl bg-surface-container-high border border-card-border flex items-center justify-center font-display font-bold text-[11px] text-primary shrink-0">
+                              {(p.name || 'P').slice(0, 2).toUpperCase()}
+                            </div>
+                          )}
+                          <div className="min-w-0">
+                            <span className="font-display font-bold text-xs text-on-surface block truncate">
+                              {p.name}
+                            </span>
+                            <span className="font-mono text-[10px] text-on-surface-variant truncate block">
+                              {p.tagline.split('|')[0]}
+                            </span>
+                          </div>
+                        </div>
 
-            <div className="space-y-3">
-              {(orgs || []).slice(0, 4).map((org) => {
-                const isFollowing = (followedOrgIds || []).includes(org.id);
-                return (
-                  <div
-                    key={org.id}
-                    className="flex items-center justify-between p-3 rounded-2xl bg-surface-container border border-card-border gap-2.5"
-                  >
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      {org.logo ? (
-                        <img src={org.logo} alt={org.name} className="w-9 h-9 rounded-xl object-cover shrink-0" />
-                      ) : (
-                        <div className="w-9 h-9 rounded-xl bg-surface-container-high border border-card-border flex items-center justify-center font-display font-bold text-[11px] text-secondary shrink-0">
-                          {(org.tag || org.name || 'OG').slice(0, 2).toUpperCase()}
-                        </div>
-                      )}
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-1">
-                          <span className="font-display font-bold text-xs text-on-surface truncate">
-                            {org.name}
-                          </span>
-                          {org.verified && <CheckCircle2 className="w-3 h-3 text-secondary shrink-0" />}
-                        </div>
-                        <span className="font-mono text-[10px] text-on-surface-variant">
-                          {org.followers.toLocaleString()} followers
-                        </span>
+                        <button
+                          onClick={() => handleToggleConnect(p.id)}
+                          className={`px-3 py-1.5 rounded-lg font-mono text-[11px] font-bold shrink-0 transition-all ${
+                            isConnected
+                              ? 'bg-surface-container-high text-on-surface-variant'
+                              : 'bg-primary text-white shadow-sm'
+                          }`}
+                        >
+                          {isConnected ? 'Connected' : '+ Connect'}
+                        </button>
                       </div>
-                    </div>
+                    );
+                  })}
+                </div>
+              </div>
 
-                    <button
-                      onClick={() => handleToggleFollow(org.id)}
-                      className={`px-3 py-1.5 rounded-lg font-mono text-[11px] font-bold shrink-0 transition-all ${
-                        isFollowing
-                          ? 'bg-surface-container-high text-on-surface-variant'
-                          : 'bg-secondary/15 text-secondary border border-secondary/30'
-                      }`}
-                    >
-                      {isFollowing ? 'Following' : '+ Follow'}
-                    </button>
+              {/* Esports Organizations to Follow Widget */}
+              <div className="p-5 rounded-3xl bg-surface-container-low border border-card-border space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Shield className="w-4 h-4 text-secondary" />
+                    <h3 className="font-display font-bold text-sm text-on-surface">
+                      Esports Orgs to Follow
+                    </h3>
                   </div>
-                );
-              })}
-            </div>
-          </div>
+                  <span className="font-mono text-[10px] text-tertiary font-bold">Franchises</span>
+                </div>
+
+                <div className="space-y-3">
+                  {(orgs || []).slice(0, 4).map((org) => {
+                    const isFollowing = (followedOrgIds || []).includes(org.id);
+                    return (
+                      <div
+                        key={org.id}
+                        className="flex items-center justify-between p-3 rounded-2xl bg-surface-container border border-card-border gap-2.5"
+                      >
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          {org.logo ? (
+                            <img src={org.logo} alt={org.name} className="w-9 h-9 rounded-xl object-cover shrink-0" />
+                          ) : (
+                            <div className="w-9 h-9 rounded-xl bg-surface-container-high border border-card-border flex items-center justify-center font-display font-bold text-[11px] text-secondary shrink-0">
+                              {(org.tag || org.name || 'OG').slice(0, 2).toUpperCase()}
+                            </div>
+                          )}
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-1">
+                              <span className="font-display font-bold text-xs text-on-surface truncate">
+                                {org.name}
+                              </span>
+                              {org.verified && <CheckCircle2 className="w-3 h-3 text-secondary shrink-0" />}
+                            </div>
+                            <span className="font-mono text-[10px] text-on-surface-variant">
+                              {org.followers.toLocaleString()} followers
+                            </span>
+                          </div>
+                        </div>
+
+                        <button
+                          onClick={() => handleToggleFollow(org.id)}
+                          className={`px-3 py-1.5 rounded-lg font-mono text-[11px] font-bold shrink-0 transition-all ${
+                            isFollowing
+                              ? 'bg-surface-container-high text-on-surface-variant'
+                              : 'bg-secondary/15 text-secondary border border-secondary/30'
+                          }`}
+                        >
+                          {isFollowing ? 'Following' : '+ Follow'}
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </>
+          )}
 
           {/* Trending Esports Radar */}
           <div className="p-5 rounded-3xl bg-surface-container-low border border-card-border space-y-3 font-mono text-xs">

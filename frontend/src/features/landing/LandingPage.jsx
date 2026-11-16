@@ -210,8 +210,7 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole, onOpenTea
   };
 
   const handleJoinCommunity = () => {
-    if (!isAuthenticated) onOpenAuthWithRole?.('player', 'signup');
-    else onSelectTab?.('feed');
+    onSelectTab?.('feed');
   };
 
   return (

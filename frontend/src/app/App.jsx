@@ -237,29 +237,13 @@ function AppContent() {
           )
         )}
 
-        {/* Protected Route: Organizer Hub (Organizer or Admin Role Required) */}
+        {/* Organizations & Tournament Hub (Publicly browsable, scrims & ops require auth inside) */}
         {activeTab === 'organizer' && (
-          !isAuthenticated ? (
-            <ProtectedGate
-              title="Tournament Organizer Hub Locked"
-              message="Please sign in with a Tournament Organizer account to host scrims and provision dedicated match rooms."
-              requiredRole="organizer"
-              onOpenAuth={handleOpenAuthWithRole}
-            />
-          ) : userRole !== 'organizer' && userRole !== 'admin' ? (
-            <ProtectedGate
-              title="Organizer Authorization Required"
-              message="Only certified Tournament Organizers can manage dedicated scrim match rooms."
-              requiredRole="organizer"
-              currentRole={userRole}
-              onOpenAuth={handleOpenAuthWithRole}
-            />
-          ) : (
-            <OrganizerDashboard
-              onSelectTab={setActiveTab}
-              onOpenScrimLobby={handleOpenScrimLobby}
-            />
-          )
+          <OrganizerDashboard
+            onSelectTab={setActiveTab}
+            onOpenScrimLobby={handleOpenScrimLobby}
+            onOpenAuth={handleOpenAuthWithRole}
+          />
         )}
 
         {/* Protected Route: User Dashboard (Role-based: Org vs Player) */}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Trophy, Swords, Calendar, Users, Shield, CheckCircle, Flame, ExternalLink,
-  Clock, ArrowRight, Lock, ChevronRight, Plus
+  Clock, ArrowRight, Lock, ChevronRight, Plus, LogIn
 } from 'lucide-react';
 import { useAuth } from '../../stores/authContext';
 import { scrimService, discoveryService } from '../../services';
@@ -67,8 +67,64 @@ export default function TournamentsPage({ onRegisterModal, onOpenScrimLobby, onS
 
   return (
     <div className="flux-page-shell mx-auto max-w-[1440px] px-4 py-8 sm:px-6 lg:px-10 space-y-8 animate-fadeIn">
-      {/* Featured tournament, when one is published */}
-      {featuredTournament && <div className="flux-feature-panel relative overflow-hidden rounded-3xl border border-card-border p-6 sm:p-8">
+      {/* Page Title & Scope */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-card-border pb-6">
+        <div>
+          <div className="inline-flex items-center gap-1.5 text-xs font-mono text-primary font-bold uppercase tracking-wider">
+            <Trophy className="w-3.5 h-3.5" />
+            Official Esports Arena
+          </div>
+          <h1 className="font-display font-bold text-3xl sm:text-4xl text-on-surface mt-1">
+            Tournaments & Daily Scrims
+          </h1>
+          <p className="text-sm text-on-surface-variant mt-1">
+            Compete in certified championships, practice in automated scrim match rooms, and win prize pools.
+          </p>
+        </div>
+
+        {/* Game filter tabs */}
+        <div className="inline-flex p-1 rounded-xl bg-surface-container border border-card-border overflow-x-auto max-w-full">
+          {GAME_TABS.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setSelectedGameFilter(tab.id)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold whitespace-nowrap transition-all ${
+                selectedGameFilter === tab.id
+                  ? 'bg-primary text-white shadow-sm'
+                  : 'text-on-surface-variant hover:text-on-surface'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {!isAuthenticated ? (
+        <div className="my-10 p-8 sm:p-12 rounded-3xl bg-surface-container-low border border-card-border text-center space-y-6 max-w-xl mx-auto shadow-2xl">
+          <div className="w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto text-primary shadow-lg">
+            <Lock className="w-7 h-7" />
+          </div>
+          <div className="space-y-2">
+            <h2 className="font-display font-extrabold text-2xl sm:text-3xl text-on-surface">
+              Sign In to View Tournaments & Scrims
+            </h2>
+            <p className="text-sm text-on-surface-variant max-w-md mx-auto leading-relaxed">
+              Official championship brackets, prize pool registrations, and daily scrim match lobbies are available exclusively to FLUX members. Sign in or register to view and compete.
+            </p>
+          </div>
+          <button
+            onClick={() => onOpenAuth?.('player', 'login')}
+            className="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-primary to-secondary hover:opacity-95 text-white font-display font-bold text-xs uppercase tracking-wider shadow-lg shadow-primary/20 active:scale-95 transition-all inline-flex items-center gap-2"
+          >
+            <LogIn className="w-4 h-4" />
+            <span>Sign In to Access Tournaments</span>
+          </button>
+        </div>
+      ) : (
+        <>
+          {/* Featured tournament, when one is published */}
+          {featuredTournament && <div className="flux-feature-panel relative overflow-hidden rounded-3xl border border-card-border p-6 sm:p-8">
         <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-10 w-64 h-64 bg-secondary/10 rounded-full blur-2xl pointer-events-none" />
 
@@ -271,6 +327,8 @@ export default function TournamentsPage({ onRegisterModal, onOpenScrimLobby, onS
           </div>
         )}
       </div>
+      </>
+      )}
 
     </div>
   );

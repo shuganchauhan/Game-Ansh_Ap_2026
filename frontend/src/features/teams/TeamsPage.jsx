@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import {
   ArrowLeft, Check, CheckCircle2, ChevronRight, Crown, Edit3, ExternalLink, FileText,
   Plus, Search, Shield, Sparkles, Swords, Target, Trash2, Trophy, Users, X, Zap,
-  Clock, UserPlus, UserCheck, AlertCircle, AlertTriangle
+  Clock, UserPlus, UserCheck, AlertCircle, AlertTriangle, Lock, LogIn
 } from 'lucide-react';
 import { useAuth } from '../../stores/authContext';
 import { useGameStore } from '../../stores/gameStore';
@@ -914,7 +914,28 @@ export default function TeamsPage({ onOpenTeamCreator, onSelectTab, onOpenAuth }
       </div>
 
       {/* Teams Grid */}
-      {filteredTeams.length > 0 ? (
+      {!isAuthenticated ? (
+        <div className="my-10 p-8 sm:p-12 rounded-3xl bg-surface-container-low border border-card-border text-center space-y-6 max-w-xl mx-auto shadow-2xl">
+          <div className="w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto text-primary shadow-lg">
+            <Lock className="w-7 h-7" />
+          </div>
+          <div className="space-y-2">
+            <h2 className="font-display font-extrabold text-2xl sm:text-3xl text-on-surface">
+              Sign In to View Teams &amp; Rosters
+            </h2>
+            <p className="text-sm text-on-surface-variant max-w-md mx-auto leading-relaxed">
+              Active competitive squads, roster recruitment openings, and player tryouts are available exclusively to FLUX members. Sign in to browse rosters or form your team.
+            </p>
+          </div>
+          <button
+            onClick={() => onOpenAuth?.('player', 'login')}
+            className="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-primary to-secondary hover:opacity-95 text-white font-display font-bold text-xs uppercase tracking-wider shadow-lg shadow-primary/20 active:scale-95 transition-all inline-flex items-center gap-2"
+          >
+            <LogIn className="w-4 h-4" />
+            <span>Sign In to Access Teams</span>
+          </button>
+        </div>
+      ) : filteredTeams.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredTeams.map((team) => (
             <div

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import {
   Trophy, Shield, Swords, Plus, CheckCircle2, Clock, AlertTriangle,
-  ExternalLink, Users, Lock, Sparkles, RefreshCw, ChevronRight, X
+  ExternalLink, Users, Lock, Sparkles, RefreshCw, ChevronRight, X, LogIn
 } from 'lucide-react';
 import { organizerService, scrimService } from '../../services';
 import { useGameStore } from '../../stores/gameStore';
+import { useAuth } from '../../stores/authContext';
 
 const GAME_OPTIONS = [
   { id: 'valorant', name: 'VALORANT', defaultSlots: 16 },
@@ -15,8 +16,9 @@ const GAME_OPTIONS = [
   { id: 'cod', name: 'Call of Duty', defaultSlots: 16 },
 ];
 
-export default function OrganizerDashboard({ onSelectTab, onOpenScrimLobby }) {
+export default function OrganizerDashboard({ onSelectTab, onOpenScrimLobby, onOpenAuth }) {
   const { currentUser } = useGameStore();
+  const { isAuthenticated, user } = useAuth();
 
   const [scrims, setScrims] = useState([]);
   const [verifStatus, setVerifStatus] = useState(null);
@@ -125,47 +127,50 @@ export default function OrganizerDashboard({ onSelectTab, onOpenScrimLobby }) {
           <div className="space-y-2">
             <div className="flex items-center gap-2">
               <span className="px-3 py-1 rounded-full bg-secondary/10 border border-secondary/30 text-secondary font-mono text-xs uppercase tracking-wider font-bold">
-                Tournament Organizer Operations
+                Esports Organizations &amp; Tournament Operations
               </span>
-              {isVerified ? (
-                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-mono text-xs font-bold">
-                  <CheckCircle2 className="w-3.5 h-3.5" />
-                  VERIFIED ORGANIZER
-                </span>
-              ) : (
-                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/30 text-amber-400 font-mono text-xs font-bold">
-                  <AlertTriangle className="w-3.5 h-3.5" />
-                  VERIFICATION PENDING ADMIN REVIEW
-                </span>
+              {isAuthenticated && (
+                isVerified ? (
+                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-mono text-xs font-bold">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    VERIFIED ORGANIZER
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/30 text-amber-400 font-mono text-xs font-bold">
+                    <AlertTriangle className="w-3.5 h-3.5" />
+                    VERIFICATION PENDING ADMIN REVIEW
+                  </span>
+                )
               )}
             </div>
 
             <h1 className="font-display font-extrabold text-3xl sm:text-4xl text-on-surface">
-              Host Scrims & Match Lobbies
+              Organizations &amp; Scrim Match Rooms
             </h1>
             <p className="text-on-surface-variant max-w-2xl text-sm sm:text-base">
-              Create scheduled competitive scrims across all 6 esports titles.
-              Each scrim automatically provisions a dedicated match room lobby with live slot rosters and confidential room credentials.
+              Explore verified esports organizations, competitive rosters, and automated scrim match rooms across India&apos;s premier esports titles.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
-            {!isVerified && (
+          {isAuthenticated && (
+            <div className="flex flex-wrap items-center gap-3">
+              {!isVerified && (
+                <button
+                  onClick={() => setVerifModalOpen(true)}
+                  className="px-5 py-2.5 rounded-2xl bg-amber-500 hover:bg-amber-400 text-black text-sm font-bold shadow-lg shadow-amber-500/20 transition"
+                >
+                  Submit Verification Dossier
+                </button>
+              )}
               <button
-                onClick={() => setVerifModalOpen(true)}
-                className="px-5 py-2.5 rounded-2xl bg-amber-500 hover:bg-amber-400 text-black text-sm font-bold shadow-lg shadow-amber-500/20 transition"
+                onClick={() => setCreateScrimModalOpen(true)}
+                className="px-5 py-2.5 rounded-2xl bg-primary hover:bg-primary-hover text-white text-sm font-bold shadow-lg shadow-primary/20 transition flex items-center gap-2"
               >
-                Submit Verification Dossier
+                <Plus className="w-4 h-4 text-white" />
+                Create New Scrim Lobby
               </button>
-            )}
-            <button
-              onClick={() => setCreateScrimModalOpen(true)}
-              className="px-5 py-2.5 rounded-2xl bg-primary hover:bg-primary-hover text-white text-sm font-bold shadow-lg shadow-primary/20 transition flex items-center gap-2"
-            >
-              <Plus className="w-4 h-4 text-white" />
-              Create New Scrim Lobby
-            </button>
-          </div>
+            </div>
+          )}
         </div>
 
         {feedback && (
@@ -174,6 +179,31 @@ export default function OrganizerDashboard({ onSelectTab, onOpenScrimLobby }) {
           </div>
         )}
       </div>
+
+      {/* Main Scrims & Management Content / Locked Gate */}
+      {!isAuthenticated ? (
+        <div className="my-10 p-8 sm:p-12 rounded-3xl bg-surface-container-low border border-card-border text-center space-y-6 max-w-xl mx-auto shadow-2xl">
+          <div className="w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto text-primary shadow-lg">
+            <Lock className="w-7 h-7" />
+          </div>
+          <div className="space-y-2">
+            <h2 className="font-display font-extrabold text-2xl sm:text-3xl text-on-surface">
+              Sign In to Access Organizations
+            </h2>
+            <p className="text-sm text-on-surface-variant max-w-md mx-auto leading-relaxed">
+              Organization rosters, tournament organizer compliance, and scrim match room hosting are available to logged in members. Sign in or register to manage your organization or host scrims.
+            </p>
+          </div>
+          <button
+            onClick={() => onOpenAuth?.('organizer', 'login')}
+            className="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-primary to-secondary hover:opacity-95 text-white font-display font-bold text-xs uppercase tracking-wider shadow-lg shadow-primary/20 active:scale-95 transition-all inline-flex items-center gap-2"
+          >
+            <LogIn className="w-4 h-4" />
+            <span>Sign In to Access Organizations</span>
+          </button>
+        </div>
+      ) : (
+        <>
 
       {/* Scrims Directory */}
       <div className="space-y-4">
@@ -475,6 +505,8 @@ export default function OrganizerDashboard({ onSelectTab, onOpenScrimLobby }) {
             </form>
           </div>
         </div>
+      )}
+      </>
       )}
     </div>
   );
