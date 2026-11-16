@@ -94,7 +94,7 @@ export default function ChatDrawer({ isOpen, onClose }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 w-full sm:w-96 rounded-3xl glass-modal border border-card-border shadow-2xl flex flex-col h-[480px] overflow-hidden animate-in slide-in-from-bottom-6">
+    <div className="fixed inset-x-3 sm:inset-x-auto bottom-[76px] sm:bottom-6 sm:right-6 sm:w-96 z-50 rounded-3xl glass-modal border border-card-border shadow-2xl flex flex-col h-[480px] max-h-[75vh] overflow-hidden animate-in slide-in-from-bottom-6">
       <div className="px-4 py-3 border-b border-card-border flex items-center gap-3 bg-surface-container-high/50">
         <div className="w-9 h-9 rounded-full bg-secondary/20 flex items-center justify-center text-secondary"><User className="w-4 h-4" /></div>
         <div className="min-w-0 flex-1">

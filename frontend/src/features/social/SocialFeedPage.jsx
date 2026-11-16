@@ -237,7 +237,7 @@ export default function SocialFeedPage({ onSelectTab, onOpenAuth }) {
             </section>
 
           {/* ── Feed Filter Tabs ── */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-1">
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar touch-pan-x">
             {[
               { id: 'all', label: 'All Dispatches' },
               { id: 'lft', label: 'LFT & Tryouts' },

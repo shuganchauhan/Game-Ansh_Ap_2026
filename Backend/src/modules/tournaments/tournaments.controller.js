@@ -20,7 +20,7 @@ async function getOrganizerVerificationStatus(req, res, next) {
 
 async function createScrim(req, res, next) {
   try {
-    const data = await tournamentsService.createScrim(req.user.id, req.body);
+    const data = await tournamentsService.createScrim(req.user.id, req.body, req.user);
     res.status(201).json({ status: 'success', data });
   } catch (err) {
     next(err);

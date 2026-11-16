@@ -83,7 +83,7 @@ export default function TournamentsPage({ onRegisterModal, onOpenScrimLobby, onS
         </div>
 
         {/* Game filter tabs */}
-        <div className="inline-flex p-1 rounded-xl bg-surface-container border border-card-border overflow-x-auto max-w-full">
+        <div className="inline-flex p-1 rounded-xl bg-surface-container border border-card-border overflow-x-auto max-w-full no-scrollbar touch-pan-x">
           {GAME_TABS.map((tab) => (
             <button
               key={tab.id}

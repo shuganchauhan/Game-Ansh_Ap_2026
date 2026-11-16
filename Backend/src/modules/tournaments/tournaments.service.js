@@ -68,7 +68,23 @@ async function getOrganizerVerificationStatus(userId, userRole, userEmail) {
 }
 
 // Scrims
-async function createScrim(organizerId, { name, game, scheduled_at, slots_max = 16, room_id = '', room_password = '' }) {
+async function createScrim(organizerId, { name, game, scheduled_at, slots_max = 16, room_id = '', room_password = '' }, user = null) {
+  // Enforce: only verified organizers (or admin) can create scrims
+  if (user?.role !== 'admin') {
+    const orgCheck = await query(
+      `SELECT o.verified, v.status AS verif_status
+       FROM tournament_organizer o
+       LEFT JOIN organizer_verification v ON v.organizer_id = o.id AND v.status = 'approved'
+       WHERE o.id = $1`,
+      [organizerId],
+    );
+
+    const isVerified = orgCheck.rows[0]?.verified === true || orgCheck.rows[0]?.verif_status === 'approved';
+    if (!isVerified) {
+      throw new ForbiddenError('Only verified tournament organizers can create scrims. Please submit your organizer verification dossier for admin review.');
+    }
+  }
+
   // Generate default room credentials if not provided
   const genRoomId = room_id || `ROOM-${Math.floor(100000 + Math.random() * 900000)}`;
   const genPassword = room_password || `GG${Math.floor(1000 + Math.random() * 9000)}`;

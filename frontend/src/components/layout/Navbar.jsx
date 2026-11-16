@@ -174,8 +174,8 @@ export default function Navbar({ activeTab, onSelectTab, onOpenAuth, onOpenChat,
           </nav>
 
           {/* Search Trigger, Notification, Theme, and Profile/Auth */}
-          <div className="flex items-center gap-2.5">
-            {/* Quick Search Trigger */}
+          <div className="flex items-center gap-1.5 sm:gap-2.5">
+            {/* Quick Search Trigger (Desktop) */}
             <button
               onClick={() => setSearchModalOpen(true)}
               className="hidden sm:flex items-center gap-2.5 pl-3.5 pr-2.5 py-2 rounded-xl bg-[#151B2B]/90 hover:bg-[#1B2335] border border-white/[0.1] text-[#94A3B8] hover:text-[#F8FAFC] text-xs font-body transition-all group shadow-inner"
@@ -188,6 +188,26 @@ export default function Navbar({ activeTab, onSelectTab, onOpenAuth, onOpenChat,
               <kbd className="px-1.5 py-0.5 rounded bg-[#090B12] border border-white/[0.1] font-mono text-[9px] text-[#94A3B8]">
                 ⌘ K
               </kbd>
+            </button>
+
+            {/* Quick Search Trigger (Mobile Icon Button) */}
+            <button
+              onClick={() => setSearchModalOpen(true)}
+              className="sm:hidden p-2 rounded-xl bg-[#151B2B] hover:bg-[#1B2335] border border-white/[0.08] text-[#94A3B8] hover:text-[#F8FAFC] transition-colors active:scale-95"
+              aria-label="Open search"
+            >
+              <Search className="w-4 h-4" />
+            </button>
+
+            {/* Live Chat Drawer Trigger */}
+            <button
+              onClick={onOpenChat}
+              className="p-2 rounded-xl bg-[#151B2B] hover:bg-[#1B2335] border border-white/[0.08] text-[#94A3B8] hover:text-[#22D3EE] transition-colors relative active:scale-95"
+              aria-label="Open live chat"
+              title="Open Live Chat"
+            >
+              <MessageSquare className="w-4 h-4" />
+              <span className="absolute 1 top-1 right-1 w-2 h-2 rounded-full bg-[#22D3EE] animate-pulse" />
             </button>
 
             {/* Notifications Bell */}
@@ -208,7 +228,7 @@ export default function Navbar({ activeTab, onSelectTab, onOpenAuth, onOpenChat,
 
                 {/* Notifications Dropdown */}
                 {notificationsOpen && (
-                  <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl bg-[#151B2B] border border-white/[0.12] p-4 shadow-2xl z-50 animate-fade-in">
+                  <div className="absolute right-0 mt-2 w-[calc(100vw-2rem)] max-w-sm sm:w-96 rounded-2xl bg-[#151B2B] border border-white/[0.12] p-4 shadow-2xl z-50 animate-fade-in">
                     <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
                       <div className="flex items-center gap-2">
                         <Bell className="w-4 h-4 text-[#8B5CF6]" />
@@ -320,7 +340,7 @@ export default function Navbar({ activeTab, onSelectTab, onOpenAuth, onOpenChat,
 
                 {/* Profile Dropdown Menu */}
                 {profileDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-[#151B2B] border border-white/[0.12] p-2 shadow-2xl z-50 animate-fade-in space-y-1">
+                  <div className="absolute right-0 mt-2 w-[calc(100vw-2rem)] max-w-xs sm:w-64 rounded-2xl bg-[#151B2B] border border-white/[0.12] p-2 shadow-2xl z-50 animate-fade-in space-y-1">
                     <div className="p-3 rounded-xl bg-[#1B2335] border border-white/[0.06] mb-1">
                       <div className="font-display font-bold text-sm text-[#F8FAFC] truncate">
                         {user.name || user.username}

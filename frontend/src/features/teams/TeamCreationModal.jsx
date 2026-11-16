@@ -200,8 +200,8 @@ export default function TeamCreationModal({ isOpen, onClose, onTeamCreated }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto">
-      <div className="w-full max-w-3xl my-8 rounded-3xl glass-modal p-6 sm:p-8 space-y-6 shadow-2xl border border-card-border relative animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md overflow-y-auto">
+      <div className="w-full max-w-3xl my-4 sm:my-8 rounded-3xl glass-modal p-4 sm:p-8 space-y-5 shadow-2xl border border-card-border relative animate-fade-in max-h-[92dvh] overflow-y-auto no-scrollbar">
         {/* Close Button */}
         <button
           onClick={onClose}

@@ -325,7 +325,13 @@ function AppContent() {
       </main>
 
       {/* Floating Bottom Nav for Mobile Screens */}
-      <MobileNav activeTab={activeTab} onSelectTab={setActiveTab} />
+      <MobileNav
+        activeTab={activeTab}
+        onSelectTab={setActiveTab}
+        onOpenAuth={handleOpenAuthWithRole}
+        onOpenChat={() => setChatOpen((prev) => !prev)}
+        onOpenTeamCreator={handleOpenTeamCreator}
+      />
 
       {/* Team Formation Modal (Unified Identity • Login Required) */}
       <TeamCreationModal

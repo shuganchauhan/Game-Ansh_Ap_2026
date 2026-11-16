@@ -127,7 +127,7 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
         </div>
 
         {/* Profile info overlay */}
-        <div className="px-6 sm:px-8 pb-6 relative -mt-16 sm:-mt-20 space-y-4">
+        <div className="px-4 sm:px-8 pb-6 relative -mt-16 sm:-mt-20 space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             {/* Avatar */}
             <div className="relative">

@@ -503,3 +503,45 @@
 .flux-marquee-bg {
   background-color: #06080E;
 }
+
+/* ─── Mobile First UX & Touch Ergonomics ─── */
+.pb-safe {
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0.75rem));
+}
+
+.pt-safe {
+  padding-top: max(0.75rem, env(safe-area-inset-top, 0.75rem));
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.touch-pan-x {
+  touch-action: pan-x;
+  -webkit-overflow-scrolling: touch;
+}
+
+.touch-pan-y {
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Prevent unwanted double-tap zoom delay on mobile action buttons */
+button, a, input, select, textarea {
+  touch-action: manipulation;
+}
+
+/* Mobile card active feedback */
+@media (hover: none) and (pointer: coarse) {
+  .active-tap:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+  }
+}
+

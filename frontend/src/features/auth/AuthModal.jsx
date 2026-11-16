@@ -111,7 +111,7 @@ export default function AuthModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 dark:bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="w-full max-w-md rounded-3xl bg-surface-container-lowest  border border-card-border p-6 sm:p-8 space-y-6 shadow-2xl relative text-on-surface">
+      <div className="w-full max-w-md rounded-3xl bg-surface-container-lowest border border-card-border p-5 sm:p-8 space-y-5 shadow-2xl relative text-on-surface max-h-[90dvh] overflow-y-auto no-scrollbar">
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -124,7 +124,7 @@ export default function AuthModal({
         {/* Brand Header */}
         <div className="text-center space-y-2 pt-1">
           <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center mx-auto shadow-lg shadow-primary/20">
-            <span className="font-display font-extrabold text-2xl text-white">G</span>
+            <span className="font-display font-black text-2xl text-white">F</span>
           </div>
           <div>
             <h2 className="font-display font-bold text-2xl text-on-surface tracking-tight">

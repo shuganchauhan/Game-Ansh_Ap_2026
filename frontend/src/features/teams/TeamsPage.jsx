@@ -885,7 +885,7 @@ export default function TeamsPage({ onOpenTeamCreator, onSelectTab, onOpenAuth }
 
       {/* Controls: Game Filters + Search */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-        <div className="inline-flex p-1 rounded-xl bg-surface-container border border-card-border overflow-x-auto max-w-full">
+        <div className="inline-flex p-1 rounded-xl bg-surface-container border border-card-border overflow-x-auto max-w-full no-scrollbar touch-pan-x">
           {['all', 'valorant', 'bgmi', 'freefire', 'coc', 'cr', 'cod'].map((g) => (
             <button
               key={g}

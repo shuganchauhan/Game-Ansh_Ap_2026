@@ -89,8 +89,15 @@ export default function OrganizerDashboard({ onSelectTab, onOpenScrimLobby, onOp
     }
   };
 
+  const isVerified = Boolean(verifStatus?.status === 'approved' || currentUser?.verified || user?.role === 'admin');
+
   const handleCreateScrim = async (e) => {
     e.preventDefault();
+    if (!isVerified) {
+      setFeedback('Verification Required: Only verified tournament organizers can create scrims. Please submit your verification dossier.');
+      setVerifModalOpen(true);
+      return;
+    }
     if (!scrimName.trim()) return;
     setActionLoading(true);
     try {
@@ -117,12 +124,10 @@ export default function OrganizerDashboard({ onSelectTab, onOpenScrimLobby, onOp
     }
   };
 
-  const isVerified = verifStatus?.status === 'approved' || currentUser?.verified;
-
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8 animate-fadeIn">
       {/* Top Banner */}
-      <div className="relative overflow-hidden rounded-3xl p-8 bg-gradient-to-r from-surface-container-highest via-surface-container-high to-surface border border-secondary/20 shadow-2xl">
+      <div className="relative overflow-hidden rounded-3xl p-5 sm:p-8 bg-gradient-to-r from-surface-container-highest via-surface-container-high to-surface border border-secondary/20 shadow-2xl">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2">
             <div className="flex items-center gap-2">
@@ -162,13 +167,27 @@ export default function OrganizerDashboard({ onSelectTab, onOpenScrimLobby, onOp
                   Submit Verification Dossier
                 </button>
               )}
-              <button
-                onClick={() => setCreateScrimModalOpen(true)}
-                className="px-5 py-2.5 rounded-2xl bg-primary hover:bg-primary-hover text-white text-sm font-bold shadow-lg shadow-primary/20 transition flex items-center gap-2"
-              >
-                <Plus className="w-4 h-4 text-white" />
-                Create New Scrim Lobby
-              </button>
+              {isVerified ? (
+                <button
+                  onClick={() => setCreateScrimModalOpen(true)}
+                  className="px-5 py-2.5 rounded-2xl bg-primary hover:bg-primary-hover text-white text-sm font-bold shadow-lg shadow-primary/20 transition flex items-center gap-2"
+                >
+                  <Plus className="w-4 h-4 text-white" />
+                  Create New Scrim Lobby
+                </button>
+              ) : (
+                <button
+                  onClick={() => {
+                    setFeedback('Only verified tournament organizers can create scrims. Please submit your verification dossier for admin review.');
+                    setVerifModalOpen(true);
+                  }}
+                  className="px-5 py-2.5 rounded-2xl bg-surface-container-high border border-card-border text-on-surface-variant hover:text-on-surface text-sm font-bold transition flex items-center gap-2"
+                  title="Only verified tournament organizers can host scrims"
+                >
+                  <Lock className="w-4 h-4 text-amber-400" />
+                  Host Scrim (Verified Only)
+                </button>
+              )}
             </div>
           )}
         </div>
@@ -233,12 +252,25 @@ export default function OrganizerDashboard({ onSelectTab, onOpenScrimLobby, onOp
             <p className="text-sm text-on-surface-variant max-w-md mx-auto">
               Ready to host? Create your first scheduled match lobby with custom room ID and password.
             </p>
-            <button
-              onClick={() => setCreateScrimModalOpen(true)}
-              className="px-5 py-2 rounded-xl bg-primary text-white font-bold text-sm"
-            >
-              Create Scrim Now
-            </button>
+            {isVerified ? (
+              <button
+                onClick={() => setCreateScrimModalOpen(true)}
+                className="px-5 py-2 rounded-xl bg-primary text-white font-bold text-sm"
+              >
+                Create Scrim Now
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  setFeedback('Only verified tournament organizers can create scrims. Please submit your verification dossier for admin review.');
+                  setVerifModalOpen(true);
+                }}
+                className="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-sm inline-flex items-center gap-2"
+              >
+                <Lock className="w-4 h-4" />
+                Submit Verification to Host Scrims
+              </button>
+            )}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">

@@ -285,14 +285,14 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole, onOpenTea
             </p>
 
             {/* Action CTAs */}
-            <div className="flex flex-row flex-wrap items-center justify-center gap-3.5 pt-1">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-1 w-full sm:w-auto">
               <button
                 onClick={() => {
                   cyberAudio.playClick();
                   onSelectTab?.('tournaments');
                 }}
                 onMouseEnter={() => cyberAudio.playHover()}
-                className="group relative px-6 sm:px-8 py-3.5 rounded-xl bg-gradient-to-r from-[#8B5CF6] via-[#6366F1] to-[#3B82F6] hover:from-[#7C3AED] hover:to-[#2563EB] text-white font-display font-bold text-xs sm:text-sm tracking-wide shadow-xl shadow-purple-600/35 hover:shadow-purple-600/55 active:scale-95 transition-all flex items-center justify-center gap-2 overflow-hidden"
+                className="w-full sm:w-auto group relative px-6 sm:px-8 py-3.5 rounded-xl bg-gradient-to-r from-[#8B5CF6] via-[#6366F1] to-[#3B82F6] hover:from-[#7C3AED] hover:to-[#2563EB] text-white font-display font-bold text-xs sm:text-sm tracking-wide shadow-xl shadow-purple-600/35 hover:shadow-purple-600/55 active:scale-95 transition-all flex items-center justify-center gap-2 overflow-hidden"
               >
                 <Rocket className="w-4 h-4 text-white group-hover:rotate-12 transition-transform" />
                 <span>Explore Tournaments</span>
@@ -305,7 +305,7 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole, onOpenTea
                   handleJoinCommunity();
                 }}
                 onMouseEnter={() => cyberAudio.playHover()}
-                className="px-6 sm:px-8 py-3.5 rounded-xl bg-[#151B2B]/90 hover:bg-[#1E2738] text-white border border-white/[0.14] hover:border-purple-400/40 font-display font-bold text-xs sm:text-sm tracking-wide backdrop-blur-md active:scale-95 transition-all flex items-center justify-center gap-2 shadow-lg"
+                className="w-full sm:w-auto px-6 sm:px-8 py-3.5 rounded-xl bg-[#151B2B]/90 hover:bg-[#1E2738] text-white border border-white/[0.14] hover:border-purple-400/40 font-display font-bold text-xs sm:text-sm tracking-wide backdrop-blur-md active:scale-95 transition-all flex items-center justify-center gap-2 shadow-lg"
               >
                 <Users className="w-4 h-4 text-[#A78BFA]" />
                 <span>Join Community</span>
