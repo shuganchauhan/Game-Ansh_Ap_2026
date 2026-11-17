@@ -33,6 +33,9 @@ export const teamService = {
   cancelInvitation: (teamId, inviteId) => api.delete(`/teams/${teamId}/invitations/${inviteId}`),
   listMyInvitations: () => api.get('/teams/invitations/my'),
   respondInvitation: (inviteId, action) => api.post(`/teams/invitations/${inviteId}/respond`, { action }),
+  // Private Squad Tactical Comms
+  getTeamMessages: (teamId) => api.get(`/teams/${teamId}/messages`),
+  sendTeamMessage: (teamId, content) => api.post(`/teams/${teamId}/messages`, { content }),
 };
 
 export const recruitmentService = {

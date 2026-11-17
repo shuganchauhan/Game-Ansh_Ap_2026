@@ -81,6 +81,37 @@ function initSocket(httpServer) {
         socket.leave(`scrim:${scrimId}`);
       }
     });
+
+    // Join / Leave dedicated Private Squad Chat room
+    socket.on('join_team_chat', async (teamId) => {
+      if (typeof teamId !== 'string' || !/^[0-9a-f-]{36}$/i.test(teamId)) return;
+      try {
+        const user = socket.data.user;
+        const check = await query(
+          `SELECT EXISTS (
+             SELECT 1 FROM team t
+             LEFT JOIN team_member tm ON tm.team_id = t.id
+             WHERE t.id = $1 AND (
+               $3 = 'admin' OR
+               ($3 = 'org' AND t.org_id = $2) OR
+               ($3 = 'player' AND (t.captain_id = $2 OR tm.player_id = $2))
+             )
+           ) AS allowed`,
+          [teamId, user.id, user.role],
+        );
+        if (check.rows[0].allowed) {
+          socket.join(`team:${teamId}`);
+        }
+      } catch (error) {
+        console.warn('[Socket] Could not authorize team room join:', error.message);
+      }
+    });
+
+    socket.on('leave_team_chat', (teamId) => {
+      if (teamId) {
+        socket.leave(`team:${teamId}`);
+      }
+    });
   });
 
   return io;
@@ -94,6 +125,11 @@ function emitToUser(userId, event, data) {
 function emitToScrimLobby(scrimId, event, data) {
   if (!io) return;
   io.to(`scrim:${scrimId}`).emit(event, data);
+}
+
+function emitToTeam(teamId, event, data) {
+  if (!io) return;
+  io.to(`team:${teamId}`).emit(event, data);
 }
 
 function broadcastEvent(event, data) {
@@ -110,6 +146,7 @@ module.exports = {
   initSocket,
   emitToUser,
   emitToScrimLobby,
+  emitToTeam,
   broadcastEvent,
   getIO,
 };

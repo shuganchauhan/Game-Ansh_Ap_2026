@@ -1,5 +1,6 @@
 const { query, withTransaction } = require('../../shared/db');
 const { NotFoundError, ForbiddenError, BadRequestError } = require('../../shared/errors');
+const { emitToTeam } = require('../../shared/socket');
 
 async function claimPlayerForTeam(client, teamId, playerId) {
   const player = await client.query('SELECT id, team_id, org_id FROM player WHERE id = $1 FOR UPDATE', [playerId]);
@@ -432,6 +433,96 @@ async function respondInvitation(inviteId, user, action) {
   });
 }
 
+async function getTeamMessages(teamId, user) {
+  const authCheck = await query(
+    `SELECT t.id, t.name, t.game, t.tag, t.division, t.captain_id, t.org_id,
+            (t.captain_id = $2) AS is_captain,
+            EXISTS (
+              SELECT 1 FROM team_member tm WHERE tm.team_id = t.id AND tm.player_id = $2
+            ) AS is_member
+     FROM team t
+     WHERE t.id = $1 AND (
+       $3 = 'admin' OR
+       ($3 = 'org' AND t.org_id = $2) OR
+       ($3 = 'player' AND (t.captain_id = $2 OR EXISTS (SELECT 1 FROM team_member tm WHERE tm.team_id = t.id AND tm.player_id = $2)))
+     )`,
+    [teamId, user.id, user.role]
+  );
+
+  if (authCheck.rowCount === 0) {
+    throw new ForbiddenError('You must be a verified squad member, captain, or team org to access private team comms.');
+  }
+
+  const team = authCheck.rows[0];
+
+  const messagesRes = await query(
+    `SELECT id, team_id, sender_id, sender_role, sender_name, content, created_at
+     FROM team_message
+     WHERE team_id = $1
+     ORDER BY created_at ASC
+     LIMIT 100`,
+    [teamId]
+  );
+
+  return {
+    team,
+    messages: messagesRes.rows,
+  };
+}
+
+async function sendTeamMessage(teamId, user, content) {
+  const authCheck = await query(
+    `SELECT t.id, t.name, t.game, t.captain_id, t.org_id,
+            (t.captain_id = $2) AS is_captain,
+            EXISTS (
+              SELECT 1 FROM team_member tm WHERE tm.team_id = t.id AND tm.player_id = $2
+            ) AS is_member
+     FROM team t
+     WHERE t.id = $1 AND (
+       $3 = 'admin' OR
+       ($3 = 'org' AND t.org_id = $2) OR
+       ($3 = 'player' AND (t.captain_id = $2 OR EXISTS (SELECT 1 FROM team_member tm WHERE tm.team_id = t.id AND tm.player_id = $2)))
+     )`,
+    [teamId, user.id, user.role]
+  );
+
+  if (authCheck.rowCount === 0) {
+    throw new ForbiddenError('You must be a verified squad member, captain, or team org to send messages.');
+  }
+
+  let senderName = user.name || user.username || 'Squad Member';
+  if (user.role === 'player') {
+    const pRes = await query('SELECT username, game_ign FROM player WHERE id = $1', [user.id]);
+    if (pRes.rowCount > 0) {
+      senderName = pRes.rows[0].game_ign || pRes.rows[0].username || senderName;
+    }
+  } else if (user.role === 'org') {
+    const oRes = await query('SELECT name FROM org WHERE id = $1', [user.id]);
+    if (oRes.rowCount > 0) {
+      senderName = `${oRes.rows[0].name} (Org)`;
+    }
+  } else if (user.role === 'admin') {
+    senderName = 'Admin';
+  }
+
+  const insRes = await query(
+    `INSERT INTO team_message (team_id, sender_id, sender_role, sender_name, content)
+     VALUES ($1, $2, $3, $4, $5)
+     RETURNING id, team_id, sender_id, sender_role, sender_name, content, created_at`,
+    [teamId, user.id, user.role, senderName, content]
+  );
+
+  const message = insRes.rows[0];
+
+  try {
+    emitToTeam(teamId, 'new_team_message', message);
+  } catch (err) {
+    console.warn('[Socket] emitToTeam error:', err.message);
+  }
+
+  return message;
+}
+
 module.exports = {
   createTeam,
   getTeam,
@@ -444,4 +535,6 @@ module.exports = {
   cancelInvitation,
   listMyInvitations,
   respondInvitation,
+  getTeamMessages,
+  sendTeamMessage,
 };

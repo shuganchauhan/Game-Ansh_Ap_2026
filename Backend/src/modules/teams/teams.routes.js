@@ -2,10 +2,11 @@ const { Router } = require('express');
 const {
   createTeam, getTeam, listTeams, updateTeam, addMember, removeMember,
   inviteMember, listTeamInvitations, cancelInvitation, listMyInvitations, respondInvitation,
+  getTeamMessages, sendTeamMessage,
 } = require('./teams.controller');
 const { authenticate, authorize } = require('../../shared/auth/middleware');
 const { validate } = require('../../shared/validation');
-const { createTeamSchema, addMemberSchema, inviteMemberSchema, respondInviteSchema } = require('./teams.schema');
+const { createTeamSchema, addMemberSchema, inviteMemberSchema, respondInviteSchema, sendTeamMessageSchema } = require('./teams.schema');
 
 const router = Router();
 
@@ -35,5 +36,9 @@ router.post('/:id/players', authenticate, authorize(['player', 'org', 'admin']),
   return addMember(req, res, next);
 });
 router.delete('/:id/players/:playerId', authenticate, authorize(['player', 'org', 'admin']), removeMember);
+
+// Private Squad Tactical Comms
+router.get('/:id/messages', authenticate, authorize(['player', 'org', 'admin']), getTeamMessages);
+router.post('/:id/messages', authenticate, authorize(['player', 'org', 'admin']), validate(sendTeamMessageSchema), sendTeamMessage);
 
 module.exports = router;

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import {
   ArrowLeft, Check, CheckCircle2, ChevronRight, Crown, Edit3, ExternalLink, FileText,
   Plus, Search, Shield, Sparkles, Swords, Target, Trash2, Trophy, Users, X, Zap,
-  Clock, UserPlus, UserCheck, AlertCircle, AlertTriangle, Lock, LogIn
+  Clock, UserPlus, UserCheck, AlertCircle, AlertTriangle, Lock, LogIn, MessageSquare
 } from 'lucide-react';
 import { useAuth } from '../../stores/authContext';
 import { useGameStore } from '../../stores/gameStore';
@@ -18,7 +18,7 @@ const COMMON_ROLES = [
   'Flex Sub',
 ];
 
-export default function TeamsPage({ onOpenTeamCreator, onSelectTab, onOpenAuth }) {
+export default function TeamsPage({ onOpenTeamCreator, onSelectTab, onOpenAuth, onOpenChat }) {
   const { user, isAuthenticated } = useAuth();
   const {
     teams,
@@ -106,6 +106,15 @@ export default function TeamsPage({ onOpenTeamCreator, onSelectTab, onOpenAuth }
   const isCaptainOrManager = activeTeamObj
     ? (activeTeamObj.captainId && activeTeamObj.captainId === currentUser?.id) || activeRole === 'org'
     : false;
+
+  const isMemberOfActiveTeam = activeTeamObj && currentUser && (
+    isCaptainOrManager ||
+    (activeTeamObj.roster || []).some((m) =>
+      (m.player_id && m.player_id === currentUser.id) ||
+      (m.id && m.id === currentUser.id) ||
+      (currentUser.username && (m.username === currentUser.username || m.ign === currentUser.game_ign))
+    )
+  );
 
   const teamApplications = activeTeamObj
     ? applications.filter((a) => a.teamId === activeTeamObj.id)
@@ -248,26 +257,39 @@ export default function TeamsPage({ onOpenTeamCreator, onSelectTab, onOpenAuth }
               </div>
             </div>
 
-            {/* Captain / Org Controls */}
-            {isCaptainOrManager && (
-              <div className="flex items-center gap-2 flex-wrap">
+            {/* Squad Tactical Comms & Captain / Org Controls */}
+            <div className="flex items-center gap-2 flex-wrap">
+              {isMemberOfActiveTeam && (
                 <button
-                  onClick={() => setInviteModalOpen(true)}
-                  disabled={activeTeamObj.roster.length >= activeTeamObj.slotsMax}
-                  className="px-4 py-2 rounded-xl bg-surface-container-high hover:bg-surface-container-highest border border-card-border text-on-surface font-display font-bold text-xs uppercase tracking-wider disabled:opacity-50 flex items-center gap-1.5 transition-all"
+                  onClick={() => onOpenChat?.('team', activeTeamObj.id)}
+                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-700 via-indigo-600 to-purple-800 text-white font-display font-bold text-xs uppercase tracking-wider shadow-md shadow-purple-900/40 hover:brightness-110 active:scale-95 transition-all flex items-center gap-1.5 border border-purple-400/30"
+                  title="Open private squad tactical chatroom"
                 >
-                  <UserPlus className="w-4 h-4 text-primary" />
-                  Invite Registered Athlete
+                  <MessageSquare className="w-4 h-4 text-cyan-300" />
+                  <span>Squad Comms</span>
                 </button>
-                <button
-                  onClick={() => setOpenRoleModalOpen(true)}
-                  className="px-4 py-2 rounded-xl bg-primary-container text-on-primary font-display font-bold text-xs uppercase tracking-wider shadow-glow active:scale-95 transition-all flex items-center gap-1.5"
-                >
-                  <Sparkles className="w-4 h-4" />
-                  Open Recruitment Role
-                </button>
-              </div>
-            )}
+              )}
+
+              {isCaptainOrManager && (
+                <>
+                  <button
+                    onClick={() => setInviteModalOpen(true)}
+                    disabled={activeTeamObj.roster.length >= activeTeamObj.slotsMax}
+                    className="px-4 py-2 rounded-xl bg-surface-container-high hover:bg-surface-container-highest border border-card-border text-on-surface font-display font-bold text-xs uppercase tracking-wider disabled:opacity-50 flex items-center gap-1.5 transition-all"
+                  >
+                    <UserPlus className="w-4 h-4 text-primary" />
+                    Invite Registered Athlete
+                  </button>
+                  <button
+                    onClick={() => setOpenRoleModalOpen(true)}
+                    className="px-4 py-2 rounded-xl bg-primary-container text-on-primary font-display font-bold text-xs uppercase tracking-wider shadow-glow active:scale-95 transition-all flex items-center gap-1.5"
+                  >
+                    <Sparkles className="w-4 h-4" />
+                    Open Recruitment Role
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         </div>
 

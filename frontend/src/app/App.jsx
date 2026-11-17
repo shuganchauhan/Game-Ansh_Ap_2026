@@ -69,12 +69,20 @@ function AppContent() {
   const [authInitialRole, setAuthInitialRole] = useState('player');
   const [authInitialMode, setAuthInitialMode] = useState('login');
   const [chatOpen, setChatOpen] = useState(false);
+  const [chatInitialTab, setChatInitialTab] = useState('direct');
+  const [chatInitialTeamId, setChatInitialTeamId] = useState(null);
   const [teamCreationModalOpen, setTeamCreationModalOpen] = useState(false);
   const [pendingAction, setPendingAction] = useState(null);
 
   const { user, isAuthenticated } = useAuth();
   const { setCurrentUser, setActiveRole, setActiveOrgId } = useGameStore();
   const userRole = user?.role || 'guest';
+
+  const handleOpenChat = (mode = 'direct', teamId = null) => {
+    setChatInitialTab(typeof mode === 'string' ? mode : 'direct');
+    setChatInitialTeamId(teamId || null);
+    setChatOpen(true);
+  };
 
   // Navigate to tab and synchronize browser history & URL bar
   const navigateToTab = (tab, options = {}) => {
@@ -171,7 +179,7 @@ function AppContent() {
         activeTab={activeTab}
         onSelectTab={navigateToTab}
         onOpenAuth={handleOpenAuthWithRole}
-        onOpenChat={() => setChatOpen((prev) => !prev)}
+        onOpenChat={handleOpenChat}
         onOpenTeamCreator={handleOpenTeamCreator}
       />
 
@@ -214,6 +222,7 @@ function AppContent() {
             onOpenTeamCreator={handleOpenTeamCreator}
             onSelectTab={navigateToTab}
             onOpenAuth={handleOpenAuthWithRole}
+            onOpenChat={handleOpenChat}
           />
         )}
 
@@ -306,6 +315,7 @@ function AppContent() {
             <PlayerDashboard
               onSelectTab={navigateToTab}
               onOpenTeamCreator={handleOpenTeamCreator}
+              onOpenChat={handleOpenChat}
             />
           )
         )}
@@ -369,7 +379,7 @@ function AppContent() {
         activeTab={activeTab}
         onSelectTab={navigateToTab}
         onOpenAuth={handleOpenAuthWithRole}
-        onOpenChat={() => setChatOpen((prev) => !prev)}
+        onOpenChat={handleOpenChat}
         onOpenTeamCreator={handleOpenTeamCreator}
       />
 
@@ -389,8 +399,14 @@ function AppContent() {
         initialMode={authInitialMode}
       />
 
-      {/* Real-Time Live Chat Drawer */}
-      <ChatDrawer isOpen={chatOpen} onClose={() => setChatOpen(false)} />
+      {/* Real-Time Live Chat Drawer (Direct DMs & Private Squad Tactical Comms) */}
+      <ChatDrawer
+        isOpen={chatOpen}
+        onClose={() => setChatOpen(false)}
+        initialTab={chatInitialTab}
+        initialTeamId={chatInitialTeamId}
+        onNavigateToTeams={() => navigateToTab('teams')}
+      />
     </div>
   );
 }

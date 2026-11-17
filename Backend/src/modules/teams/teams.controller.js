@@ -99,6 +99,24 @@ async function respondInvitation(req, res, next) {
   }
 }
 
+async function getTeamMessages(req, res, next) {
+  try {
+    const data = await teamsService.getTeamMessages(req.params.id, req.user);
+    res.json({ status: 'success', data });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function sendTeamMessage(req, res, next) {
+  try {
+    const data = await teamsService.sendTeamMessage(req.params.id, req.user, req.body.content);
+    res.status(201).json({ status: 'success', data });
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   createTeam,
   getTeam,
@@ -111,4 +129,6 @@ module.exports = {
   cancelInvitation,
   listMyInvitations,
   respondInvitation,
+  getTeamMessages,
+  sendTeamMessage,
 };

@@ -6,7 +6,7 @@ import { useAuth } from '../../stores/authContext';
 import { useGameStore } from '../../stores/gameStore';
 import { orgService, organizerService, playerService } from '../../services';
 
-export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSelectTeam }) {
+export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSelectTeam, onOpenChat }) {
   const { user } = useAuth();
   const {
     currentUser,
@@ -770,10 +770,18 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
                         onSelectTeam?.(team);
                         onSelectTab('teams');
                       }}
-                      className="w-full py-2 rounded-xl bg-surface-container hover:bg-surface-container-high border border-card-border font-display font-bold text-xs uppercase tracking-wider text-on-surface transition-all flex items-center justify-center gap-1.5"
+                      className="flex-1 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high border border-card-border font-display font-bold text-xs uppercase tracking-wider text-on-surface transition-all flex items-center justify-center gap-1.5"
                     >
-                      <span>Manage Roster &amp; Roles</span>
+                      <span>Manage Roster</span>
                       <ChevronRight className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      onClick={() => onOpenChat?.('team', team.id)}
+                      className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-purple-700 to-indigo-600 hover:brightness-110 text-white border border-purple-400/30 font-display font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 shadow-md shadow-purple-900/30 shrink-0"
+                      title="Open Private Squad Tactical Comms"
+                    >
+                      <MessageSquare className="w-3.5 h-3.5 text-cyan-300" />
+                      <span>Comms</span>
                     </button>
                   </div>
                 </div>
