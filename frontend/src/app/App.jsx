@@ -22,6 +22,7 @@ import AuthModal from '../features/auth/AuthModal';
 import ChatDrawer from '../features/chat/ChatDrawer';
 import ErrorBoundary from '../components/common/ErrorBoundary';
 import { Lock, ShieldAlert, LogIn, Sparkles, Trophy, Gamepad2, Shield } from 'lucide-react';
+import { parsePath, formatPath } from '../lib/router';
 
 function ProtectedGate({ title, message, requiredRole = null, currentRole = null, onOpenAuth }) {
   return (
@@ -61,8 +62,9 @@ function ProtectedGate({ title, message, requiredRole = null, currentRole = null
 }
 
 function AppContent() {
-  const [activeTab, setActiveTab] = useState('landing');
-  const [activeScrimId, setActiveScrimId] = useState(null);
+  const initialRoute = parsePath(window.location.pathname);
+  const [activeTab, setActiveTab] = useState(initialRoute.tab);
+  const [activeScrimId, setActiveScrimId] = useState(initialRoute.scrimId);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authInitialRole, setAuthInitialRole] = useState('player');
   const [authInitialMode, setAuthInitialMode] = useState('login');
@@ -73,6 +75,33 @@ function AppContent() {
   const { user, isAuthenticated } = useAuth();
   const { setCurrentUser, setActiveRole, setActiveOrgId } = useGameStore();
   const userRole = user?.role || 'guest';
+
+  // Navigate to tab and synchronize browser history & URL bar
+  const navigateToTab = (tab, options = {}) => {
+    const scrimId = options.scrimId !== undefined ? options.scrimId : (tab === 'scrim-lobby' ? activeScrimId : null);
+    const targetPath = formatPath(tab, { scrimId });
+
+    if (window.location.pathname !== targetPath) {
+      window.history.pushState({ tab, scrimId }, '', targetPath);
+    }
+    setActiveTab(tab);
+    if (tab === 'scrim-lobby') {
+      setActiveScrimId(scrimId);
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Sync state with browser back/forward buttons
+  useEffect(() => {
+    const handlePopState = () => {
+      const route = parsePath(window.location.pathname);
+      setActiveTab(route.tab);
+      setActiveScrimId(route.scrimId);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   useEffect(() => {
     if (!user) return;
@@ -87,7 +116,7 @@ function AppContent() {
     setAuthModalOpen(true);
   };
 
-  const handleLandingNavigation = (tab) => setActiveTab(tab);
+  const handleLandingNavigation = (tab) => navigateToTab(tab);
 
   const handleAuthSuccess = (loggedUser, isNewSignup = false) => {
     if (pendingAction === 'createTeam') {
@@ -97,7 +126,7 @@ function AppContent() {
     }
 
     if (loggedUser?.role === 'admin') {
-      setActiveTab('admin');
+      navigateToTab('admin');
       return;
     }
 
@@ -109,11 +138,11 @@ function AppContent() {
       !loggedUser?.game_ign?.startsWith('gamer_');
 
     if (isNewSignup || !hasCompletedProfile) {
-      setActiveTab('onboarding');
+      navigateToTab('onboarding');
     } else if (loggedUser?.role === 'organizer') {
-      setActiveTab('organizer');
+      navigateToTab('organizer');
     } else {
-      setActiveTab('dashboard');
+      navigateToTab('dashboard');
     }
   };
 
@@ -128,12 +157,11 @@ function AppContent() {
 
   const handleTeamCreated = () => {
     setTeamCreationModalOpen(false);
-    setActiveTab('dashboard');
+    navigateToTab('dashboard');
   };
 
   const handleOpenScrimLobby = (scrimId) => {
-    setActiveScrimId(scrimId);
-    setActiveTab('scrim-lobby');
+    navigateToTab('scrim-lobby', { scrimId });
   };
 
   return (
@@ -141,15 +169,15 @@ function AppContent() {
       {/* Top Header Navbar */}
       <Navbar
         activeTab={activeTab}
-        onSelectTab={setActiveTab}
+        onSelectTab={navigateToTab}
         onOpenAuth={handleOpenAuthWithRole}
         onOpenChat={() => setChatOpen((prev) => !prev)}
         onOpenTeamCreator={handleOpenTeamCreator}
       />
 
       {/* Main Viewport */}
-      <main className="flex-1 pb-20 md:pb-10">
-        <ErrorBoundary key={activeTab} fallbackTitle={`Unable to render ${activeTab} view`} onReset={() => setActiveTab('landing')}>
+      <main className="flex-1 pb-28 md:pb-10">
+        <ErrorBoundary key={activeTab} fallbackTitle={`Unable to render ${activeTab} view`} onReset={() => navigateToTab('landing')}>
         {/* Public Routes */}
         {activeTab === 'landing' && (
           <LandingPage
@@ -161,7 +189,7 @@ function AppContent() {
 
         {activeTab === 'discovery' && (
           <DiscoveryPage
-            onSelectTab={setActiveTab}
+            onSelectTab={navigateToTab}
             onOpenAuth={handleOpenAuthWithRole}
           />
         )}
@@ -176,7 +204,7 @@ function AppContent() {
               }
             }}
             onOpenScrimLobby={handleOpenScrimLobby}
-            onSelectTab={setActiveTab}
+            onSelectTab={navigateToTab}
             onOpenAuth={handleOpenAuthWithRole}
           />
         )}
@@ -184,14 +212,14 @@ function AppContent() {
         {activeTab === 'teams' && (
           <TeamsPage
             onOpenTeamCreator={handleOpenTeamCreator}
-            onSelectTab={setActiveTab}
+            onSelectTab={navigateToTab}
             onOpenAuth={handleOpenAuthWithRole}
           />
         )}
 
         {activeTab === 'feed' && (
           <SocialFeedPage
-            onSelectTab={setActiveTab}
+            onSelectTab={navigateToTab}
             onOpenAuth={() => handleOpenAuthWithRole('player')}
           />
         )}
@@ -207,8 +235,14 @@ function AppContent() {
           ) : (
             <ScrimLobbyPage
               scrimId={activeScrimId}
-              onBack={() => setActiveTab('tournaments')}
-              onSelectTab={setActiveTab}
+              onBack={() => {
+                if (window.history.length > 1) {
+                  window.history.back();
+                } else {
+                  navigateToTab('tournaments');
+                }
+              }}
+              onSelectTab={navigateToTab}
             />
           )
         )}
@@ -232,7 +266,7 @@ function AppContent() {
             />
           ) : (
             <AdminPortalPage
-              onSelectTab={setActiveTab}
+              onSelectTab={navigateToTab}
             />
           )
         )}
@@ -240,7 +274,7 @@ function AppContent() {
         {/* Organizations & Tournament Hub (Publicly browsable, scrims & ops require auth inside) */}
         {activeTab === 'organizer' && (
           <OrganizerDashboard
-            onSelectTab={setActiveTab}
+            onSelectTab={navigateToTab}
             onOpenScrimLobby={handleOpenScrimLobby}
             onOpenAuth={handleOpenAuthWithRole}
           />
@@ -256,21 +290,21 @@ function AppContent() {
             />
           ) : userRole === 'admin' ? (
             <AdminPortalPage
-              onSelectTab={setActiveTab}
+              onSelectTab={navigateToTab}
             />
           ) : userRole === 'organizer' ? (
             <OrganizerDashboard
-              onSelectTab={setActiveTab}
+              onSelectTab={navigateToTab}
               onOpenScrimLobby={handleOpenScrimLobby}
             />
           ) : userRole === 'org' ? (
             <OrgDashboard
-              onSelectTab={setActiveTab}
+              onSelectTab={navigateToTab}
               onOpenTeamCreator={handleOpenTeamCreator}
             />
           ) : (
             <PlayerDashboard
-              onSelectTab={setActiveTab}
+              onSelectTab={navigateToTab}
               onOpenTeamCreator={handleOpenTeamCreator}
             />
           )
@@ -286,8 +320,14 @@ function AppContent() {
             />
           ) : (
             <PlayerProfilePage
-              onSelectTab={setActiveTab}
-              onBack={() => setActiveTab('dashboard')}
+              onSelectTab={navigateToTab}
+              onBack={() => {
+                if (window.history.length > 1) {
+                  window.history.back();
+                } else {
+                  navigateToTab('dashboard');
+                }
+              }}
             />
           )
         )}
@@ -302,7 +342,7 @@ function AppContent() {
             />
           ) : (
             <OnboardingPage
-              onSelectTab={setActiveTab}
+              onSelectTab={navigateToTab}
             />
           )
         )}
@@ -327,7 +367,7 @@ function AppContent() {
       {/* Floating Bottom Nav for Mobile Screens */}
       <MobileNav
         activeTab={activeTab}
-        onSelectTab={setActiveTab}
+        onSelectTab={navigateToTab}
         onOpenAuth={handleOpenAuthWithRole}
         onOpenChat={() => setChatOpen((prev) => !prev)}
         onOpenTeamCreator={handleOpenTeamCreator}

@@ -6,8 +6,8 @@ const { pool } = require('./src/shared/db');
 async function seedAdmin() {
   const email = process.env.ADMIN_EMAIL?.trim().toLowerCase();
   const password = process.env.ADMIN_PASSWORD;
-  if (!email || !password || password.length < 12) {
-    throw new Error('Set ADMIN_EMAIL and an ADMIN_PASSWORD of at least 12 characters before creating an admin account.');
+  if (!email || !password || password.length < 6) {
+    throw new Error('Set ADMIN_EMAIL and an ADMIN_PASSWORD of at least 6 characters before creating an admin account.');
   }
   const passwordHash = await bcrypt.hash(password, 12);
   await pool.query(

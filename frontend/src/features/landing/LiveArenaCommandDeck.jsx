@@ -67,7 +67,7 @@ export default function LiveArenaCommandDeck({ onSelectTab, onOpenAuth }) {
   };
 
   return (
-    <div className="relative rounded-3xl bg-gradient-to-b from-[#151B2B] via-[#101522] to-[#090B12] border border-white/[0.12] p-6 sm:p-8 overflow-hidden shadow-2xl space-y-6">
+    <div className="relative rounded-3xl bg-gradient-to-b from-[#151B2B] via-[#101522] to-[#090B12] border border-white/[0.12] p-4 sm:p-8 overflow-hidden shadow-2xl space-y-5 sm:space-y-6">
       {/* Background Matrix Circuit Glow */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-[#8B5CF6]/15 via-[#22D3EE]/10 to-transparent rounded-full blur-3xl pointer-events-none" />
 

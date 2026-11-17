@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
-const BACKEND_TARGET = process.env.VITE_BACKEND_TARGET || 'https://game-ansh-ap-2026.onrender.com';
+const BACKEND_TARGET = process.env.VITE_BACKEND_TARGET || 'http://127.0.0.1:3000';
 
 export default defineConfig({
   plugins: [react()],

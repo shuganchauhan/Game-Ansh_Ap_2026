@@ -6,6 +6,14 @@ import { useAuth } from '../../stores/authContext';
 import { useGameStore } from '../../stores/gameStore';
 import { useGSAPReveal } from '../../hooks/useGSAP';
 import useApi from '../../hooks/useApi';
+import {
+  valorantImg,
+  bgmiImg,
+  freefireImg,
+  cocImg,
+  crImg,
+  codImg,
+} from '../../assets';
 
 /* ═══════════════════════════════════════════════════════
    Supported game directory
@@ -25,7 +33,7 @@ const GAMES = [
     name: 'VALORANT',
     publisher: 'Riot Games',
     genre: 'Tactical FPS',
-    image: '/valorant.jpg',
+    image: valorantImg,
     color: '#8B5CF6',
     gradient: 'from-[#8B5CF6]/25 via-[#8B5CF6]/5 to-transparent',
     border: 'border-[#8B5CF6]/30 hover:border-[#8B5CF6]/80',
@@ -38,7 +46,7 @@ const GAMES = [
     name: 'BGMI',
     publisher: 'Krafton',
     genre: 'Battle Royale',
-    image: '/bgmi.jpg',
+    image: bgmiImg,
     color: '#22D3EE',
     gradient: 'from-[#22D3EE]/25 via-[#22D3EE]/5 to-transparent',
     border: 'border-[#22D3EE]/30 hover:border-[#22D3EE]/80',
@@ -51,7 +59,7 @@ const GAMES = [
     name: 'Free Fire',
     publisher: 'Garena',
     genre: 'Battle Royale',
-    image: '/freefire.jpg',
+    image: freefireImg,
     color: '#EC4899',
     gradient: 'from-[#EC4899]/25 via-[#EC4899]/5 to-transparent',
     border: 'border-[#EC4899]/30 hover:border-[#EC4899]/80',
@@ -64,7 +72,7 @@ const GAMES = [
     name: 'Clash of Clans',
     publisher: 'Supercell',
     genre: 'Strategy / Clan War',
-    image: '/coc.jpg',
+    image: cocImg,
     color: '#F59E0B',
     gradient: 'from-[#F59E0B]/25 via-[#F59E0B]/5 to-transparent',
     border: 'border-[#F59E0B]/30 hover:border-[#F59E0B]/80',
@@ -77,7 +85,7 @@ const GAMES = [
     name: 'Clash Royale',
     publisher: 'Supercell',
     genre: 'Strategy / Card',
-    image: '/cr.jpg',
+    image: crImg,
     color: '#6366F1',
     gradient: 'from-[#6366F1]/25 via-[#6366F1]/5 to-transparent',
     border: 'border-[#6366F1]/30 hover:border-[#6366F1]/80',
@@ -90,7 +98,7 @@ const GAMES = [
     name: 'Call of Duty',
     publisher: 'Activision',
     genre: 'FPS / BR',
-    image: '/cod.jpg',
+    image: codImg,
     color: '#10B981',
     gradient: 'from-[#10B981]/25 via-[#10B981]/5 to-transparent',
     border: 'border-[#10B981]/30 hover:border-[#10B981]/80',

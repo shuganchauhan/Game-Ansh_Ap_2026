@@ -3,17 +3,19 @@ const http = require('http');
 const app = require('./app');
 const { initSocket } = require('./shared/socket');
 const { pool } = require('./shared/db');
+const { migrate } = require('./shared/db/migrate');
 const redis = require('./shared/redis');
 
 const PORT = Number(process.env.PORT) || 3000;
 
 async function start() {
-  // Verify DB connection
+  // Verify DB connection and apply pending migrations
   try {
     await pool.query('SELECT 1');
     console.log('[DB] Connected to PostgreSQL');
+    await migrate();
   } catch (err) {
-    console.error('[DB] Failed to connect:', err);
+    console.error('[DB] Failed to connect or migrate:', err);
     process.exit(1);
   }
 

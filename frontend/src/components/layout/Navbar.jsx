@@ -104,29 +104,29 @@ export default function Navbar({ activeTab, onSelectTab, onOpenAuth, onOpenChat,
       <header
         className={`sticky top-0 z-40 w-full transition-all duration-300 ${
           scrolled
-            ? 'bg-[#090B12]/92 backdrop-blur-2xl border-b border-white/[0.08] shadow-2xl shadow-black/50'
-            : 'bg-[#090B12]/80 backdrop-blur-xl border-b border-white/[0.06]'
+            ? 'bg-[#090B12]/95 backdrop-blur-2xl border-b border-white/[0.08] shadow-2xl shadow-black/50'
+            : 'bg-[#090B12]/85 backdrop-blur-xl border-b border-white/[0.06]'
         }`}
       >
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 h-[72px] flex items-center justify-between gap-4">
+        <div className="max-w-[1440px] mx-auto px-3 sm:px-6 lg:px-8 h-[60px] sm:h-[72px] flex items-center justify-between gap-2 sm:gap-4">
           {/* Logo and Brand */}
           <div
             onClick={() => onSelectTab('landing')}
-            className="flex items-center gap-3 cursor-pointer select-none group shrink-0"
+            className="flex items-center gap-2 sm:gap-3 cursor-pointer select-none group shrink-0"
           >
             {/* FLUX Crest */}
-            <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-[#8B5CF6] via-[#6366F1] to-[#22D3EE] p-[1.5px] shadow-lg shadow-purple-600/30 group-hover:shadow-cyan-400/50 transition-all duration-300 group-hover:scale-105">
-              <div className="w-full h-full rounded-[10px] bg-[#090B12] flex items-center justify-center overflow-hidden">
-                <span className="font-display font-black text-xl bg-gradient-to-br from-white via-slate-100 to-[#22D3EE] bg-clip-text text-transparent">
+            <div className="relative w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-[#8B5CF6] via-[#6366F1] to-[#22D3EE] p-[1.5px] shadow-md sm:shadow-lg shadow-purple-600/30 group-hover:shadow-cyan-400/50 transition-all duration-300 group-hover:scale-105">
+              <div className="w-full h-full rounded-[9px] sm:rounded-[10px] bg-[#090B12] flex items-center justify-center overflow-hidden">
+                <span className="font-display font-black text-base sm:text-xl bg-gradient-to-br from-white via-slate-100 to-[#22D3EE] bg-clip-text text-transparent">
                   F
                 </span>
               </div>
             </div>
             <div className="flex flex-col">
-              <span className="font-display font-black text-xl tracking-wider text-[#F8FAFC] leading-none flex items-center">
+              <span className="font-display font-black text-lg sm:text-xl tracking-wider text-[#F8FAFC] leading-none flex items-center">
                 FLU<span className="text-[#22D3EE]">X</span>
               </span>
-              <span className="font-mono text-[8.5px] uppercase tracking-[0.22em] text-[#94A3B8] font-bold mt-1">
+              <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-[#94A3B8] font-bold mt-1 hidden sm:block">
                 PLAY · CONNECT · COMPETE
               </span>
             </div>
@@ -199,15 +199,15 @@ export default function Navbar({ activeTab, onSelectTab, onOpenAuth, onOpenChat,
               <Search className="w-4 h-4" />
             </button>
 
-            {/* Live Chat Drawer Trigger */}
+            {/* Live Chat Drawer Trigger (Desktop only to prevent mobile top crowding) */}
             <button
               onClick={onOpenChat}
-              className="p-2 rounded-xl bg-[#151B2B] hover:bg-[#1B2335] border border-white/[0.08] text-[#94A3B8] hover:text-[#22D3EE] transition-colors relative active:scale-95"
+              className="hidden sm:flex p-2 rounded-xl bg-[#151B2B] hover:bg-[#1B2335] border border-white/[0.08] text-[#94A3B8] hover:text-[#22D3EE] transition-colors relative active:scale-95"
               aria-label="Open live chat"
               title="Open Live Chat"
             >
               <MessageSquare className="w-4 h-4" />
-              <span className="absolute 1 top-1 right-1 w-2 h-2 rounded-full bg-[#22D3EE] animate-pulse" />
+              <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-[#22D3EE] animate-pulse" />
             </button>
 
             {/* Notifications Bell */}
@@ -228,7 +228,7 @@ export default function Navbar({ activeTab, onSelectTab, onOpenAuth, onOpenChat,
 
                 {/* Notifications Dropdown */}
                 {notificationsOpen && (
-                  <div className="absolute right-0 mt-2 w-[calc(100vw-2rem)] max-w-sm sm:w-96 rounded-2xl bg-[#151B2B] border border-white/[0.12] p-4 shadow-2xl z-50 animate-fade-in">
+                  <div className="absolute right-0 mt-2 w-[calc(100vw-1.5rem)] max-w-sm sm:w-96 rounded-2xl bg-[#151B2B] border border-white/[0.12] p-4 shadow-2xl z-50 animate-fade-in">
                     <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
                       <div className="flex items-center gap-2">
                         <Bell className="w-4 h-4 text-[#8B5CF6]" />
@@ -306,19 +306,19 @@ export default function Navbar({ activeTab, onSelectTab, onOpenAuth, onOpenChat,
 
             {/* If NOT Authenticated: Show Sign In & Register Buttons */}
             {!isAuthenticated ? (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2">
                 <button
                   onClick={() => onOpenAuth?.('player', 'login')}
-                  className="px-4 py-2 rounded-xl bg-[#151B2B]/90 hover:bg-[#1E2738] border border-white/[0.1] font-display font-bold text-xs text-[#F8FAFC] transition-all flex items-center gap-2 shadow-sm"
+                  className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl bg-gradient-to-r from-[#8B5CF6] to-[#22D3EE] hover:opacity-95 text-white font-display font-bold text-xs transition-all flex items-center gap-1.5 shadow-md shadow-purple-600/25 active:scale-95 shrink-0"
                 >
-                  <User className="w-3.5 h-3.5 text-[#94A3B8]" />
+                  <User className="w-3.5 h-3.5" />
                   <span>Sign In</span>
                 </button>
                 <button
                   onClick={() => onOpenAuth?.('player', 'signup')}
-                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-[#8B5CF6] via-[#6366F1] to-[#3B82F6] hover:from-[#7C3AED] hover:to-[#2563EB] text-white font-display font-bold text-xs tracking-wide shadow-lg shadow-purple-600/30 hover:shadow-purple-600/50 active:scale-95 transition-all flex items-center gap-1.5"
+                  className="hidden sm:inline-flex px-4 py-2 rounded-xl bg-[#151B2B]/90 hover:bg-[#1E2738] border border-white/[0.1] text-white font-display font-bold text-xs tracking-wide transition-all items-center gap-1.5 active:scale-95 shrink-0"
                 >
-                  <Sparkles className="w-3.5 h-3.5 text-white" />
+                  <Sparkles className="w-3.5 h-3.5 text-[#22D3EE]" />
                   <span>Register</span>
                 </button>
               </div>
@@ -327,15 +327,16 @@ export default function Navbar({ activeTab, onSelectTab, onOpenAuth, onOpenChat,
               <div className="relative" ref={profileRef}>
                 <button
                   onClick={() => setProfileDropdownOpen((prev) => !prev)}
-                  className="flex items-center gap-2 pl-1.5 pr-2.5 py-1 rounded-xl bg-[#151B2B] hover:bg-[#1B2335] border border-white/[0.08] transition-all"
+                  className="flex items-center gap-1.5 sm:gap-2 p-1 sm:pl-1.5 sm:pr-2.5 sm:py-1 rounded-xl bg-[#151B2B] hover:bg-[#1B2335] border border-white/[0.08] transition-all"
+                  aria-label="User account menu"
                 >
-                  <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#8B5CF6]/30 to-[#22D3EE]/30 flex items-center justify-center font-display font-bold text-xs text-[#F8FAFC] ring-1 ring-white/[0.1]">
+                  <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#8B5CF6]/30 to-[#22D3EE]/30 flex items-center justify-center font-display font-bold text-xs text-[#F8FAFC] ring-1 ring-white/[0.1] shrink-0">
                     {user.name?.[0] || user.username?.[0] || user.email?.[0] || 'U'}
                   </div>
                   <span className="font-display text-xs font-semibold text-[#F8FAFC] max-w-[100px] truncate hidden sm:inline">
                     {user.name || user.username || user.email.split('@')[0]}
                   </span>
-                  <ChevronDown className="w-3.5 h-3.5 text-[#94A3B8]" />
+                  <ChevronDown className="w-3.5 h-3.5 text-[#94A3B8] hidden sm:inline" />
                 </button>
 
                 {/* Profile Dropdown Menu */}

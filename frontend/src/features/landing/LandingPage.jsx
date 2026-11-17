@@ -9,12 +9,20 @@ import { useAuth } from '../../stores/authContext';
 import { useGameStore } from '../../stores/gameStore';
 import useApi from '../../hooks/useApi';
 import heroArenaBg from '../../assets/hero-arena.jpg';
+import {
+  valorantImg,
+  bgmiImg,
+  freefireImg,
+  codImg,
+  cocImg,
+  crImg,
+} from '../../assets';
 import CyberHeroCanvas from '../../components/ui/CyberHeroCanvas';
 import LiveArenaCommandDeck from './LiveArenaCommandDeck';
 import { cyberAudio } from '../../lib/cyberAudio';
 
 /* ═══════════════════════════════════════════════════════
-   OFFICIAL FEATURED GAMES DATA (With User-Provided Artwork)
+   OFFICIAL FEATURED GAMES DATA (With Assets Folder Artwork)
 ═══════════════════════════════════════════════════════ */
 const FEATURED_GAMES = [
   {
@@ -22,8 +30,7 @@ const FEATURED_GAMES = [
     name: 'VALORANT',
     genre: 'Tactical FPS',
     publisher: 'Riot Games',
-    image: '/valorant.jpg',
-    rating: '9.8',
+    image: valorantImg,
     activeSquads: '142 Teams',
     activeScrims: '28 Live Lobbies',
     color: '#8B5CF6',
@@ -36,8 +43,7 @@ const FEATURED_GAMES = [
     name: 'BGMI',
     genre: 'Battle Royale',
     publisher: 'Krafton',
-    image: '/bgmi.jpg',
-    rating: '9.7',
+    image: bgmiImg,
     activeSquads: '210 Teams',
     activeScrims: '42 Live Lobbies',
     color: '#22D3EE',
@@ -50,8 +56,7 @@ const FEATURED_GAMES = [
     name: 'Free Fire',
     genre: 'Fast Battle Royale',
     publisher: 'Garena',
-    image: '/freefire.jpg',
-    rating: '9.5',
+    image: freefireImg,
     activeSquads: '98 Teams',
     activeScrims: '19 Live Lobbies',
     color: '#EC4899',
@@ -64,8 +69,7 @@ const FEATURED_GAMES = [
     name: 'Call of Duty',
     genre: 'Military FPS',
     publisher: 'Activision',
-    image: '/cod.jpg',
-    rating: '9.6',
+    image: codImg,
     activeSquads: '84 Teams',
     activeScrims: '15 Live Lobbies',
     color: '#10B981',
@@ -78,8 +82,7 @@ const FEATURED_GAMES = [
     name: 'Clash of Clans',
     genre: 'Strategy & Clan Wars',
     publisher: 'Supercell',
-    image: '/coc.jpg',
-    rating: '9.4',
+    image: cocImg,
     activeSquads: '115 Clans',
     activeScrims: 'Clan War Leagues',
     color: '#F59E0B',
@@ -92,8 +95,7 @@ const FEATURED_GAMES = [
     name: 'Clash Royale',
     genre: 'Tactical Card Arena',
     publisher: 'Supercell',
-    image: '/cr.jpg',
-    rating: '9.3',
+    image: crImg,
     activeSquads: '76 Rosters',
     activeScrims: '1v1 Duel Ladders',
     color: '#6366F1',
@@ -560,10 +562,6 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole, onOpenTea
               <span className="px-2.5 py-1 rounded-full bg-white/10 text-white font-mono text-xs backdrop-blur-sm">
                 {activeSpotlightGame.genre}
               </span>
-              <span className="px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 font-mono text-xs font-bold flex items-center gap-1">
-                <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                {activeSpotlightGame.rating} Rating
-              </span>
             </div>
 
             <h3 className="font-display font-black text-3xl sm:text-5xl text-[#F8FAFC]">
@@ -623,12 +621,6 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole, onOpenTea
                   {isActive && (
                     <div className="absolute inset-0 bg-[#8B5CF6]/10 pointer-events-none" />
                   )}
-
-                  {/* Rating Badge */}
-                  <div className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-lg bg-black/60 backdrop-blur-md border border-white/10 font-mono text-[10px] font-bold text-amber-300 flex items-center gap-1">
-                    <Star className="w-2.5 h-2.5 fill-amber-400 text-amber-400" />
-                    {game.rating}
-                  </div>
 
                   {/* Bottom label */}
                   <div className="absolute bottom-3 inset-x-3 space-y-0.5">
