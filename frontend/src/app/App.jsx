@@ -74,9 +74,47 @@ function AppContent() {
   const [teamCreationModalOpen, setTeamCreationModalOpen] = useState(false);
   const [pendingAction, setPendingAction] = useState(null);
 
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, setAuthSession } = useAuth();
   const { setCurrentUser, setActiveRole, setActiveOrgId } = useGameStore();
   const userRole = user?.role || 'guest';
+
+  // Handle Google OAuth 2.0 Redirect Callback
+  useEffect(() => {
+    if (window.location.pathname.startsWith('/auth/callback')) {
+      const searchParams = new URLSearchParams(window.location.search);
+      const token = searchParams.get('token');
+      const error = searchParams.get('error');
+
+      if (token) {
+        const id = searchParams.get('id');
+        const role = searchParams.get('role') || 'player';
+        const name = searchParams.get('name') || 'Athlete';
+        const email = searchParams.get('email') || '';
+        const avatar = searchParams.get('avatar') || '';
+
+        const authUser = {
+          id,
+          role,
+          name,
+          username: name,
+          email,
+          avatar_url: avatar,
+        };
+
+        if (typeof setAuthSession === 'function') {
+          setAuthSession(token, authUser);
+        }
+
+        window.history.replaceState({ tab: 'dashboard' }, '', '/dashboard');
+        setActiveTab('dashboard');
+      } else if (error) {
+        console.warn('[Google OAuth Error]:', error);
+        window.history.replaceState({ tab: 'landing' }, '', '/');
+        setActiveTab('landing');
+        setAuthModalOpen(true);
+      }
+    }
+  }, [setAuthSession]);
 
   const handleOpenChat = (mode = 'direct', teamId = null) => {
     setChatInitialTab(typeof mode === 'string' ? mode : 'direct');

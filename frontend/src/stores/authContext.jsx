@@ -90,6 +90,17 @@ export function AuthProvider({ children }) {
     });
   };
 
+  const setAuthSession = (authToken, authUser) => {
+    setToken(authToken);
+    setUser(authUser);
+    try {
+      localStorage.setItem('gamersg_token', authToken);
+      localStorage.setItem('gamersg_user', JSON.stringify(authUser));
+    } catch {
+      // ignore storage errors
+    }
+  };
+
   const logout = () => {
     disconnectSocket();
     setToken(null);
@@ -97,7 +108,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, isAuthenticated: !!token, login, signup, logout, updateUser }}>
+    <AuthContext.Provider value={{ user, token, isAuthenticated: !!token, login, signup, logout, updateUser, setAuthSession }}>
       {children}
     </AuthContext.Provider>
   );

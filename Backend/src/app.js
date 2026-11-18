@@ -20,6 +20,8 @@ const tournamentsRoutes = require('./modules/tournaments/tournaments.routes');
 const adminRoutes = require('./modules/admin/admin.routes');
 const uploadsRoutes = require('./modules/uploads/uploads.routes');
 const path = require('path');
+const passport = require('passport');
+require('./shared/auth/passport');
 
 const app = express();
 
@@ -30,6 +32,7 @@ app.use(cors({ origin: corsOriginDelegate, credentials: true }));
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
+app.use(passport.initialize());
 
 // Serve uploaded static assets
 app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));

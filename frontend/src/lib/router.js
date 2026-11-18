@@ -25,6 +25,10 @@ export function parsePath(pathname) {
     return { tab: 'landing', scrimId: null };
   }
 
+  if (clean === '/auth/callback' || clean === '/auth/google/callback') {
+    return { tab: 'auth-callback', scrimId: null };
+  }
+
   // Scrims lobby: /scrims/:id or /tournaments/scrims/:id
   const scrimMatch = clean.match(/^\/(?:tournaments\/)?scrims\/(.+)$/);
   if (scrimMatch) {
