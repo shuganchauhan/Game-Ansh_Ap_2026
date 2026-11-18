@@ -1,4 +1,4 @@
-# Gamers'G — Competitive Esports Platform
+# Gamers'G — Competitive Esports Platform.
 
 Full-stack esports platform with a React/Vite client and Express/PostgreSQL API. The repository is an active product build; follow the release checklist below before exposing a deployment to real users.
 
