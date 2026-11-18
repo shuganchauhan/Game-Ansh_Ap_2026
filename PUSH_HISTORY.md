@@ -12,8 +12,9 @@ All remotes configured in `.git/config`:
 |:---|:---|:---|
 | **`shugan-ap`** (Default tracking) | `https://github.com/shuganchauhan/Game-Ansh_Ap_2026.git` | Primary production repository & deployment source |
 | **`origin`** | `https://github.com/shuganchauhan/Game-Ansh.git` | Mirror / Main repository |
-| **`upstream`** | `https://github.com/shuganchauhan/Gaming_DE_project_2026.git` | Project archive & backup |
 | **`aaryan`** | `https://github.com/aaryan218/Game-Ansh.git` | Collaborator fork |
+
+> **Note:** `DE_project_2026` has been deprecated and permanently removed from active push remotes.
 
 ---
 
