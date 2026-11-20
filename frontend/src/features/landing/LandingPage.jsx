@@ -120,58 +120,54 @@ const DISCOVERY_CATEGORIES = [
 ];
 
 /* ═══════════════════════════════════════════════════════
-   TOP ESPORTS SQUADS LEADERBOARD
+   LIVE STATUS DISPATCH
 ═══════════════════════════════════════════════════════ */
-const TOP_SQUADS_LEADERBOARD = [
-  { rank: '01', name: 'Team SouL', tag: 'SOUL', game: 'BGMI', winrate: '82%', points: '2,840 pts', division: 'BMPS Pro Major', verified: true, logoText: 'SL' },
-  { rank: '02', name: 'Global Esports', tag: 'GE', game: 'VALORANT', winrate: '78%', points: '2,690 pts', division: 'VCT Pacific Challenger', verified: true, logoText: 'GE' },
-  { rank: '03', name: 'GodLike Esports', tag: 'GODL', game: 'BGMI', winrate: '76%', points: '2,540 pts', division: 'BGIS Grand Finals', verified: true, logoText: 'GL' },
-  { rank: '04', name: 'Total Gaming', tag: 'TG', game: 'Free Fire', winrate: '73%', points: '2,410 pts', division: 'FFIC Pro League', verified: true, logoText: 'TG' },
-  { rank: '05', name: 'Warriors Gaming', tag: 'WAR', game: 'Clash of Clans', winrate: '71%', points: '2,280 pts', division: 'CWL Masters Tier 1', verified: false, logoText: 'WG' },
-];
-
-/* ═══════════════════════════════════════════════════════
-   MARQUEE LIVE DATA STRIPS
-═══════════════════════════════════════════════════════ */
-const MARQUEE_LIVE_MATCHES = [
-  { game: 'VALORANT', team1: 'Team Mahi', team2: 'AFK Gaming', score: '12 — 8', status: 'LIVE', map: 'Ascent' },
-  { game: 'BGMI', team1: 'Team SouL', team2: 'GodLike', score: 'MATCH 3 · RD 4', status: 'LIVE', map: 'Miramar' },
-  { game: 'Free Fire', team1: 'Total Gaming', team2: 'WSB', score: '24 — 19', status: 'LIVE', map: 'Purgatory' },
-  { game: 'CoD Mobile', team1: 'GAS Esports', team2: 'Team Raze', score: '5 — 3', status: 'LIVE', map: 'Hardpoint' },
-  { game: 'Clash Royale', team1: 'SkRossi', team2: 'YoDa', score: '2 — 1', status: 'LIVE', map: 'Grand Challenge' },
-  { game: 'VALORANT', team1: 'Global Esports', team2: 'Revenant XR', score: '10 — 6', status: 'LIVE', map: 'Haven' },
-  { game: 'BGMI', team1: 'OR Esports', team2: 'Enigma Gaming', score: 'MATCH 5 · RD 2', status: 'LIVE', map: 'Erangel' },
-  { game: 'Free Fire MAX', team1: 'Elite Esports', team2: 'Defenders', score: '30 — 27', status: 'LIVE', map: 'Bermuda' },
+const LIVE_TICKER_ITEMS = [
+  { game: 'TACTICAL', team1: 'COMPETITIVE SCRIMS', team2: 'OPEN', score: 'LIVE', map: 'Tier-1 Lobbies' },
+  { game: 'FPS', team1: 'VALORANT', team2: 'INDIA CIRCUIT', score: 'READY', map: 'Ascent' },
+  { game: 'BATTLE ROYALE', team1: 'BGMI', team2: 'PRO SCRIMS', score: 'READY', map: 'Erangel' },
+  { game: 'PRO LEAGUE', team1: 'FREE FIRE', team2: 'CLASH SQUAD', score: 'READY', map: 'Bermuda' },
+  { game: 'MILITARY FPS', team1: 'COD MOBILE', team2: 'HARDPOINT', score: 'READY', map: 'Crash' },
+  { game: 'STRATEGY', team1: 'CLASH OF CLANS', team2: 'CWL MASTERS', score: 'READY', map: 'War Base' },
 ];
 
 const MARQUEE_STATS = [
-  { icon: Activity, label: 'Players Online', value: '14,280', color: '#22D3EE' },
-  { icon: Wifi, label: 'Live Scrims', value: '127 Active', color: '#10B981' },
-  { icon: Trophy, label: "Today's Matches", value: '48 Scheduled', color: '#F59E0B' },
-  { icon: Users, label: 'Active Squads', value: '1,342 Rosters', color: '#8B5CF6' },
-  { icon: TrendingUp, label: 'Avg Match Rating', value: '8.4 / 10', color: '#EC4899' },
-  { icon: Award, label: 'Prize Pool This Week', value: '₹3.2L+', color: '#22D3EE' },
-  { icon: Clock, label: 'Next Major Event', value: 'Nov 15 · BGMI Open', color: '#8B5CF6' },
-  { icon: Flame, label: 'Hottest Title', value: 'VALORANT VCT', color: '#F87171' },
-  { icon: Star, label: 'Top Rated Player', value: 'Mortal · 9.9', color: '#F59E0B' },
-];
-
-const MARQUEE_TEAMS = [
-  { name: 'Team SouL', tag: 'BGMI PRO', wins: '82%' },
-  { name: 'Global Esports', tag: 'VALORANT VCT', wins: '78%' },
-  { name: 'GodLike', tag: 'BGMI BGIS', wins: '76%' },
-  { name: 'Total Gaming', tag: 'Free Fire FFIC', wins: '73%' },
-  { name: 'OR Esports', tag: 'BGMI Elite', wins: '71%' },
-  { name: 'Enigma Gaming', tag: 'CoD Mobile', wins: '70%' },
-  { name: 'Team Mahi', tag: 'VALORANT', wins: '69%' },
-  { name: 'AFK Gaming', tag: 'Multi-Title', wins: '68%' },
-  { name: 'Revenant XR', tag: 'VALORANT', wins: '67%' },
-  { name: 'Marcos Gaming', tag: 'BGMI', wins: '65%' },
+  { icon: Activity, label: 'Platform Status', value: 'Live 100%', color: '#22D3EE' },
+  { icon: Wifi, label: 'Server Latency', value: '< 20ms Nodes', color: '#10B981' },
+  { icon: Trophy, label: "Tournament Engine", value: 'Automated Brackets', color: '#F59E0B' },
+  { icon: Users, label: 'Roster Formation', value: 'Multi-Game Ready', color: '#8B5CF6' },
+  { icon: TrendingUp, label: 'Anti-Cheat Protocol', value: 'Enforced', color: '#EC4899' },
+  { icon: Award, label: 'Supported Titles', value: '6 Major Games', color: '#22D3EE' },
+  { icon: Clock, label: 'Live Scrims', value: 'Daily 6pm–12am', color: '#8B5CF6' },
+  { icon: Flame, label: 'Verified Passports', value: 'Riot & Krafton ID', color: '#F87171' },
+  { icon: Star, label: 'Fair Play Verified', value: '100% Anti-Cheat', color: '#F59E0B' },
 ];
 
 export default function LandingPage({ onSelectTab, onOpenAuthWithRole, onOpenTeamCreator }) {
   const { isAuthenticated, user } = useAuth();
-  const { players = [], posts = [], toggleLikePost } = useGameStore();
+  const { players = [], posts = [], teams = [], toggleLikePost } = useGameStore();
+
+  const squadLeaderboard = teams.length > 0
+    ? teams.map((team, idx) => ({
+        rank: idx + 1 < 10 ? `0${idx + 1}` : `${idx + 1}`,
+        name: team.name,
+        tag: team.tag || team.name.slice(0, 4).toUpperCase(),
+        game: (team.game || 'VALORANT').toUpperCase(),
+        winrate: team.winrate || '0%',
+        points: `${(team.membersCount || 0) * 100} pts`,
+        division: team.division || 'Competitive',
+        verified: Boolean(team.verified || team.orgId),
+        logoText: (team.tag || team.name.slice(0, 2)).toUpperCase(),
+      }))
+    : [];
+
+  const marqueeTeams = teams.length > 0
+    ? teams.map((team) => ({
+        name: team.name,
+        tag: (team.tag || team.name.slice(0, 4)).toUpperCase(),
+        wins: team.winrate || '0%',
+      }))
+    : [];
 
   const [activeSpotlightGame, setActiveSpotlightGame] = useState(FEATURED_GAMES[0]);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -428,7 +424,7 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole, onOpenTea
 
         <div className="pl-20 overflow-hidden">
           <div className="animate-marquee-smooth flex items-center">
-            {[...MARQUEE_LIVE_MATCHES, ...MARQUEE_LIVE_MATCHES].map((match, i) => (
+            {[...LIVE_TICKER_ITEMS, ...LIVE_TICKER_ITEMS].map((match, i) => (
               <div
                 key={i}
                 className="flex items-center gap-3 px-6 py-3 border-r border-white/[0.06] shrink-0 cursor-pointer hover:bg-white/[0.03] transition-colors"
@@ -733,33 +729,37 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole, onOpenTea
       <div className="relative overflow-hidden border-t border-white/[0.06] bg-[#101522] py-0">
         <div className="absolute left-0 top-0 bottom-0 w-16 z-10 bg-gradient-to-r from-[#101522] to-transparent pointer-events-none" />
         <div className="absolute right-0 top-0 bottom-0 w-16 z-10 bg-gradient-to-l from-[#101522] to-transparent pointer-events-none" />
-        <div className="absolute left-0 top-0 bottom-0 z-20 flex items-center px-4 bg-[#101522] border-r border-white/[0.06]">
-          <span className="font-mono text-[9px] font-black uppercase tracking-[0.2em] text-[#F59E0B] whitespace-nowrap flex items-center gap-1.5">
-            <Trophy className="w-3 h-3" />
-            TOP SQUADS
-          </span>
-        </div>
-        <div className="pl-24 overflow-hidden">
-          <div className="animate-marquee-smooth flex items-center" style={{ animationDuration: '30s' }}>
-            {[...MARQUEE_TEAMS, ...MARQUEE_TEAMS].map((team, i) => (
-              <div
-                key={i}
-                className="flex items-center gap-2.5 px-5 py-2.5 border-r border-white/[0.05] shrink-0 cursor-pointer hover:bg-white/[0.03] transition-colors"
-                onClick={() => onSelectTab?.('teams')}
-              >
-                <span className="font-mono text-[10px] font-black text-[#94A3B8]">
-                  #{((i % MARQUEE_TEAMS.length) + 1) < 10 ? `0${(i % MARQUEE_TEAMS.length) + 1}` : (i % MARQUEE_TEAMS.length) + 1}
-                </span>
-                <span className="w-6 h-6 rounded-lg bg-[#1B2335] border border-white/[0.08] text-[#8B5CF6] font-display font-black text-[9px] flex items-center justify-center shrink-0">
-                  {team.name.slice(0, 2).toUpperCase()}
-                </span>
-                <span className="font-display font-bold text-xs text-[#F8FAFC] whitespace-nowrap">{team.name}</span>
-                <span className="px-2 py-0.5 rounded bg-[#8B5CF6]/15 border border-[#8B5CF6]/25 font-mono text-[9px] font-bold text-[#8B5CF6] whitespace-nowrap">{team.tag}</span>
-                <span className="font-mono text-[10px] font-bold text-emerald-400 whitespace-nowrap">{team.wins} WR</span>
+        {marqueeTeams.length > 0 && (
+          <>
+            <div className="absolute left-0 top-0 bottom-0 z-20 flex items-center px-4 bg-[#101522] border-r border-white/[0.06]">
+              <span className="font-mono text-[9px] font-black uppercase tracking-[0.2em] text-[#F59E0B] whitespace-nowrap flex items-center gap-1.5">
+                <Trophy className="w-3 h-3" />
+                TOP SQUADS
+              </span>
+            </div>
+            <div className="pl-24 overflow-hidden">
+              <div className="animate-marquee-smooth flex items-center" style={{ animationDuration: '30s' }}>
+                {[...marqueeTeams, ...marqueeTeams].map((team, i) => (
+                  <div
+                    key={i}
+                    className="flex items-center gap-2.5 px-5 py-2.5 border-r border-white/[0.05] shrink-0 cursor-pointer hover:bg-white/[0.03] transition-colors"
+                    onClick={() => onSelectTab?.('teams')}
+                  >
+                    <span className="font-mono text-[10px] font-black text-[#94A3B8]">
+                      #{((i % marqueeTeams.length) + 1) < 10 ? `0${(i % marqueeTeams.length) + 1}` : (i % marqueeTeams.length) + 1}
+                    </span>
+                    <span className="w-6 h-6 rounded-lg bg-[#1B2335] border border-white/[0.08] text-[#8B5CF6] font-display font-black text-[9px] flex items-center justify-center shrink-0">
+                      {team.name.slice(0, 2).toUpperCase()}
+                    </span>
+                    <span className="font-display font-bold text-xs text-[#F8FAFC] whitespace-nowrap">{team.name}</span>
+                    <span className="px-2 py-0.5 rounded bg-[#8B5CF6]/15 border border-[#8B5CF6]/25 font-mono text-[9px] font-bold text-[#8B5CF6] whitespace-nowrap">{team.tag}</span>
+                    <span className="font-mono text-[10px] font-bold text-emerald-400 whitespace-nowrap">{team.wins} WR</span>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
+          </>
+        )}
       </div>
 
       {/* ═══════════════════════════════════════════════════════
@@ -804,60 +804,78 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole, onOpenTea
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/[0.06] font-body text-xs">
-                {TOP_SQUADS_LEADERBOARD.map((squad) => (
-                  <tr
-                    key={squad.rank}
-                    className="hover:bg-white/[0.02] transition-colors cursor-pointer group"
-                    onClick={() => onSelectTab?.('teams')}
-                  >
-                    <td className="py-4 px-6 font-mono font-black text-sm text-[#F8FAFC]">
-                      {squad.rank === '01' ? (
-                        <span className="text-amber-400 flex items-center gap-1.5 font-bold">
-                          <Crown className="w-4 h-4" /> 01
-                        </span>
-                      ) : (
-                        <span className="text-[#94A3B8]">#{squad.rank}</span>
-                      )}
-                    </td>
+                {squadLeaderboard.length > 0 ? (
+                  squadLeaderboard.map((squad) => (
+                    <tr
+                      key={squad.rank}
+                      className="hover:bg-white/[0.02] transition-colors cursor-pointer group"
+                      onClick={() => onSelectTab?.('teams')}
+                    >
+                      <td className="py-4 px-6 font-mono font-black text-sm text-[#F8FAFC]">
+                        {squad.rank === '01' ? (
+                          <span className="text-amber-400 flex items-center gap-1.5 font-bold">
+                            <Crown className="w-4 h-4" /> 01
+                          </span>
+                        ) : (
+                          <span className="text-[#94A3B8]">#{squad.rank}</span>
+                        )}
+                      </td>
 
-                    <td className="py-4 px-6">
-                      <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-xl bg-[#1B2335] border border-white/[0.08] text-[#8B5CF6] font-display font-black text-xs flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                          {squad.logoText}
-                        </div>
-                        <div>
-                          <div className="flex items-center gap-1.5">
-                            <span className="font-display font-bold text-sm text-[#F8FAFC]">
-                              {squad.name}
-                            </span>
-                            {squad.verified && (
-                              <CheckCircle2 className="w-3.5 h-3.5 text-[#22D3EE] shrink-0" />
-                            )}
+                      <td className="py-4 px-6">
+                        <div className="flex items-center gap-3">
+                          <div className="w-9 h-9 rounded-xl bg-[#1B2335] border border-white/[0.08] text-[#8B5CF6] font-display font-black text-xs flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                            {squad.logoText}
                           </div>
-                          <span className="font-mono text-[10px] text-[#94A3B8]">[{squad.tag}]</span>
+                          <div>
+                            <div className="flex items-center gap-1.5">
+                              <span className="font-display font-bold text-sm text-[#F8FAFC]">
+                                {squad.name}
+                              </span>
+                              {squad.verified && (
+                                <CheckCircle2 className="w-3.5 h-3.5 text-[#22D3EE] shrink-0" />
+                              )}
+                            </div>
+                            <span className="font-mono text-[10px] text-[#94A3B8]">[{squad.tag}]</span>
+                          </div>
                         </div>
-                      </div>
-                    </td>
+                      </td>
 
-                    <td className="py-4 px-6">
-                      <span className="px-2.5 py-1 rounded-lg bg-[#1B2335] border border-white/[0.06] font-mono text-[11px] font-bold text-[#F8FAFC]">
-                        {squad.game}
-                      </span>
-                    </td>
+                      <td className="py-4 px-6">
+                        <span className="px-2.5 py-1 rounded-lg bg-[#1B2335] border border-white/[0.06] font-mono text-[11px] font-bold text-[#F8FAFC]">
+                          {squad.game}
+                        </span>
+                      </td>
 
-                    <td className="py-4 px-6 font-mono text-xs text-[#94A3B8]">
-                      {squad.division}
-                    </td>
+                      <td className="py-4 px-6 font-mono text-xs text-[#94A3B8]">
+                        {squad.division}
+                      </td>
 
-                    <td className="py-4 px-6 font-mono font-bold text-emerald-400">
-                      {squad.winrate}
-                    </td>
+                      <td className="py-4 px-6 font-mono font-bold text-emerald-400">
+                        {squad.winrate}
+                      </td>
 
-                    <td className="py-4 px-6 text-right font-mono font-bold text-[#F8FAFC]">
-                      {squad.points}
+                      <td className="py-4 px-6 text-right font-mono font-bold text-[#F8FAFC]">
+                        {squad.points}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={6} className="py-14 text-center text-[#94A3B8] font-body text-xs">
+                      <Trophy className="w-8 h-8 text-[#94A3B8]/40 mx-auto mb-2" />
+                      <p className="font-display font-bold text-sm text-[#F8FAFC] mb-1">No Squads Formed Yet</p>
+                      <p className="text-xs text-[#94A3B8] max-w-sm mx-auto mb-4">
+                        Form a team in Discovery and recruit players to claim the #01 championship seed!
+                      </p>
+                      <button
+                        onClick={() => onSelectTab?.('teams')}
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#8B5CF6] hover:bg-[#7C3AED] text-white font-display font-bold text-xs uppercase transition-all"
+                      >
+                        Create / Register Squad
+                      </button>
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>
@@ -906,38 +924,45 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole, onOpenTea
               </div>
 
               <div className="space-y-3">
-                {players.slice(0, 4).map((athlete) => (
-                  <div
-                    key={athlete.id}
-                    className="p-3 rounded-2xl bg-[#1B2335] border border-white/[0.06] flex items-center justify-between gap-3 hover:border-[#8B5CF6]/40 transition-colors"
-                  >
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#8B5CF6]/30 to-[#22D3EE]/30 text-[#F8FAFC] font-display font-bold text-xs flex items-center justify-center shrink-0">
-                        {athlete.username?.slice(0, 2).toUpperCase() || 'AT'}
-                      </div>
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-1.5">
-                          <span className="font-display font-bold text-xs text-[#F8FAFC] truncate">
-                            {athlete.name || athlete.username}
-                          </span>
-                          {athlete.isVerified && (
-                            <ShieldCheck className="w-3.5 h-3.5 text-[#22D3EE] shrink-0" />
-                          )}
-                        </div>
-                        <span className="font-mono text-[10px] text-[#94A3B8] block truncate">
-                          @{athlete.username} · {athlete.primaryGame?.toUpperCase()}
-                        </span>
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={() => onSelectTab?.('discovery')}
-                      className="px-2.5 py-1 rounded-lg bg-white/[0.06] hover:bg-[#8B5CF6] hover:text-white text-[#94A3B8] font-mono text-[10px] font-bold transition-all shrink-0"
+                {players.length > 0 ? (
+                  players.slice(0, 4).map((athlete) => (
+                    <div
+                      key={athlete.id}
+                      className="p-3 rounded-2xl bg-[#1B2335] border border-white/[0.06] flex items-center justify-between gap-3 hover:border-[#8B5CF6]/40 transition-colors"
                     >
-                      Dossier
-                    </button>
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#8B5CF6]/30 to-[#22D3EE]/30 text-[#F8FAFC] font-display font-bold text-xs flex items-center justify-center shrink-0">
+                          {athlete.username?.slice(0, 2).toUpperCase() || 'AT'}
+                        </div>
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-1.5">
+                            <span className="font-display font-bold text-xs text-[#F8FAFC] truncate">
+                              {athlete.name || athlete.username}
+                            </span>
+                            {athlete.isVerified && (
+                              <ShieldCheck className="w-3.5 h-3.5 text-[#22D3EE] shrink-0" />
+                            )}
+                          </div>
+                          <span className="font-mono text-[10px] text-[#94A3B8] block truncate">
+                            @{athlete.username} · {athlete.primaryGame?.toUpperCase()}
+                          </span>
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={() => onSelectTab?.('discovery')}
+                        className="px-2.5 py-1 rounded-lg bg-white/[0.06] hover:bg-[#8B5CF6] hover:text-white text-[#94A3B8] font-mono text-[10px] font-bold transition-all shrink-0"
+                      >
+                        Dossier
+                      </button>
+                    </div>
+                  ))
+                ) : (
+                  <div className="py-8 text-center text-[#94A3B8] font-body text-xs">
+                    <Users className="w-6 h-6 text-[#94A3B8]/40 mx-auto mb-1.5" />
+                    No public athlete profiles yet.
                   </div>
-                ))}
+                )}
               </div>
             </div>
 
@@ -953,47 +978,54 @@ export default function LandingPage({ onSelectTab, onOpenAuthWithRole, onOpenTea
               </div>
 
               <div className="space-y-3">
-                {posts.slice(0, 3).map((post) => (
-                  <div
-                    key={post.id}
-                    className="p-4 rounded-2xl bg-[#1B2335] border border-white/[0.06] space-y-2"
-                  >
-                    <div className="flex items-center justify-between text-xs">
-                      <div className="flex items-center gap-2">
-                        <span className="font-display font-bold text-[#F8FAFC]">
-                          {post.authorName || 'Competitive Gamer'}
-                        </span>
-                        <span className="px-2 py-0.5 rounded bg-white/[0.06] text-[#94A3B8] font-mono text-[10px]">
-                          {post.game?.toUpperCase()}
-                        </span>
+                {posts.length > 0 ? (
+                  posts.slice(0, 3).map((post) => (
+                    <div
+                      key={post.id}
+                      className="p-4 rounded-2xl bg-[#1B2335] border border-white/[0.06] space-y-2"
+                    >
+                      <div className="flex items-center justify-between text-xs">
+                        <div className="flex items-center gap-2">
+                          <span className="font-display font-bold text-[#F8FAFC]">
+                            {post.authorName || 'Competitive Gamer'}
+                          </span>
+                          <span className="px-2 py-0.5 rounded bg-white/[0.06] text-[#94A3B8] font-mono text-[10px]">
+                            {post.game?.toUpperCase()}
+                          </span>
+                        </div>
+                        <span className="font-mono text-[10px] text-[#94A3B8]">{post.createdAt}</span>
                       </div>
-                      <span className="font-mono text-[10px] text-[#94A3B8]">{post.createdAt}</span>
-                    </div>
 
-                    <p className="font-body text-xs text-[#F8FAFC] leading-relaxed">
-                      {post.content}
-                    </p>
+                      <p className="font-body text-xs text-[#F8FAFC] leading-relaxed">
+                        {post.content}
+                      </p>
 
-                    <div className="flex items-center gap-4 pt-1 text-xs text-[#94A3B8] font-mono">
-                      <button
-                        onClick={() => toggleLikePost(post.id)}
-                        className={`flex items-center gap-1.5 transition-colors ${
-                          post.likedByMe ? 'text-[#8B5CF6]' : 'hover:text-[#F8FAFC]'
-                        }`}
-                      >
-                        <Flame className="w-3.5 h-3.5" />
-                        <span>{post.likes || 0} Likes</span>
-                      </button>
-                      <button
-                        onClick={() => onSelectTab?.('feed')}
-                        className="flex items-center gap-1.5 hover:text-[#F8FAFC] transition-colors"
-                      >
-                        <MessageSquare className="w-3.5 h-3.5" />
-                        <span>{post.comments?.length || 0} Comments</span>
-                      </button>
+                      <div className="flex items-center gap-4 pt-1 text-xs text-[#94A3B8] font-mono">
+                        <button
+                          onClick={() => toggleLikePost(post.id)}
+                          className={`flex items-center gap-1.5 transition-colors ${
+                            post.likedByMe ? 'text-[#8B5CF6]' : 'hover:text-[#F8FAFC]'
+                          }`}
+                        >
+                          <Flame className="w-3.5 h-3.5" />
+                          <span>{post.likes || 0} Likes</span>
+                        </button>
+                        <button
+                          onClick={() => onSelectTab?.('feed')}
+                          className="flex items-center gap-1.5 hover:text-[#F8FAFC] transition-colors"
+                        >
+                          <MessageSquare className="w-3.5 h-3.5" />
+                          <span>{post.comments?.length || 0} Comments</span>
+                        </button>
+                      </div>
                     </div>
+                  ))
+                ) : (
+                  <div className="py-8 text-center text-[#94A3B8] font-body text-xs">
+                    <MessageSquare className="w-6 h-6 text-[#94A3B8]/40 mx-auto mb-1.5" />
+                    No community posts yet. Be the first to share on the Social Feed!
                   </div>
-                ))}
+                )}
               </div>
             </div>
           </div>

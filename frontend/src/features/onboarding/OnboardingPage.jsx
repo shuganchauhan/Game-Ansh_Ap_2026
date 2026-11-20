@@ -360,7 +360,7 @@ export default function OnboardingPage({ onSelectTab }) {
                   <input
                     type="text"
                     required
-                    placeholder="e.g. Vortex#9921"
+                    placeholder="e.g. Player#9921"
                     value={playerIgn}
                     onChange={(e) => setPlayerIgn(e.target.value)}
                     className="w-full pl-10 pr-4 py-3 rounded-xl bg-surface-container-low border border-card-border text-on-surface text-sm focus:outline-none focus:border-primary font-body"
@@ -654,7 +654,7 @@ export default function OnboardingPage({ onSelectTab }) {
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Velocity Gaming"
+                  placeholder="e.g. Apex Gaming"
                   value={orgName}
                   onChange={(e) => setOrgName(e.target.value)}
                   className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-card-border text-on-surface text-sm focus:outline-none focus:border-[#37ebf3] font-body"
@@ -667,7 +667,7 @@ export default function OnboardingPage({ onSelectTab }) {
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. Velocity Gaming Pvt Ltd"
+                  placeholder="e.g. Apex Gaming Pvt Ltd"
                   value={orgLegalName}
                   onChange={(e) => setOrgLegalName(e.target.value)}
                   className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-card-border text-on-surface text-sm focus:outline-none focus:border-[#37ebf3] font-body"

@@ -221,10 +221,10 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
             Competitive Tier
           </span>
           <div className="font-display font-bold text-xl text-tertiary">
-            {safeUser.stats?.valorant?.rank || 'IMMORTAL 3'}
+            {safeUser.stats?.valorant?.rank || 'Unranked'}
           </div>
           <span className="font-mono text-[10px] text-secondary">
-            {safeUser.stats?.valorant?.rr || '284 RR'} · Top 0.8%
+            {safeUser.stats?.valorant?.rr || '0 RR'}
           </span>
         </div>
 
@@ -233,10 +233,10 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
             Tournament KD
           </span>
           <div className="font-display font-bold text-xl text-secondary">
-            {safeUser.stats?.valorant?.kd || '1.38'}
+            {safeUser.stats?.valorant?.kd || '0.00'}
           </div>
           <span className="font-mono text-[10px] text-on-surface-variant">
-            Verified Scrim Sample (48 Maps)
+            Verified Scrim Sample
           </span>
         </div>
 
@@ -245,7 +245,7 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
             Headshot Precision
           </span>
           <div className="font-display font-bold text-xl text-primary">
-            {safeUser.stats?.valorant?.hs || '34.2%'}
+            {safeUser.stats?.valorant?.hs || '0%'}
           </div>
           <span className="font-mono text-[10px] text-on-surface-variant">
             Rifle &amp; Vandal Accuracy
@@ -257,10 +257,10 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
             Clutch Winrate
           </span>
           <div className="font-display font-bold text-xl text-on-surface">
-            {safeUser.stats?.valorant?.winrate || '68.4%'}
+            {safeUser.stats?.valorant?.winrate || '0%'}
           </div>
           <span className="font-mono text-[10px] text-secondary">
-            1v2+ Clutches (31 Converted)
+            Clutch Conversions
           </span>
         </div>
       </div>
@@ -323,14 +323,14 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
               <div className="p-4 rounded-2xl bg-surface-container-low border border-[#37ebf3]/30 space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="font-display font-bold text-sm text-[#37ebf3] flex items-center gap-1.5"><Zap className="w-4 h-4" /> VALORANT</span>
-                  <CheckCircle2 className="w-4 h-4 text-secondary" />
+                  {safeUser.gameAccounts?.valorant && <CheckCircle2 className="w-4 h-4 text-secondary" />}
                 </div>
                 <div className="font-mono text-xs text-on-surface font-semibold">
-                  IGN: {safeUser.gameAccounts?.valorant || 'Vortex#IND'}
+                  IGN: {safeUser.gameAccounts?.valorant || 'Not Linked'}
                 </div>
                 <div className="flex items-center justify-between text-xs font-mono text-on-surface-variant pt-1 border-t border-card-border">
-                  <span>Immortal 3 (284 RR)</span>
-                  <span className="text-[#37ebf3] font-bold">1.38 KD</span>
+                  <span>{safeUser.stats?.valorant?.rank || 'Unranked'}</span>
+                  <span className="text-[#37ebf3] font-bold">{safeUser.stats?.valorant?.kd ? `${safeUser.stats.valorant.kd} KD` : '—'}</span>
                 </div>
               </div>
 
@@ -338,14 +338,14 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
               <div className="p-4 rounded-2xl bg-surface-container-low border border-[#C48200]/30 space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="font-display font-bold text-sm text-[#C48200] flex items-center gap-1.5"><Crosshair className="w-4 h-4" /> BGMI</span>
-                  <CheckCircle2 className="w-4 h-4 text-secondary" />
+                  {safeUser.gameAccounts?.bgmi && <CheckCircle2 className="w-4 h-4 text-secondary" />}
                 </div>
                 <div className="font-mono text-xs text-on-surface font-semibold">
-                  ID: {safeUser.gameAccounts?.bgmi || '512948194'}
+                  ID: {safeUser.gameAccounts?.bgmi || 'Not Linked'}
                 </div>
                 <div className="flex items-center justify-between text-xs font-mono text-on-surface-variant pt-1 border-t border-card-border">
-                  <span>Conqueror (6400 pts)</span>
-                  <span className="text-[#C48200] font-bold">5.20 KD</span>
+                  <span>{safeUser.stats?.bgmi?.rank || 'Unranked'}</span>
+                  <span className="text-[#C48200] font-bold">{safeUser.stats?.bgmi?.kd ? `${safeUser.stats.bgmi.kd} KD` : '—'}</span>
                 </div>
               </div>
 
@@ -353,14 +353,14 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
               <div className="p-4 rounded-2xl bg-surface-container-low border border-[#e455ae]/30 space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="font-display font-bold text-sm text-[#e455ae] flex items-center gap-1.5"><Flame className="w-4 h-4" /> FREE FIRE</span>
-                  <CheckCircle2 className="w-4 h-4 text-secondary" />
+                  {safeUser.gameAccounts?.freefire && <CheckCircle2 className="w-4 h-4 text-secondary" />}
                 </div>
                 <div className="font-mono text-xs text-on-surface font-semibold">
-                  UID: {safeUser.gameAccounts?.freefire || '891240182'}
+                  UID: {safeUser.gameAccounts?.freefire || 'Not Linked'}
                 </div>
                 <div className="flex items-center justify-between text-xs font-mono text-on-surface-variant pt-1 border-t border-card-border">
-                  <span>Grandmaster (84 Stars)</span>
-                  <span className="text-[#e455ae] font-bold">62% HS</span>
+                  <span>{safeUser.stats?.freefire?.rank || 'Unranked'}</span>
+                  <span className="text-[#e455ae] font-bold">{safeUser.stats?.freefire?.kd ? `${safeUser.stats.freefire.kd} KD` : '—'}</span>
                 </div>
               </div>
 
@@ -368,14 +368,14 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
               <div className="p-4 rounded-2xl bg-surface-container-low border border-[#1ac5b0]/30 space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="font-display font-bold text-sm text-[#1ac5b0] flex items-center gap-1.5"><Shield className="w-4 h-4" /> CLASH OF CLANS</span>
-                  <CheckCircle2 className="w-4 h-4 text-secondary" />
+                  {safeUser.gameAccounts?.coc && <CheckCircle2 className="w-4 h-4 text-secondary" />}
                 </div>
                 <div className="font-mono text-xs text-on-surface font-semibold">
-                  Tag: {safeUser.gameAccounts?.coc || '#2QP9LV0'}
+                  Tag: {safeUser.gameAccounts?.coc || 'Not Linked'}
                 </div>
                 <div className="flex items-center justify-between text-xs font-mono text-on-surface-variant pt-1 border-t border-card-border">
-                  <span>Town Hall 17 Max</span>
-                  <span className="text-[#1ac5b0] font-bold">1,840 War Stars</span>
+                  <span>{safeUser.stats?.coc?.th || 'Unranked'}</span>
+                  <span className="text-[#1ac5b0] font-bold">{safeUser.stats?.coc?.warStars ? `${safeUser.stats.coc.warStars} Stars` : '—'}</span>
                 </div>
               </div>
 
@@ -383,14 +383,14 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
               <div className="p-4 rounded-2xl bg-surface-container-low border border-[#9381ff]/30 space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="font-display font-bold text-sm text-[#9381ff] flex items-center gap-1.5"><Crown className="w-4 h-4" /> CLASH ROYALE</span>
-                  <CheckCircle2 className="w-4 h-4 text-secondary" />
+                  {safeUser.gameAccounts?.cr && <CheckCircle2 className="w-4 h-4 text-secondary" />}
                 </div>
                 <div className="font-mono text-xs text-on-surface font-semibold">
-                  Tag: {safeUser.gameAccounts?.cr || '#8P8Y20R'}
+                  Tag: {safeUser.gameAccounts?.cr || 'Not Linked'}
                 </div>
                 <div className="flex items-center justify-between text-xs font-mono text-on-surface-variant pt-1 border-t border-card-border">
-                  <span>Ultimate Champion</span>
-                  <span className="text-[#9381ff] font-bold">8,400 Trophies</span>
+                  <span>{safeUser.stats?.cr?.league || 'Unranked'}</span>
+                  <span className="text-[#9381ff] font-bold">{safeUser.stats?.cr?.trophies ? `${safeUser.stats.cr.trophies} Trophies` : '—'}</span>
                 </div>
               </div>
 
@@ -398,14 +398,14 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
               <div className="p-4 rounded-2xl bg-surface-container-low border border-[#cb1dcd]/30 space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="font-display font-bold text-sm text-[#cb1dcd] flex items-center gap-1.5"><Target className="w-4 h-4" /> CALL OF DUTY</span>
-                  <CheckCircle2 className="w-4 h-4 text-secondary" />
+                  {safeUser.gameAccounts?.cod && <CheckCircle2 className="w-4 h-4 text-secondary" />}
                 </div>
                 <div className="font-mono text-xs text-on-surface font-semibold">
-                  Activision: {safeUser.gameAccounts?.cod || 'Vortex#91823'}
+                  Activision: {safeUser.gameAccounts?.cod || 'Not Linked'}
                 </div>
                 <div className="flex items-center justify-between text-xs font-mono text-on-surface-variant pt-1 border-t border-card-border">
-                  <span>Legendary Tier</span>
-                  <span className="text-[#4caf50] font-bold">2.14 KD</span>
+                  <span>{safeUser.stats?.cod?.rank || 'Unranked'}</span>
+                  <span className="text-[#4caf50] font-bold">{safeUser.stats?.cod?.kd ? `${safeUser.stats.cod.kd} KD` : '—'}</span>
                 </div>
               </div>
             </div>
@@ -422,18 +422,24 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
             Competitive Placements &amp; Tournaments Won
           </h3>
 
-          <div className="space-y-4 relative before:absolute before:inset-0 before:left-3 before:w-0.5 before:bg-card-border">
-            {safeUser.careerMilestones?.map((milestone, idx) => (
-              <div key={idx} className="relative flex items-start gap-4 pl-8">
-                <span className="absolute left-1.5 top-1.5 w-3 h-3 rounded-full bg-secondary ring-4 ring-surface-container-low" />
-                <div className="space-y-0.5">
-                  <span className="font-mono text-xs text-secondary font-bold">{milestone.year}</span>
-                  <h4 className="font-display font-bold text-base text-on-surface">{milestone.title}</h4>
-                  <p className="font-body text-xs text-on-surface-variant">{milestone.team}</p>
+          {safeUser.careerMilestones && safeUser.careerMilestones.length > 0 ? (
+            <div className="space-y-4 relative before:absolute before:inset-0 before:left-3 before:w-0.5 before:bg-card-border">
+              {safeUser.careerMilestones.map((milestone, idx) => (
+                <div key={idx} className="relative flex items-start gap-4 pl-8">
+                  <span className="absolute left-1.5 top-1.5 w-3 h-3 rounded-full bg-secondary ring-4 ring-surface-container-low" />
+                  <div className="space-y-0.5">
+                    <span className="font-mono text-xs text-secondary font-bold">{milestone.year}</span>
+                    <h4 className="font-display font-bold text-base text-on-surface">{milestone.title}</h4>
+                    <p className="font-body text-xs text-on-surface-variant">{milestone.team}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="py-8 text-center text-on-surface-variant font-body text-xs">
+              No tournament placements recorded yet. Compete in verified tournaments and scrims to build your official career dossier.
+            </div>
+          )}
         </div>
       )}
 
@@ -447,42 +453,8 @@ export default function PlayerProfilePage({ onSelectTab, onBack }) {
               Coach &amp; Teammate Recommendations
             </h3>
 
-            <div className="space-y-3">
-              <div className="p-4 rounded-2xl bg-surface-container border border-card-border space-y-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-lg bg-secondary/20 flex items-center justify-center font-display font-bold text-xs text-secondary">
-                      M
-                    </div>
-                    <div>
-                      <span className="font-display font-bold text-xs text-on-surface block">Mortal (S8UL)</span>
-                      <span className="font-mono text-[10px] text-on-surface-variant">Team Owner &amp; Captain</span>
-                    </div>
-                  </div>
-                  <span className="font-mono text-[10px] text-secondary font-bold">Verified Review</span>
-                </div>
-                <p className="font-body text-xs text-on-surface-variant italic">
-                  &ldquo;Alex is one of the most disciplined communicators we've scrimmed with. Excellent mid-round reads and ice-cold clutches in overtime.&rdquo;
-                </p>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-surface-container border border-card-border space-y-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center font-display font-bold text-xs text-primary">
-                      G
-                    </div>
-                    <div>
-                      <span className="font-display font-bold text-xs text-on-surface block">Global Esports Scout Desk</span>
-                      <span className="font-mono text-[10px] text-on-surface-variant">Tactical Scout Department</span>
-                    </div>
-                  </div>
-                  <span className="font-mono text-[10px] text-primary font-bold">Scout Endorsement</span>
-                </div>
-                <p className="font-body text-xs text-on-surface-variant italic">
-                  &ldquo;High mechanical baseline with 34% headshot accuracy. Strong candidate for any tier-1 academy or VCT split roster.&rdquo;
-                </p>
-              </div>
+            <div className="py-8 text-center text-on-surface-variant font-body text-xs">
+              No endorsements or scout reviews yet. Compete in tournaments and scrims to earn verified recommendations from coaches and team captains.
             </div>
           </div>
         </div>

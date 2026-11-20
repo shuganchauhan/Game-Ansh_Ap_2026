@@ -28,18 +28,19 @@ async function seed() {
 
   // 1. Admin Accounts
   console.log('[Seed] Inserting Admin users...');
+  const adminEmail = (process.env.ADMIN_EMAIL || 'shagunaaryanansh@flux.com').trim().toLowerCase();
+  const adminPassword = process.env.ADMIN_PASSWORD || 'flux@2026';
+  const adminHash = await bcrypt.hash(adminPassword, 12);
   const adminRes = await pool.query(
     `INSERT INTO "admin" (email, password_hash)
-     VALUES ('admin@gamersg.com', $1)
+     VALUES ($1, $2)
      ON CONFLICT (email) DO UPDATE SET password_hash = EXCLUDED.password_hash
      RETURNING id, email`,
-    [hash],
+    [adminEmail, adminHash],
   );
   await pool.query(
-    `INSERT INTO "admin" (email, password_hash)
-     VALUES ('admin@admin.com', $1)
-     ON CONFLICT (email) DO UPDATE SET password_hash = EXCLUDED.password_hash`,
-    [hash],
+    `DELETE FROM "admin" WHERE LOWER(email) != LOWER($1)`,
+    [adminEmail],
   );
   const adminId = adminRes.rows[0].id;
 

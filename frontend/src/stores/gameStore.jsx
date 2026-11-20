@@ -4,7 +4,7 @@ import { useAuth } from './authContext';
 
 const GameStoreContext = createContext();
 
-const STORAGE_KEY = 'gamersg_store_v1';
+const STORAGE_KEY = 'gamersg_store_v2';
 
 const GUEST_ATHLETE = {
   id: '',
@@ -59,558 +59,13 @@ function fromApiApplication(app) {
   };
 }
 
-/* ── Initial Mock Players (Competitive Athlete Network) ── */
-const INITIAL_PLAYERS = [
-  {
-    id: 'player-me',
-    name: 'Alex "Vortex" Chauhan',
-    username: 'Vortex',
-    tagline: 'Tier 1 Flex Duelist & IGL | VCT India Contender | Looking for Sponsored Roster',
-    avatar: '',
-    banner: '',
-    location: 'Mumbai, India',
-    primaryGame: 'valorant',
-    lftStatus: 'Actively Looking for Tier 1 / Tier 2 Team',
-    scrimAvailability: 'Daily 6:00 PM – 11:30 PM IST',
-    discord: 'Vortex#0001',
-    bio: 'Competitive tactical FPS athlete with 4+ years of competitive experience across VCT Qualifiers and BMPS circuits. Shotcaller with disciplined macro comms and high clutch winrate.',
-    stats: {
-      valorant: { rank: 'IMMORTAL 3', rr: '284 RR', kd: '1.38', winrate: '68.4%', hs: '34%' },
-      bgmi: { rank: 'Conqueror', points: '6400 pts', kd: '5.20', winrate: '42%', matches: '320' },
-      freefire: { rank: 'Grandmaster', stars: '84 Stars', kd: '4.80', winrate: '38%', headshot: '62%' },
-      coc: { th: 'Town Hall 17', warStars: '1,840', trophies: '5,820', clan: 'INDIA Warriors' },
-      cr: { league: 'Ultimate Champion', trophies: '8,400', bestSeason: '#42 IN', winrate: '64%' },
-      cod: { rank: 'Legendary', mpRank: 'Top 1000', kd: '2.14', accuracy: '31%' },
-    },
-    gameAccounts: {
-      valorant: 'Vortex#IND',
-      bgmi: '512948194 (SoulVortex)',
-      freefire: '891240182 (VortexFF)',
-      coc: '#2QP9LV0 (VortexClan)',
-      cr: '#8P8Y20R (VortexCR)',
-      cod: 'Vortex#91823',
-    },
-    careerMilestones: [
-      { year: '2025', title: 'Top 4 — VCT India Challenger Series', team: 'Velocity Gaming (Trial)' },
-      { year: '2025', title: 'Grand Finals Qualifier — BMPS Season 3', team: 'Soul Academy' },
-      { year: '2024', title: 'Champion — Red Bull Campus Clutch India', team: 'Team Brutality' },
-    ],
-    connectionsCount: 428,
-    isVerified: true,
-  },
-  {
-    id: 'player-2',
-    name: 'Mortal (Naman Mathur)',
-    username: 'Mortal',
-    tagline: 'Co-Owner S8UL | Esports Athlete & Mentor | BGMI Legend',
-    avatar: '',
-    location: 'Mumbai, India',
-    primaryGame: 'bgmi',
-    lftStatus: 'Active Roster — Team Soul',
-    stats: { bgmi: { rank: 'Conqueror', kd: '6.40', winrate: '54%' } },
-    gameAccounts: { bgmi: '518294810 (SoulMortal)' },
-    connectionsCount: 12400,
-    isVerified: true,
-  },
-  {
-    id: 'player-3',
-    name: 'ScoutOP (Tanmay Singh)',
-    username: 'ScoutOP',
-    tagline: 'Professional BGMI/PUBGM Athlete | Sniper & IGL | Team IND / OR Alum',
-    avatar: '',
-    location: 'Valsad, India',
-    primaryGame: 'bgmi',
-    lftStatus: 'Active Roster',
-    stats: { bgmi: { rank: 'Conqueror', kd: '7.10', winrate: '58%' } },
-    gameAccounts: { bgmi: '528491029 (ScoutOP)' },
-    connectionsCount: 9800,
-    isVerified: true,
-  },
-  {
-    id: 'player-4',
-    name: 'Ayan "GodAyan" Sen',
-    username: 'GodAyan',
-    tagline: 'Free Fire Grandmaster Rusher | Total Gaming Tryout Finalist',
-    avatar: '',
-    location: 'Kolkata, India',
-    primaryGame: 'freefire',
-    lftStatus: 'Looking for Free Fire Pro League Squad',
-    stats: { freefire: { rank: 'Grandmaster', kd: '5.80', winrate: '45%' } },
-    gameAccounts: { freefire: '849104810 (AyanFF)' },
-    connectionsCount: 310,
-    isVerified: false,
-  },
-  {
-    id: 'player-5',
-    name: 'Jonathan "JONATHAN" Amaral',
-    username: 'JONATHAN',
-    tagline: 'Professional BGMI Athlete | 3x MVP PMIS/BGIS | Two-Thumb Gyro Legend',
-    avatar: '',
-    location: 'Goa, India',
-    primaryGame: 'bgmi',
-    lftStatus: 'Available for Tier 1 Invitational Squads',
-    stats: { bgmi: { rank: 'Conqueror', kd: '7.85', winrate: '62%' } },
-    gameAccounts: { bgmi: '511223344 (GodLJONATHAN)' },
-    connectionsCount: 15200,
-    isVerified: true,
-  },
-  {
-    id: 'player-6',
-    name: 'Ganesh "SkRossi" Gangadhar',
-    username: 'SkRossi',
-    tagline: 'Valorant Duelist & Jett Operator Specialist | VCT Masters Qualifier',
-    avatar: '',
-    location: 'Bangalore, India',
-    primaryGame: 'valorant',
-    lftStatus: 'Looking for VCT India Contenders Team',
-    stats: { valorant: { rank: 'RADIANTE', rr: '540 RR', kd: '1.45', winrate: '71%', hs: '38%' } },
-    gameAccounts: { valorant: 'SkRossi#GE' },
-    connectionsCount: 11400,
-    isVerified: true,
-  },
-  {
-    id: 'player-7',
-    name: 'Harsh "Goblin" Paudwal',
-    username: 'Goblin',
-    tagline: 'BMPS MVP & Top Fragger | High-Tempo Close-Quarter Rusher',
-    avatar: '',
-    location: 'Mumbai, India',
-    primaryGame: 'bgmi',
-    lftStatus: 'Actively Looking for Team',
-    stats: { bgmi: { rank: 'Conqueror', kd: '6.90', winrate: '52%' } },
-    gameAccounts: { bgmi: '523948102 (GoblinOP)' },
-    connectionsCount: 8900,
-    isVerified: true,
-  },
-  {
-    id: 'player-8',
-    name: 'Ankit "VasiyoCRJ7" Pant',
-    username: 'VasiyoCRJ7',
-    tagline: 'Free Fire World Series Competitor | Strategic Shotcaller',
-    avatar: '',
-    location: 'Dehradun, India',
-    primaryGame: 'freefire',
-    lftStatus: 'Open for Pro League Tryouts',
-    stats: { freefire: { rank: 'Grandmaster', kd: '5.20', winrate: '41%' } },
-    gameAccounts: { freefire: '819203941 (TG_Vasiyo)' },
-    connectionsCount: 7600,
-    isVerified: true,
-  },
-  {
-    id: 'player-9',
-    name: 'Sabyasachi "Antidote" Bose',
-    username: 'Antidote',
-    tagline: 'Tactical Sentinel & Controller | Ex-CS:GO Veteran | Discipline & Comms',
-    avatar: '',
-    location: 'Kolkata, India',
-    primaryGame: 'valorant',
-    lftStatus: 'LFT — Tier 1 / Tier 2 Valorant',
-    stats: { valorant: { rank: 'IMMORTAL 3', rr: '310 RR', kd: '1.28', winrate: '64%', hs: '32%' } },
-    gameAccounts: { valorant: 'Antidote#CAL' },
-    connectionsCount: 6200,
-    isVerified: true,
-  },
-  {
-    id: 'player-10',
-    name: 'Shubham "NinjaJOD" Sahoo',
-    username: 'NinjaJOD',
-    tagline: 'Fastest BGMI Entry Assaulter | GodLike Roster Alum',
-    avatar: '',
-    location: 'Bhubaneswar, India',
-    primaryGame: 'bgmi',
-    lftStatus: 'Looking for BGIS Championship Squad',
-    stats: { bgmi: { rank: 'Conqueror', kd: '6.75', winrate: '55%' } },
-    gameAccounts: { bgmi: '539102941 (NinjaJOD)' },
-    connectionsCount: 7400,
-    isVerified: true,
-  },
-];
-
-/* ── Initial Pending Squad Invitations (Unstop-style) ── */
-const INITIAL_INVITATIONS = [
-  {
-    id: 'inv-godl-1',
-    team_id: 'team-godl-bgmi',
-    team_name: 'GodLike Esports',
-    team_tag: 'GODL',
-    team_game: 'bgmi',
-    division: 'BGIS Grand Finals Circuit',
-    role: 'Co-Assaulter / Entry Fragger',
-    inviter_name: 'GodL Captain',
-    message: 'We noticed your recent scrim performances and tournament kill-records. We want you on our official 5-man roster for the upcoming major.',
-    status: 'pending',
-    created_at: new Date(Date.now() - 3600000 * 3).toISOString(),
-    slots_max: 5,
-    member_count: 3,
-  },
-  {
-    id: 'inv-ge-1',
-    team_id: 'team-ge-val',
-    team_name: 'Global Esports Red',
-    team_tag: 'GE',
-    team_game: 'valorant',
-    division: 'VCT Pacific Challenger Tier 1',
-    role: 'Initiator / Flash Support',
-    inviter_name: 'GE Captain',
-    message: 'Your clutch statistics in recent competitive cups align with our squad playbook. Join us for the upcoming VCT Challenger run.',
-    status: 'pending',
-    created_at: new Date(Date.now() - 3600000 * 14).toISOString(),
-    slots_max: 5,
-    member_count: 4,
-  },
-];
-
-/* ── Initial Organizations ── */
-const INITIAL_ORGS = [
-  {
-    id: 'org-s8ul',
-    name: 'S8UL Esports',
-    tag: 'S8UL',
-    legalName: 'S8UL Gaming Entertainment Pvt Ltd',
-    logo: '',
-    banner: '',
-    verified: true,
-    verificationStatus: 'verified', // 'unverified' | 'under_review' | 'verified'
-    followers: 84200,
-    isFollowing: true,
-    location: 'Navi Mumbai, India',
-    website: 'https://s8ulesports.com',
-    twitter: '@S8ULesports',
-    about: 'Leading South Asian Esports and Gaming organization. 2x Esports Awards Global Winner. Managing championship rosters in BGMI, Valorant, and Free Fire.',
-    founded: '2020',
-    games: ['bgmi', 'valorant', 'freefire'],
-  },
-  {
-    id: 'org-ge',
-    name: 'Global Esports',
-    tag: 'GE',
-    legalName: 'Global Esports Private Limited',
-    logo: '',
-    banner: '',
-    verified: true,
-    verificationStatus: 'verified',
-    followers: 61500,
-    isFollowing: false,
-    location: 'Mumbai, India',
-    website: 'https://globalesports.com',
-    twitter: '@GlobalEsportsIn',
-    about: 'India’s only VCT Pacific franchise partner organization. Competing globally across FPS and Battle Royale titles.',
-    founded: '2017',
-    games: ['valorant', 'bgmi', 'cod'],
-  },
-  {
-    id: 'org-godlike',
-    name: 'Godlike Esports',
-    tag: 'GODL',
-    legalName: 'Godlike Esports LLP',
-    logo: '',
-    banner: '',
-    verified: true,
-    verificationStatus: 'verified',
-    followers: 53900,
-    isFollowing: false,
-    location: 'Pune, India',
-    website: 'https://godlike.gg',
-    twitter: '@GodLike_in',
-    about: 'Elite Indian esports powerhouse known for clutch plays, aggressive playstyle, and championship trophies.',
-    founded: '2019',
-    games: ['bgmi', 'freefire', 'cod'],
-  },
-  {
-    id: 'org-totalgaming',
-    name: 'Total Gaming Esports',
-    tag: 'TG',
-    legalName: 'Total Gaming Entertainment',
-    logo: '',
-    banner: '',
-    verified: true,
-    verificationStatus: 'verified',
-    followers: 78000,
-    isFollowing: false,
-    location: 'Ahmedabad, India',
-    website: 'https://totalgaming.in',
-    twitter: '@TotalGamingEsports',
-    about: 'Home of India’s premier Free Fire roster. Champions of FFIC and international representatives.',
-    founded: '2020',
-    games: ['freefire', 'bgmi'],
-  },
-  {
-    id: 'org-warriors',
-    name: 'Warriors Gaming Clan',
-    tag: 'WAR',
-    legalName: 'Warriors Esports Syndicate',
-    logo: '',
-    banner: '',
-    verified: false,
-    verificationStatus: 'under_review',
-    followers: 12400,
-    isFollowing: false,
-    location: 'Delhi NCR, India',
-    website: 'https://warriorsclan.in',
-    twitter: '@WarriorsIndia',
-    about: 'India’s top Clash of Clans and Clash Royale competitive clan. Over 800+ war wins and top 50 global ranking.',
-    founded: '2016',
-    games: ['coc', 'cr'],
-  },
-];
-
-/* ── Initial Teams across the 6 Games ── */
-const INITIAL_TEAMS = [
-  {
-    id: 'team-soul-bgmi',
-    name: 'Team Soul',
-    tag: 'SOUL',
-    game: 'bgmi',
-    orgId: 'org-s8ul',
-    orgName: 'S8UL Esports',
-    verified: true,
-    division: 'BMPS Pro — Grand Finals',
-    winrate: '82%',
-    captainId: 'player-2',
-    slotsMax: 5,
-    roster: [
-      { id: 'm1', name: 'Mortal', role: 'IGL / Shotcaller', ign: 'SoulMortal', isCaptain: true },
-      { id: 'm2', name: 'Neyo', role: 'Main Assaulter', ign: 'SoulNeyo' },
-      { id: 'm3', name: 'Ronak', role: 'Support / DMR', ign: 'SoulRonak' },
-      { id: 'm4', name: 'Manya', role: 'Entry Fragger', ign: 'SoulManya' },
-    ],
-    openRoles: [
-      { id: 'role-soul-sub', roleName: 'Fifth Sub / Flex Fragger', description: 'Conqueror tier BGMI assaulter with device verification.', requirements: 'Peak Conqueror, 5+ KD in scrims' },
-    ],
-  },
-  {
-    id: 'team-ge-val',
-    name: 'Global Esports Red',
-    tag: 'GE',
-    game: 'valorant',
-    orgId: 'org-ge',
-    orgName: 'Global Esports',
-    verified: true,
-    division: 'VCT India — Tier 1',
-    winrate: '74%',
-    captainId: 'player-me',
-    slotsMax: 5,
-    roster: [
-      { id: 'm5', name: 'Alex "Vortex"', role: 'Duelist / Flex', ign: 'Vortex#IND', isCaptain: true },
-      { id: 'm6', name: 'Lightning', role: 'Initiator', ign: 'Lightning#GE' },
-      { id: 'm7', name: 'SkRossi (Trial)', role: 'Jett / Operator', ign: 'SkR#IND' },
-      { id: 'm8', name: 'Arav', role: 'Sentinel', ign: 'Arav#001' },
-    ],
-    openRoles: [
-      { id: 'role-ge-ctrl', roleName: 'Main Controller (Omen/Viper)', description: 'Seeking Immortal 3+ tactical controller for VCT India Split 2.', requirements: 'Peak Immortal 3+, Fluent comms, daily scrims' },
-    ],
-  },
-  {
-    id: 'team-godl-bgmi',
-    name: 'Godlike Esports',
-    tag: 'GODL',
-    game: 'bgmi',
-    orgId: 'org-godlike',
-    orgName: 'Godlike Esports',
-    verified: true,
-    division: 'BMPS Pro — Grand Finals',
-    winrate: '78%',
-    captainId: 'player-3',
-    slotsMax: 5,
-    roster: [
-      { id: 'm9', name: 'Jonathan', role: 'Assaulter / Fragger', ign: 'GodLJonathan', isCaptain: true },
-      { id: 'm10', name: 'Zgod', role: 'Support / Healer', ign: 'GodLZgod' },
-      { id: 'm11', name: 'Shadow', role: 'IGL', ign: 'GodLShadow' },
-      { id: 'm12', name: 'ClutchGod', role: 'Flex', ign: 'GodLClutch' },
-    ],
-    openRoles: [],
-  },
-  {
-    id: 'team-tg-ff',
-    name: 'Total Gaming Esports',
-    tag: 'TG',
-    game: 'freefire',
-    orgId: 'org-totalgaming',
-    orgName: 'Total Gaming Esports',
-    verified: true,
-    division: 'Free Fire India Pro — Div 1',
-    winrate: '76%',
-    captainId: 'player-4',
-    slotsMax: 4,
-    roster: [
-      { id: 'm13', name: 'Mafia', role: 'Rusher', ign: 'TG_Mafia', isCaptain: true },
-      { id: 'm14', name: 'FozyAjay', role: 'Sniper', ign: 'TG_Fozy' },
-      { id: 'm15', name: 'Bala', role: 'Support', ign: 'TG_Bala' },
-    ],
-    openRoles: [
-      { id: 'role-tg-4th', roleName: 'Main Rusher (Slot 4)', description: 'Looking for aggressive Grandmaster entry rusher for FFIC 2026.', requirements: 'Grandmaster, 55%+ headshot rate, Tournament proof' },
-    ],
-  },
-  {
-    id: 'team-war-coc',
-    name: 'INDIA Warriors',
-    tag: 'WAR',
-    game: 'coc',
-    orgId: 'org-warriors',
-    orgName: 'Warriors Gaming Clan',
-    verified: true,
-    division: 'Legend League — Top 200 India',
-    winrate: '80%',
-    captainId: 'player-me',
-    slotsMax: 15,
-    roster: [
-      { id: 'm16', name: 'Leader Shogun', role: 'Clan Leader', ign: '#2QP9LV0', isCaptain: true },
-      { id: 'm17', name: 'Co-Leader Raj', role: 'War Base Specialist', ign: '#89LV129' },
-      { id: 'm18', name: 'Vikram TH17', role: 'Legend League Attacker', ign: '#9012KA0' },
-      { id: 'm19', name: 'Aman Pro', role: 'CWL Attacker', ign: '#KL02931' },
-    ],
-    openRoles: [
-      { id: 'role-coc-th17', roleName: 'Town Hall 17 Max War Attacker', description: 'Looking for high 3-star percentage attackers for Champion CWL.', requirements: 'TH17 Maxed Heroes, 5600+ Trophies' },
-    ],
-  },
-  {
-    id: 'team-synergy-cod',
-    name: 'SynerGY India',
-    tag: 'SYN',
-    game: 'cod',
-    orgId: 'org-ge',
-    orgName: 'Global Esports',
-    verified: true,
-    division: 'COD Mobile World — India Region',
-    winrate: '75%',
-    captainId: 'player-me',
-    slotsMax: 5,
-    roster: [
-      { id: 'm20', name: 'Vortex COD', role: 'Anchor / AR', ign: 'Vortex#91823', isCaptain: true },
-      { id: 'm21', name: 'GhostIN', role: 'SMG Rusher', ign: 'Ghost#001' },
-      { id: 'm22', name: 'Spectre', role: 'Sniper (DL Q33)', ign: 'Spectre#881' },
-      { id: 'm23', name: 'Blaze', role: 'Support / Trophy', ign: 'Blaze#212' },
-    ],
-    openRoles: [
-      { id: 'role-cod-flex', roleName: 'Flex SMG / Slayer', description: 'Need aggressive slayer for upcoming Stage 4 Regional Qualifier.', requirements: 'Legendary 12K+ Points, Low latency device' },
-    ],
-  },
-  {
-    id: 'team-cr-phoenix',
-    name: 'Phoenix Force CR',
-    tag: 'PHX',
-    game: 'cr',
-    orgId: 'org-warriors',
-    orgName: 'Warriors Gaming Clan',
-    verified: true,
-    division: 'Ultimate Championship — India Top 50',
-    winrate: '79%',
-    captainId: 'player-me',
-    slotsMax: 3,
-    roster: [
-      { id: 'm24', name: 'CrownMaster', role: 'Main 1v1 Ladder', ign: '#8P8Y20R', isCaptain: true },
-      { id: 'm25', name: 'PekkaGod', role: 'Beatdown Specialist', ign: '#99QP812' },
-    ],
-    openRoles: [
-      { id: 'role-cr-cycle', roleName: 'Fast Cycle / Miner Control Specialist', description: 'Crown Championship South Asia representation.', requirements: 'Top 200 India Finish, 12-win Grand Challenge badge' },
-    ],
-  },
-];
-
-/* ── Initial Community Feed Posts ── */
-const INITIAL_POSTS = [
-  {
-    id: 'post-1',
-    authorName: 'S8UL Esports',
-    authorHandle: '@S8ULesports',
-    authorAvatar: '',
-    isOrg: true,
-    isVerified: true,
-    category: 'Org Announcement',
-    game: 'bgmi',
-    content: 'OFFICIAL ANNOUNCEMENT: Tryouts are now formally open for our 5th roster slot on Team Soul (BGMI Division) ahead of BMPS Season 4 Grand Finals! We are actively scouting players with proven tier-1 scrim records. Apply via the Recruitment tab with your tracker ID & VOD link.',
-    createdAt: '2 hours ago',
-    likes: 842,
-    likedByMe: false,
-    comments: [
-      { id: 'c1', user: 'Vortex', text: 'Dossier and VOD package submitted through the portal! Excited for this opportunity.', time: '1h ago' },
-      { id: 'c2', user: 'ScoutOP', text: 'Big move! Hope to see a cracked fifth on the roster.', time: '45m ago' },
-    ],
-    shares: 94,
-  },
-  {
-    id: 'post-2',
-    authorName: 'Alex "Vortex" Chauhan',
-    authorHandle: '@Vortex_VAL',
-    authorAvatar: '',
-    isOrg: false,
-    isVerified: true,
-    category: 'LFT / Tryout',
-    game: 'valorant',
-    content: '[LFT - VALORANT TIER 1 / TIER 2]\n\n• Peak Rank: Immortal 3 (284 RR)\n• Primary Role: Flex Duelist / IGL\n• Main Agents: Jett, Raze, Omen\n• Scrim Hours: 6:00 PM – Midnight IST\n\nLooking for an ambitious, org-backed team aiming for VCT India Split. Full VOD review and match analytics linked on my profile. DMs and tryout offers open!',
-    createdAt: '5 hours ago',
-    likes: 312,
-    likedByMe: true,
-    comments: [
-      { id: 'c3', user: 'Global Esports', text: 'DM sent regarding our upcoming tryout block next Tuesday.', time: '3h ago' },
-    ],
-    shares: 48,
-  },
-  {
-    id: 'post-3',
-    authorName: 'Global Esports',
-    authorHandle: '@GlobalEsportsIn',
-    authorAvatar: '',
-    isOrg: true,
-    isVerified: true,
-    category: 'Match Result',
-    game: 'valorant',
-    content: 'GGWP! Secured 2-1 victory against Team Vitality in tonight’s international scrim block on Haven & Sunset. Our new controller lineup showed disciplined utility execution. Full tournament schedule coming this Friday.',
-    createdAt: '8 hours ago',
-    likes: 521,
-    likedByMe: false,
-    comments: [],
-    shares: 31,
-  },
-  {
-    id: 'post-4',
-    authorName: 'Total Gaming Esports',
-    authorHandle: '@TotalGamingEsports',
-    authorAvatar: '',
-    isOrg: true,
-    isVerified: true,
-    category: 'Recruitment',
-    game: 'freefire',
-    content: 'Free Fire India Championship (FFIC) 2026 Tryouts are active! If you hold a 55%+ headshot rate and competitive scrim tournament experience, check our team openings on FLUX.',
-    createdAt: '1 day ago',
-    likes: 670,
-    likedByMe: false,
-    comments: [],
-    shares: 82,
-  },
-];
-
-/* ── Initial Applications ── */
-const INITIAL_APPLICATIONS = [
-  {
-    id: 'app-1',
-    teamId: 'team-soul-bgmi',
-    teamName: 'Team Soul',
-    game: 'bgmi',
-    roleName: 'Fifth Sub / Flex Fragger',
-    applicantId: 'player-me',
-    applicantName: 'Alex "Vortex" Chauhan',
-    applicantRank: 'Conqueror (6400 pts)',
-    pitch: 'Competitive BGMI flex assaulter with 5.2 KD. Top 4 BMPS experience with disciplined IGL comms.',
-    vodLink: 'https://youtu.be/sample-vod-scrim-highlight',
-    status: 'shortlisted', // 'applied' | 'shortlisted' | 'accepted' | 'rejected'
-    appliedAt: '2 days ago',
-  },
-  {
-    id: 'app-2',
-    teamId: 'team-tg-ff',
-    teamName: 'Total Gaming Esports',
-    game: 'freefire',
-    roleName: 'Main Rusher (Slot 4)',
-    applicantId: 'player-4',
-    applicantName: 'Ayan "GodAyan" Sen',
-    applicantRank: 'Grandmaster (84 Stars)',
-    pitch: 'Grandmaster rusher with 5.8 KD and 62% headshot rate in competitive scrim lobbies.',
-    vodLink: 'https://youtu.be/freefire-ayan-highlights',
-    status: 'applied',
-    appliedAt: '4 hours ago',
-  },
-];
+/* ── Clean Entity State (Live backend data will populate these) ── */
+const INITIAL_PLAYERS = [];
+const INITIAL_INVITATIONS = [];
+const INITIAL_ORGS = [];
+const INITIAL_TEAMS = [];
+const INITIAL_POSTS = [];
+const INITIAL_APPLICATIONS = [];
 
 export function GameStoreProvider({ children }) {
   const { user: authUser } = useAuth();
@@ -618,40 +73,49 @@ export function GameStoreProvider({ children }) {
   // Load or fallback
   const [storeState, setStoreState] = useState(() => {
     try {
-      const saved = typeof localStorage !== 'undefined' ? localStorage.getItem(STORAGE_KEY) : null;
+      if (typeof localStorage !== "undefined") {
+        // Purge legacy cache with mock data
+        localStorage.removeItem("gamersg_store_v1");
+      }
+      const saved = typeof localStorage !== "undefined" ? localStorage.getItem(STORAGE_KEY) : null;
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (parsed.currentUser?.id === 'player-me' || !parsed.currentUser?.id) {
-          parsed.currentUser = GUEST_ATHLETE;
+        const hasMockEntities = (parsed.players && parsed.players.some((p) => p.id === "player-me" || p.id === "player-mortal")) ||
+                                (parsed.orgs && parsed.orgs.some((o) => o.id === "org-s8ul")) ||
+                                (parsed.teams && parsed.teams.some((t) => t.id === "team-soul-bgmi"));
+        if (!hasMockEntities) {
+          if (parsed.currentUser?.id === "player-me" || !parsed.currentUser?.id) {
+            parsed.currentUser = GUEST_ATHLETE;
+          }
+          return {
+            ...parsed,
+            players: parsed.players || [],
+            orgs: parsed.orgs || [],
+            teams: parsed.teams || [],
+            posts: parsed.posts || [],
+            applications: parsed.applications || [],
+            connectedPlayerIds: parsed.connectedPlayerIds || [],
+            followedOrgIds: parsed.followedOrgIds || [],
+            myInvitations: parsed.myInvitations || [],
+            teamInvitationsMap: parsed.teamInvitationsMap || {},
+          };
         }
-        return {
-          ...parsed,
-          players: (parsed.players && parsed.players.length > 0) ? parsed.players : INITIAL_PLAYERS,
-          orgs: (parsed.orgs && parsed.orgs.length > 0) ? parsed.orgs : INITIAL_ORGS,
-          teams: (parsed.teams && parsed.teams.length > 0) ? parsed.teams : INITIAL_TEAMS,
-          posts: (parsed.posts && parsed.posts.length > 0) ? parsed.posts : INITIAL_POSTS,
-          applications: (parsed.applications && parsed.applications.length > 0) ? parsed.applications : INITIAL_APPLICATIONS,
-          connectedPlayerIds: parsed.connectedPlayerIds || [],
-          followedOrgIds: parsed.followedOrgIds || [],
-          myInvitations: (parsed.myInvitations && parsed.myInvitations.length > 0) ? parsed.myInvitations : INITIAL_INVITATIONS,
-          teamInvitationsMap: parsed.teamInvitationsMap || {},
-        };
       }
     } catch (e) {
-      console.warn('Failed to load store from localStorage, using initial dataset:', e);
+      console.warn("Failed to load store from localStorage:", e);
     }
     return {
-      activeRole: 'player',
+      activeRole: "player",
       activeOrgId: null,
       currentUser: GUEST_ATHLETE,
-      players: INITIAL_PLAYERS,
-      orgs: INITIAL_ORGS,
-      teams: INITIAL_TEAMS,
-      posts: INITIAL_POSTS,
-      applications: INITIAL_APPLICATIONS,
+      players: [],
+      orgs: [],
+      teams: [],
+      posts: [],
+      applications: [],
       connectedPlayerIds: [],
       followedOrgIds: [],
-      myInvitations: INITIAL_INVITATIONS,
+      myInvitations: [],
       teamInvitationsMap: {},
     };
   });
@@ -725,19 +189,16 @@ export function GameStoreProvider({ children }) {
                 stats: bp.stats || {},
                 isVerified: true,
               }));
-              const playerMap = new Map();
-              [...mappedBackend, ...prev.players].forEach((p) => {
-                if (p && p.id && !playerMap.has(p.id)) playerMap.set(p.id, p);
-              });
-              return { ...prev, players: Array.from(playerMap.values()) };
+              return { ...prev, players: mappedBackend };
             });
           }
         }
         if (teamsResult.status === 'fulfilled') {
           const teamsRes = teamsResult.value;
           const backendTeams = Array.isArray(teamsRes) ? teamsRes : (teamsRes?.data || []);
-          setStoreState((prev) => {
-            const newTeams = backendTeams.map((bt) => ({
+          if (backendTeams.length > 0) {
+            setStoreState((prev) => {
+              const newTeams = backendTeams.map((bt) => ({
                 id: bt.id,
                 name: bt.name,
                 tag: bt.tag || bt.name.slice(0, 4).toUpperCase(),
@@ -753,25 +214,15 @@ export function GameStoreProvider({ children }) {
                 openRoles: [],
                 membersCount: bt.members_count || 0,
               }));
-            const teamMap = new Map();
-            [...newTeams, ...prev.teams].forEach((t) => {
-              if (t && t.id && !teamMap.has(t.id)) teamMap.set(t.id, t);
+              return { ...prev, teams: newTeams };
             });
-            return { ...prev, teams: Array.from(teamMap.values()) };
-          });
+          }
         }
         if (feedResult.status === 'fulfilled') {
           const remotePosts = Array.isArray(feedResult.value) ? feedResult.value.map(fromApiPost) : [];
-          setStoreState((prev) => {
-            const postMap = new Map();
-            remotePosts.forEach((p) => {
-              if (p && p.id) postMap.set(p.id, p);
-            });
-            (prev.posts || []).forEach((p) => {
-              if (p && p.id && !postMap.has(p.id)) postMap.set(p.id, p);
-            });
-            return { ...prev, posts: Array.from(postMap.values()) };
-          });
+          if (remotePosts.length > 0) {
+            setStoreState((prev) => ({ ...prev, posts: remotePosts }));
+          }
         }
         if (tourneysResult.status === 'fulfilled') {
           const tRes = tourneysResult.value;
@@ -947,7 +398,7 @@ export function GameStoreProvider({ children }) {
         slots_max: clampedSlots,
         status: isReg ? 'registered' : 'draft',
         org_id: orgId,
-        captain_id: storeState.currentUser?.id || 'player-me',
+        captain_id: storeState.currentUser?.id || null,
         members: initialMembers.map((m) => ({
           id: m.id || `member-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
           name: m.name,
@@ -1171,7 +622,7 @@ export function GameStoreProvider({ children }) {
         return {
           ...o,
           legalName: verificationForm.legalName || o.legalName,
-          gstNumber: verificationForm.gstNumber || '27AABCU9603R1ZM',
+          gstNumber: verificationForm.gstNumber || '',
           website: verificationForm.website || o.website,
           twitter: verificationForm.twitter || o.twitter,
           verificationStatus: 'under_review',

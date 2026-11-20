@@ -3,11 +3,11 @@ import { Radio, Crosshair, Wifi, Shield, Swords, Trophy, Play, CheckCircle2, Che
 import { cyberAudio } from '../../lib/cyberAudio';
 
 const LIVE_EVENTS = [
-  { killer: 'JONATHAN', victim: 'Mortal', weapon: 'M416 Headshot', game: 'BGMI', time: '1s ago' },
-  { killer: 'SkRossi', victim: 'Hellff', weapon: 'Operator Pick', game: 'VALORANT', time: '3s ago' },
-  { killer: 'Goblin', victim: 'Spower', weapon: 'Grenade Double', game: 'BGMI', time: '7s ago' },
-  { killer: 'ScoutOP', victim: 'Vortex', weapon: 'DMR Precision', game: 'BGMI', time: '11s ago' },
-  { killer: 'Antidote', victim: 'Marcos', weapon: 'Vandal Spray', game: 'VALORANT', time: '15s ago' },
+  { killer: 'CYBER_ACE', victim: 'PHANTOM', weapon: 'Vandal Headshot', game: 'VALORANT', time: '1s ago' },
+  { killer: 'NIGHTHAWK', victim: 'STRIKER', weapon: 'Operator Pick', game: 'VALORANT', time: '3s ago' },
+  { killer: 'BLAZE_99', victim: 'SHADOW', weapon: 'M416 Burst', game: 'BGMI', time: '7s ago' },
+  { killer: 'VIPER_X', victim: 'TITAN', weapon: 'AWM Precision', game: 'BGMI', time: '11s ago' },
+  { killer: 'SPECTRE', victim: 'RAZOR', weapon: 'Sheriff Tap', game: 'VALORANT', time: '15s ago' },
 ];
 
 const SERVER_NODES = [
@@ -302,7 +302,7 @@ export default function LiveArenaCommandDeck({ onSelectTab, onOpenAuth }) {
                     MATCH CONFIRMED!
                   </span>
                   <span className="font-mono text-[10px] text-[#F8FAFC] block">
-                    Ascent 5v5 vs GodLike
+                    Ascent 5v5 Competitive Scrim
                   </span>
                   <span className="font-mono text-[9px] text-[#94A3B8] block">
                     Server: Mumbai-01 · 14ms

@@ -219,7 +219,7 @@ export default function AuthModal({
               </label>
               <input
                 type="text"
-                placeholder="e.g. Vortex_99"
+                placeholder="e.g. Shadow_99"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 className="w-full px-4 py-3 rounded-xl bg-surface-container-low dark:bg-white/5 border border-card-border text-on-surface placeholder:text-on-surface-variant/50 text-sm focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary font-body transition-all"

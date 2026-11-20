@@ -883,16 +883,16 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
 
           <div className="p-4 rounded-2xl bg-surface-container border border-card-border space-y-2.5">
             <div className="flex items-center justify-between text-xs font-mono">
-              <span className="text-on-surface-variant">Franchise Scout Views</span>
-              <span className="font-bold text-secondary">18 this week</span>
+              <span className="text-on-surface-variant">Profile Radar Status</span>
+              <span className="font-bold text-secondary">{safeUser.isVerified ? 'Verified Active' : 'Public Active'}</span>
             </div>
             <div className="flex items-center justify-between text-xs font-mono">
               <span className="text-on-surface-variant">Direct Tryout Offers</span>
-              <span className="font-bold text-tertiary">3 pending</span>
+              <span className="font-bold text-tertiary">{pendingInvites.length} pending</span>
             </div>
             <div className="flex items-center justify-between text-xs font-mono">
-              <span className="text-on-surface-variant">Top Scout Interest</span>
-              <span className="font-bold text-primary">S8UL &amp; Global Esports</span>
+              <span className="text-on-surface-variant">Primary Game Radar</span>
+              <span className="font-bold text-primary uppercase">{safeUser.primaryGame || 'Competitive'}</span>
             </div>
           </div>
 
@@ -1060,7 +1060,7 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
                     value={profileForm.name}
                     onChange={(e) => setProfileForm({ ...profileForm, name: e.target.value })}
                     className="w-full px-3.5 py-2.5 rounded-xl bg-surface-container border border-card-border text-on-surface text-sm focus:border-primary focus:outline-none"
-                    placeholder="e.g. Alex 'Vortex' Chauhan"
+                    placeholder="e.g. Alex Chauhan"
                   />
                 </div>
                 <div>
@@ -1086,7 +1086,7 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
                   value={profileForm.tagline}
                   onChange={(e) => setProfileForm({ ...profileForm, tagline: e.target.value })}
                   className="w-full px-3.5 py-2.5 rounded-xl bg-surface-container border border-card-border text-on-surface text-sm focus:border-primary focus:outline-none"
-                  placeholder="e.g. Tier 1 IGL | VCT India Contender | Looking for Sponsored Roster"
+                  placeholder="e.g. Tier 1 IGL | Competitive Contender | Looking for Team"
                 />
               </div>
 
@@ -1109,7 +1109,7 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
                     value={profileForm.valorantIgn}
                     onChange={(e) => setProfileForm({ ...profileForm, valorantIgn: e.target.value })}
                     className="w-full px-3.5 py-2.5 rounded-xl bg-surface-container border border-card-border text-on-surface text-sm focus:border-primary focus:outline-none"
-                    placeholder="e.g. Vortex#IND"
+                    placeholder="e.g. Player#TAG"
                   />
                 </div>
                 <div>
@@ -1119,7 +1119,7 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
                     value={profileForm.bgmiIgn}
                     onChange={(e) => setProfileForm({ ...profileForm, bgmiIgn: e.target.value })}
                     className="w-full px-3.5 py-2.5 rounded-xl bg-surface-container border border-card-border text-on-surface text-sm focus:border-primary focus:outline-none"
-                    placeholder="e.g. 512948194 (SoulVortex)"
+                    placeholder="e.g. 512948194"
                   />
                 </div>
               </div>
@@ -1142,7 +1142,7 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
                     value={profileForm.discord}
                     onChange={(e) => setProfileForm({ ...profileForm, discord: e.target.value })}
                     className="w-full px-3.5 py-2.5 rounded-xl bg-surface-container border border-card-border text-on-surface text-sm focus:border-primary focus:outline-none"
-                    placeholder="e.g. Vortex#0001"
+                    placeholder="e.g. user#0001"
                   />
                 </div>
               </div>
@@ -1198,7 +1198,7 @@ export default function PlayerDashboard({ onSelectTab, onOpenTeamCreator, onSele
                     value={orgForm.legal_name}
                     onChange={(e) => setOrgForm({ ...orgForm, legal_name: e.target.value })}
                     className="w-full px-3.5 py-2.5 rounded-xl bg-surface-container border border-card-border text-on-surface text-sm focus:border-tertiary focus:outline-none"
-                    placeholder="e.g. S8UL Gaming Entertainment Pvt Ltd"
+                    placeholder="e.g. Apex Gaming Entertainment Pvt Ltd"
                   />
                 </div>
                 <div>

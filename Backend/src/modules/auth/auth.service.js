@@ -75,8 +75,8 @@ async function signupOrganizer({ name, email, password }) {
 
 async function login({ email, password, role }) {
   let cleanEmail = (email || '').trim().toLowerCase();
-  if (cleanEmail === 'admin' || cleanEmail === 'admin@gamersg') {
-    cleanEmail = 'admin@gamersg.com';
+  if (cleanEmail === 'admin' || cleanEmail === 'admin@flux') {
+    cleanEmail = (process.env.ADMIN_EMAIL || 'shagunaaryanansh@flux.com').trim().toLowerCase();
   }
 
   // If role is explicitly provided, verify against that role's table first

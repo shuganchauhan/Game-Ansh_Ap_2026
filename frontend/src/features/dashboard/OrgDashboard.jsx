@@ -33,11 +33,11 @@ export default function OrgDashboard({ onSelectTab, onOpenTeamCreator, onSelectT
   // Org verification form state
   const [verificationModalOpen, setVerificationModalOpen] = useState(false);
   const [formLegalName, setFormLegalName] = useState(currentOrg.legalName || currentOrg.name || '');
-  const [formGst, setFormGst] = useState('27AABCU9603R1ZM');
+  const [formGst, setFormGst] = useState('');
   const [formWebsite, setFormWebsite] = useState(currentOrg.website || '');
   const [formTwitter, setFormTwitter] = useState(currentOrg.twitter || '');
-  const [formRepName, setFormRepName] = useState('Animesh "Thug" Agarwal');
-  const [formRepEmail, setFormRepEmail] = useState('operations@s8ulesports.com');
+  const [formRepName, setFormRepName] = useState('');
+  const [formRepEmail, setFormRepEmail] = useState('');
   const [formDocsSubmitted, setFormDocsSubmitted] = useState(false);
 
   // Broadcast announcement state
@@ -599,7 +599,7 @@ export default function OrgDashboard({ onSelectTab, onOpenTeamCreator, onSelectT
                       required
                       value={formLegalName}
                       onChange={(e) => setFormLegalName(e.target.value)}
-                      placeholder="e.g. S8UL Gaming Entertainment Pvt Ltd"
+                      placeholder="e.g. Apex Esports Pvt Ltd"
                       className="w-full p-3 rounded-xl bg-surface-container border border-card-border text-on-surface text-sm font-body focus:outline-none"
                     />
                   </div>
@@ -614,7 +614,7 @@ export default function OrgDashboard({ onSelectTab, onOpenTeamCreator, onSelectT
                         required
                         value={formGst}
                         onChange={(e) => setFormGst(e.target.value)}
-                        placeholder="e.g. 27AABCU9603R1ZM"
+                        placeholder="e.g. 27AAAAA0000A1Z5"
                         className="w-full p-3 rounded-xl bg-surface-container border border-card-border text-on-surface text-sm font-body focus:outline-none"
                       />
                     </div>
@@ -643,7 +643,7 @@ export default function OrgDashboard({ onSelectTab, onOpenTeamCreator, onSelectT
                         required
                         value={formTwitter}
                         onChange={(e) => setFormTwitter(e.target.value)}
-                        placeholder="@S8ULesports"
+                        placeholder="@OrgEsports"
                         className="w-full p-3 rounded-xl bg-surface-container border border-card-border text-on-surface text-sm font-body focus:outline-none"
                       />
                     </div>

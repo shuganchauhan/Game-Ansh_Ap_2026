@@ -4,11 +4,18 @@ const bcrypt = require('bcrypt');
 const { pool } = require('./src/shared/db');
 
 async function seedAdmin() {
-  const email = process.env.ADMIN_EMAIL?.trim().toLowerCase();
-  const password = process.env.ADMIN_PASSWORD;
+  const email = (process.env.ADMIN_EMAIL || 'shagunaaryanansh@flux.com').trim().toLowerCase();
+  const password = process.env.ADMIN_PASSWORD || 'flux@2026';
   if (!email || !password || password.length < 6) {
     throw new Error('Set ADMIN_EMAIL and an ADMIN_PASSWORD of at least 6 characters before creating an admin account.');
   }
+
+  // Remove any legacy admin accounts so only the single authorized admin remains
+  await pool.query(
+    `DELETE FROM "admin" WHERE LOWER(email) != LOWER($1)`,
+    [email],
+  );
+
   const passwordHash = await bcrypt.hash(password, 12);
   await pool.query(
     `INSERT INTO "admin" (email, password_hash)
@@ -16,7 +23,7 @@ async function seedAdmin() {
      ON CONFLICT (email) DO UPDATE SET password_hash = EXCLUDED.password_hash`,
     [email, passwordHash],
   );
-  console.log(`Admin account provisioned if it did not already exist: ${email}.`);
+  console.log(`Single authorized admin account provisioned: ${email}`);
 
   await pool.end();
 }
