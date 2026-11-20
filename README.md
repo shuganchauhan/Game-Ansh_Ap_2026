@@ -4,7 +4,7 @@ Full-stack esports platform with a React/Vite client and Express/PostgreSQL API.
 
 ---
 
-## 🏛️ Monorepo Architecture
+## 🏛️ Monorepo Architecture.
 
 ```
 Game-Ansh/
